@@ -14,13 +14,14 @@ const envSchema = z.object({
 
 export type Env = z.infer<typeof envSchema>;
 
-// SPEC_DEVIATION: o design pede "parse na inicialização", mas o parse aqui é
-// feito por uma função exportada (não no top-level do módulo) para que
-// importar `shared` não valide env vars durante `next build`/`next dev`
-// antes de existirem — quem precisa das vars (ex.: `shared/db`, instância
-// Better Auth, nas tasks T8/T9) chama `getEnv()` no seu próprio boot.
-// Reason: parse no top-level do módulo quebraria o build deste worker (sem
-// as env vars no ambiente de CI/build), conforme aviso do orquestrador.
+// Decisão de design: "parse na inicialização" (design.md componente 3;
+// spec.md AC-4 da story Persistência) é implementado como uma função
+// exportada chamada pelo consumidor, não como parse no top-level do módulo.
+// Assim, importar `shared` não valida env vars durante `next build`/`next
+// dev` antes de existirem; quem precisa das vars no seu próprio boot (ex.:
+// `shared/db`, instância Better Auth — tasks T8/T9) chama `getEnv()` lá.
+// Isso continua cumprindo o AC (falha clara ao iniciar o subsistema que
+// depende da env) sem acoplar a validação ao carregamento do módulo.
 export function getEnv(
   source: Record<string, string | undefined> = process.env,
 ): Env {
