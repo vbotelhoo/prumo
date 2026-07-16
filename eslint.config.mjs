@@ -82,6 +82,17 @@ const eslintConfig = defineConfig([
   ...nextVitals,
   ...nextTs,
   boundariesConfig,
+  {
+    // `src/instrumentation.ts` é o hook de boot do Next.js (não faz parte do
+    // grafo de módulos de negócio — só chama `getEnv()` de `shared`, mesma
+    // exceção já dada a configs de raiz). Sem esta exceção, o plugin de
+    // fronteiras marca o arquivo (e seu teste) como "unknown file" (deny-by-
+    // default), já que nenhum elemento em `boundaries/elements` o classifica.
+    files: ["src/instrumentation.ts", "src/__tests__/**/*"],
+    rules: {
+      "boundaries/no-unknown-files": 0,
+    },
+  },
   // Override default ignores of eslint-config-next.
   globalIgnores([
     // Default ignores of eslint-config-next:

@@ -185,6 +185,8 @@ T10 ──→ T11 ──→ T12 ──→ T13 ──→ T14
 **Tests**: unit · **Gate**: quick
 **Commit**: `feat(shared): validação de env vars com zod`
 
+> **Nota pós-validação (Fix 1, ver `validation.md`)**: `getEnv()` implementado/testado aqui não era chamado por nenhum caminho de código real (gap AC-4). Fix: `src/instrumentation.ts` (`register()`) chama `getEnv()` no boot real de `next dev`/`next start`. Ver commit `fix(setup): chama getEnv() no boot real via instrumentation.ts (AC-4 persistência)`.
+
 ---
 
 ### T6: Tipo Money em shared [P]

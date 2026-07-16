@@ -16,12 +16,12 @@ export type Env = z.infer<typeof envSchema>;
 
 // Decisão de design: "parse na inicialização" (design.md componente 3;
 // spec.md AC-4 da story Persistência) é implementado como uma função
-// exportada chamada pelo consumidor, não como parse no top-level do módulo.
-// Assim, importar `shared` não valida env vars durante `next build`/`next
-// dev` antes de existirem; quem precisa das vars no seu próprio boot (ex.:
-// `shared/db`, instância Better Auth — tasks T8/T9) chama `getEnv()` lá.
-// Isso continua cumprindo o AC (falha clara ao iniciar o subsistema que
-// depende da env) sem acoplar a validação ao carregamento do módulo.
+// exportada, não como parse no top-level do módulo — assim importar
+// `shared` não valida env vars por si só (ex.: durante `next build`, que só
+// compila e não precisa das vars). Quem de fato dispara essa validação no
+// boot real do processo que serve tráfego (`next dev`/`next start`) é
+// `src/instrumentation.ts`, chamando `getEnv()` dentro de `register()` —
+// hook do Next.js executado antes de qualquer request.
 export function getEnv(
   source: Record<string, string | undefined> = process.env,
 ): Env {
