@@ -178,9 +178,9 @@ T10 ──→ T11 ──→ T12 ──→ T13 ──→ T14
 
 **Done when**:
 
-- [ ] Env completa → parse ok; env faltante → erro nomeando as vars ausentes (AC-4 da story Persistência)
-- [ ] Unit tests cobrem: sucesso, cada var ausente, mensagem de erro
-- [ ] Quick gate passa; test count registrado
+- [x] Env completa → parse ok; env faltante → erro nomeando as vars ausentes (AC-4 da story Persistência)
+- [x] Unit tests cobrem: sucesso, cada var ausente, mensagem de erro
+- [x] Quick gate passa; test count registrado
 
 **Tests**: unit · **Gate**: quick
 **Commit**: `feat(shared): validação de env vars com zod`
