@@ -157,9 +157,9 @@ T10 ──→ T11 ──→ T12 ──→ T13 ──→ T14
 
 **Done when**:
 
-- [ ] `pnpm test:unit` executa (verde com suíte vazia ou sanity test)
-- [ ] Projects filtráveis por `--project`; convenção de nomes documentada no config
-- [ ] Build gate passa
+- [x] `pnpm test:unit` executa (verde com suíte vazia ou sanity test)
+- [x] Projects filtráveis por `--project`; convenção de nomes documentada no config
+- [x] Build gate passa
 
 **Tests**: none (infra de teste) · **Gate**: build
 **Commit**: `chore(setup): vitest 4 com projects unit e integration`
