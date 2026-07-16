@@ -1,0 +1,45 @@
+{
+  "schema": 1,
+  "promote_threshold": 2,
+  "window_days": 45,
+  "quarantine_threshold": 2,
+  "next_id": 3,
+  "lessons": [
+    {
+      "id": "L-001",
+      "key": "ac_gap::when validate env at startup is implemented as an exported function verify at least one real boot path db client auth instance actually calls it before marking the task done a passing unit test of the function alone does not prove the ac empirically try starting building the app without the required env vars",
+      "text": "When 'validate env at startup' is implemented as an exported function, verify at least one real boot path (db client, auth instance) actually calls it before marking the task done — a passing unit test of the function alone does not prove the AC; empirically try starting/building the app without the required env vars.",
+      "signal": "ac_gap",
+      "scope": "env-validation,startup-checks",
+      "status": "candidate",
+      "features": [
+        "setup"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "spec.md story Persistência AC-4 / src/shared/env.ts:25-36 (env-validation,startup-checks)"
+      ],
+      "created": "2026-07-16T16:05:09Z",
+      "last_seen": "2026-07-16T16:05:09Z"
+    },
+    {
+      "id": "L-002",
+      "key": "spec_deviation::next js instrumentation ts register throwing on invalid env does not abort the process next js catches it internally only logs failed to prepare server the observable effect is every route responding 500 with the cause in logs not a dead process verify what fail on boot means empirically http response not just log or exit code before accepting an ac about startup failure as satisfied",
+      "text": "Next.js instrumentation.ts register() throwing on invalid env does not abort the process (Next.js catches it internally, only logs 'Failed to prepare server'); the observable effect is every route responding 500 with the cause in logs, not a dead process — verify what 'fail on boot' means empirically (HTTP response, not just log or exit code) before accepting an AC about startup failure as satisfied.",
+      "signal": "spec_deviation",
+      "scope": "env-validation,startup-checks,nextjs-instrumentation",
+      "status": "candidate",
+      "features": [
+        "setup"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "src/instrumentation.ts:12-20 SPEC_DEVIATION (env-validation,startup-checks,nextjs-instrumentation)"
+      ],
+      "created": "2026-07-16T16:56:15Z",
+      "last_seen": "2026-07-16T16:56:15Z"
+    }
+  ]
+}
