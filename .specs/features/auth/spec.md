@@ -161,22 +161,22 @@ O Prumo está no ar com Better Auth instalado, mas sem nenhum fluxo de usuário:
 
 | Requirement ID | Story | Phase | Status |
 | -------------- | ----- | ----- | ------ |
-| AUTH-01 | P1: Cadastro (formulário completo em `/signup`) | Design | Pending |
-| AUTH-02 | P1: Cadastro (validações: senha 8+/minúscula/maiúscula/dígito/especial, confirmação, idade 18+, CPF dígitos, termos) | Design | Pending |
-| AUTH-03 | P1: Cadastro (unicidade e-mail/CPF + erro genérico anti-enumeração + atomicidade) | Design | Pending |
-| AUTH-04 | P1: Cadastro (persistência do perfil + timestamp do aceite) | Design | Pending |
-| AUTH-05 | P1: Cadastro (validação server-side Zod na fronteira) | Design | Pending |
-| AUTH-06 | P1: CEP (consulta ViaCEP preenche endereço) | Design | Pending |
-| AUTH-07 | P1: CEP (fail-open: falha/não encontrado → manual, nunca bloqueia) | Design | Pending |
-| AUTH-08 | P1: Login (formulário + sessão + redirect pós-login) | Design | Pending |
-| AUTH-09 | P1: Login (erro genérico para credenciais inválidas) | Design | Pending |
-| AUTH-10 | P1: Sessão (persistência 7d renovável + expiração) | Design | Pending |
-| AUTH-11 | P1: Sessão (proteção de rotas: redirect deslogado → `/login`; logado em `/login`/`/signup` → interna) | Design | Pending |
-| AUTH-12 | P1: Logout (destrói sessão server-side + redirect home) | Design | Pending |
-| AUTH-13 | P2: Página de termos (`/terms` placeholder pública) | Design | Pending |
-| AUTH-14 | P1: E2E (cadastro → login → logout) | Design | Pending |
+| AUTH-01 | P1: Cadastro (formulário completo em `/signup`) | Tasks | In Tasks |
+| AUTH-02 | P1: Cadastro (validações: senha 8+/minúscula/maiúscula/dígito/especial, confirmação, idade 18+, CPF dígitos, termos) | Tasks | In Tasks |
+| AUTH-03 | P1: Cadastro (unicidade e-mail/CPF + erro genérico anti-enumeração + atomicidade) | Tasks | In Tasks |
+| AUTH-04 | P1: Cadastro (persistência do perfil + timestamp do aceite) | Tasks | In Tasks |
+| AUTH-05 | P1: Cadastro (validação server-side Zod na fronteira) | Tasks | In Tasks |
+| AUTH-06 | P1: CEP (consulta ViaCEP preenche endereço) | Tasks | In Tasks |
+| AUTH-07 | P1: CEP (fail-open: falha/não encontrado → manual, nunca bloqueia) | Tasks | In Tasks |
+| AUTH-08 | P1: Login (formulário + sessão + redirect pós-login) | Tasks | In Tasks |
+| AUTH-09 | P1: Login (erro genérico para credenciais inválidas) | Tasks | In Tasks |
+| AUTH-10 | P1: Sessão (persistência 7d renovável + expiração) | Tasks | In Tasks |
+| AUTH-11 | P1: Sessão (proteção de rotas: redirect deslogado → `/login`; logado em `/login`/`/signup` → interna) | Tasks | In Tasks |
+| AUTH-12 | P1: Logout (destrói sessão server-side + redirect home) | Tasks | In Tasks |
+| AUTH-13 | P2: Página de termos (`/terms` placeholder pública) | Tasks | In Tasks |
+| AUTH-14 | P1: E2E (cadastro → login → logout) | Tasks | In Tasks |
 
-**Coverage:** 14 total, 0 mapped to tasks, 14 unmapped ⚠️ (mapeamento acontece na fase Tasks)
+**Coverage:** 14 total, 14 mapped to tasks (T1..T10), 0 unmapped ✅ — ver `.specs/features/auth/tasks.md`
 
 ---
 

@@ -2,7 +2,7 @@
 
 **Spec**: `.specs/features/auth/spec.md`
 **Context**: `.specs/features/auth/context.md`
-**Status**: Draft — awaiting approval
+**Status**: Approved
 **Approach**: A — `additionalFields` no User + signup via Better Auth (confirmada pelo usuário)
 
 ---

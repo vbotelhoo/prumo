@@ -124,11 +124,11 @@
 
 ## Handoff
 
-- **Feature**: auth (Roadmap item 2) — Design em Draft (Abordagem A)
-- **Phase / Task**: Design escrito; aguardando aprovação do usuário antes de Tasks
-- **Completed**: Specify confirmado; design.md com componentes, data model, erros, riscos e mapeamento AUTH-01..14; AD-015 registrada.
+- **Feature**: auth (Roadmap item 2) — Tasks em Draft (Design Approved, Abordagem A)
+- **Phase / Task**: Tasks T1..T10 em 4 fases; aguardando aprovação do usuário antes de Execute
+- **Completed**: Specify + Design (AD-014/015); `tasks.md` com matriz de testes, gates, validações de granularidade/diagrama/co-location — 14/14 AUTH mapeados.
 - **In-progress** (file:line): nenhum
-- **Next step**: Usuário aprova `.specs/features/auth/design.md` → fase Tasks.
+- **Next step**: Usuário aprova `.specs/features/auth/tasks.md` → Execute (oferecer 1 worker por fase, pois há 4 fases).
 - **Blockers**: nenhum.
-- **Uncommitted files**: design + AD-015 (commit na branch abaixo)
+- **Uncommitted files**: tasks + sync design/spec/STATE (commit na branch abaixo)
 - **Branch**: docs/setup-pendencias-concluidas (PR para `main`)
