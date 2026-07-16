@@ -106,13 +106,21 @@
 - **Date**: 2026-07-16
 - **Status**: active
 
+### AD-014
+- **Decision**: Paths de URL da aplicação em inglês (`/signup`, `/login`, `/terms`, `/app`, etc.). Texto da UI permanece em pt-BR.
+- **Reason**: Convenção única e estável para rotas técnicas; evita mistura `/termos` vs `/terms` e facilita consistência entre features.
+- **Trade-off**: URL e copy da UI ficam em idiomas diferentes; aceitável porque o produto é brasileiro e as rotas são superfície técnica.
+- **Scope**: Todas as rotas em `src/app` e links internos.
+- **Date**: 2026-07-16
+- **Status**: active
+
 ## Handoff
 
-- **Feature**: setup (Roadmap item 1) — ✅ CONCLUÍDA (Execute + Verifier PASS + pendências de credencial executadas + docs sincronizadas)
-- **Phase / Task**: nenhuma — feature encerrada; próxima é a feature 2 do ROADMAP (`auth`)
-- **Completed**: Ciclo completo da feature setup: Specify, Design, Tasks, Execute (T1..T14, 1 commit atômico por task), Verifier PASS (`.specs/features/setup/validation.md`), pendências de credencial executadas em 2026-07-16 (CI verde em `main` run 29521931576; deploy Railway no ar em `https://prumo.up.railway.app/`; branch protection ativa em `main` — 5 checks obrigatórios, strict mode, `enforce_admins`, sem review obrigatório por ser mantenedor solo). Documentação sincronizada em 2026-07-16: `ROADMAP.md` (item 1 → concluída), `README.md` (URL de produção, infra provisionada, branch protection ativa em vez de "recomendada"), `spec.md` (traceability → Verified, success criteria → [x]), `tasks.md` (Status → Done).
+- **Feature**: auth (Roadmap item 2) — Specify ✅ confirmado (assumptions fechadas + AD-014)
+- **Phase / Task**: Specify concluída; próxima fase = Design
+- **Completed**: Spec + context da feature auth; 4 assumptions abertas confirmadas pelo usuário (paths em inglês como regra → AD-014; pós-logout → `/`; `/app` com saudação + logout; senha exige também dígito numérico). Feature setup permanece concluída.
 - **In-progress** (file:line): nenhum
-- **Next step**: Specify da feature 2 (`auth`) — cadastro e login com e-mail/senha (Better Auth), sessão e logout, E2E cadastro → login → logout. Better Auth já instalado/configurado no setup (instância, handler, tabelas migradas); a feature 2 é a UI + fluxos por cima disso.
+- **Next step**: Design da feature `auth` — arquitetura (perfil vs. campos no User, ViaCEP, proteção de rotas via `proxy.ts`, schemas Zod, componentes/páginas).
 - **Blockers**: nenhum.
-- **Uncommitted files**: nenhum (atualizações de docs commitadas na branch de docs; entram em `main` via PR — push direto bloqueado pela branch protection)
+- **Uncommitted files**: nenhum (docs na branch abaixo)
 - **Branch**: docs/setup-pendencias-concluidas (PR para `main`)

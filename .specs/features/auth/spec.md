@@ -31,15 +31,15 @@ O Prumo está no ar com Better Auth instalado, mas sem nenhum fluxo de usuário:
 
 | Assumption / decision | Chosen default | Rationale | Confirmed? |
 | --------------------- | -------------- | --------- | ---------- |
-| Rota da página de termos | `/terms` | Consistência com as rotas em inglês (`/signup`, `/login`) escolhidas pelo usuário; a opção discutida citava "/termos" antes da decisão por rotas em inglês | n |
-| Destino pós-logout | Home (`/`) | Página pública natural após encerrar sessão | n |
-| Conteúdo da página interna placeholder (`/app`) | Saudação com o nome do usuário + botão de logout | Mínimo que prova sessão ativa e viabiliza o E2E; substituída pelo dashboard na feature 6 | n |
-| Resposta a e-mail OU CPF já cadastrados | Mesma mensagem genérica de falha do cadastro, sem indicar o campo causador | Anti-enumeração (decisão do usuário para e-mail; CPF é o mesmo vetor) | y (e-mail) / n (CPF estendido) |
-| Idioma da UI | pt-BR | Produto brasileiro; toda a documentação e identidade são em pt-BR | n |
-| Requisito de dígito na senha | Não exigido | Usuário especificou exatamente: 8+ chars, 1 minúscula, 1 maiúscula, 1 especial — sem citar dígito; não inventar requisito | n |
-| Persistência do perfil (nascimento, CPF, endereço, aceite) | Vinculada 1:1 ao usuário Better Auth; modelagem exata (campos extras vs. tabela própria) é decisão de Design | Spec define O QUE persistir; COMO é do Design | n |
+| Paths de URL em inglês (incl. `/terms`) | `/signup`, `/login`, `/terms`, `/app` | Regra de projeto (AD-014); UI em pt-BR | y |
+| Destino pós-logout | Home (`/`) | Home pública; no futuro terá o direcionamento para login | y |
+| Página interna placeholder | `/app` com saudação (nome do usuário) + botão de logout | Mínimo que prova sessão e viabiliza o E2E; substituída pelo dashboard na feature 6 | y |
+| Resposta a e-mail OU CPF já cadastrados | Mesma mensagem genérica de falha do cadastro, sem indicar o campo causador | Anti-enumeração | y |
+| Idioma da UI | pt-BR | Produto brasileiro | y |
+| Política de senha | ≥8 chars, 1 minúscula, 1 maiúscula, 1 dígito e 1 caractere especial | Confirmado pelo usuário (dígito incluído) | y |
+| Persistência do perfil (nascimento, CPF, endereço, aceite) | Vinculada 1:1 ao usuário Better Auth; modelagem exata (campos extras vs. tabela própria) é decisão de Design | Spec define O QUE persistir; COMO é do Design | n (Design) |
 
-**Open questions:** none — all resolved or logged above.
+**Open questions:** none — all product assumptions confirmed; only Design-level modeling remains.
 
 ---
 
@@ -55,7 +55,7 @@ O Prumo está no ar com Better Auth instalado, mas sem nenhum fluxo de usuário:
 
 1. WHEN o visitante acessa `/signup` THEN o sistema SHALL exibir o formulário com os campos: nome, data de nascimento, CPF, CEP, logradouro, número, complemento (opcional), bairro, cidade, UF, e-mail, senha, confirmação de senha e checkbox de aceite de termos com link para a página de termos.
 2. WHEN o visitante submete o formulário com todos os campos válidos THEN o sistema SHALL criar a conta, persistir o perfil (nascimento, CPF, endereço) e o timestamp do aceite de termos vinculados ao usuário, iniciar a sessão e redirecionar para a página interna protegida.
-3. WHEN a senha submetida tem menos de 8 caracteres OU não contém ao menos 1 letra minúscula, 1 maiúscula e 1 caractere especial THEN o sistema SHALL rejeitar a submissão exibindo a regra completa de senha junto ao campo.
+3. WHEN a senha submetida tem menos de 8 caracteres OU não contém ao menos 1 letra minúscula, 1 maiúscula, 1 dígito numérico e 1 caractere especial THEN o sistema SHALL rejeitar a submissão exibindo a regra completa de senha junto ao campo.
 4. WHEN a confirmação de senha difere da senha THEN o sistema SHALL rejeitar a submissão indicando a divergência.
 5. WHEN a data de nascimento corresponde a idade menor que 18 anos (ou é inválida/futura) THEN o sistema SHALL rejeitar a submissão indicando a exigência de 18+.
 6. WHEN o CPF submetido falha na validação dos dígitos verificadores (algoritmo oficial) THEN o sistema SHALL rejeitar a submissão indicando CPF inválido.
@@ -145,7 +145,7 @@ O Prumo está no ar com Better Auth instalado, mas sem nenhum fluxo de usuário:
 
 | Dimension | Resolution |
 | --------- | ---------- |
-| Input validation & bounds | Coberto: ACs de senha, CPF, idade, termos, normalização de máscaras, validação Zod server-side |
+| Input validation & bounds | Coberto: ACs de senha (8+/minúscula/maiúscula/dígito/especial), CPF, idade, termos, normalização de máscaras, validação Zod server-side |
 | Failure / partial-failure | Coberto: ViaCEP fail-open; atomicidade usuário+perfil+aceite |
 | Idempotency / duplicates | Coberto: unicidade de e-mail/CPF por constraint; concorrência no edge case |
 | Auth boundaries & rate limits | Boundaries cobertos (redirect de rotas protegidas); rate limiting custom fora do escopo (assumption logada) |
@@ -162,7 +162,7 @@ O Prumo está no ar com Better Auth instalado, mas sem nenhum fluxo de usuário:
 | Requirement ID | Story | Phase | Status |
 | -------------- | ----- | ----- | ------ |
 | AUTH-01 | P1: Cadastro (formulário completo em `/signup`) | Design | Pending |
-| AUTH-02 | P1: Cadastro (validações: senha, confirmação, idade 18+, CPF dígitos, termos) | Design | Pending |
+| AUTH-02 | P1: Cadastro (validações: senha 8+/minúscula/maiúscula/dígito/especial, confirmação, idade 18+, CPF dígitos, termos) | Design | Pending |
 | AUTH-03 | P1: Cadastro (unicidade e-mail/CPF + erro genérico anti-enumeração + atomicidade) | Design | Pending |
 | AUTH-04 | P1: Cadastro (persistência do perfil + timestamp do aceite) | Design | Pending |
 | AUTH-05 | P1: Cadastro (validação server-side Zod na fronteira) | Design | Pending |
