@@ -310,9 +310,9 @@ T10 ──→ T11 ──→ T12 ──→ T13 ──→ T14
 
 **Done when**:
 
-- [ ] `pnpm test:e2e` roda contra build de produção e passa (AC-4 da story Testes)
-- [ ] Smoke: `GET /` → 200 + texto "Prumo"
-- [ ] Full gate passa (unit + integration + e2e)
+- [x] `pnpm test:e2e` roda contra build de produção e passa (AC-4 da story Testes)
+- [x] Smoke: `GET /` → 200 + texto "Prumo"
+- [x] Full gate passa (unit + integration + e2e)
 
 **Tests**: e2e · **Gate**: full
 **Commit**: `feat(setup): playwright com smoke e2e da home`
