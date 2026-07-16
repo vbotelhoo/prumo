@@ -288,10 +288,10 @@ T10 ──→ T11 ──→ T12 ──→ T13 ──→ T14
 
 **Done when**:
 
-- [ ] `pnpm test:integration` local (Docker) verde: sobe container, migra, testa, derruba (AC-2 da story Testes)
-- [ ] Com `DATABASE_URL` de teste definida, usa-a em vez de Testcontainers (AC-3)
-- [ ] Sem Docker e sem URL → mensagem clara com as duas opções (edge case)
-- [ ] Teste valida conexão + existência das tabelas `user`/`session`/`account`/`verification`
+- [x] `pnpm test:integration` local (Docker) verde: sobe container, migra, testa, derruba (AC-2 da story Testes)
+- [x] Com `DATABASE_URL` de teste definida, usa-a em vez de Testcontainers (AC-3)
+- [x] Sem Docker e sem URL → mensagem clara com as duas opções (edge case)
+- [x] Teste valida conexão + existência das tabelas `user`/`session`/`account`/`verification`
 
 **Tests**: integration · **Gate**: full (unit + integration)
 **Commit**: `feat(setup): suíte de integração com testcontainers e fallback de url`
