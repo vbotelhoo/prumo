@@ -6,7 +6,7 @@ Identidade e sessão do usuário: cadastro, login/logout, e gestão de sessão v
 
 ## API pública
 
-Hoje vazia (placeholder criado no setup — Fase 1). A partir da Fase 3 (Persistência + Better Auth), `index.ts` passa a exportar a instância Better Auth (`auth`) configurada com adapter Prisma e provider e-mail/senha.
+- `auth` — instância Better Auth (`betterAuth`) configurada com `prismaAdapter` (PostgreSQL) e `emailAndPassword: { enabled: true }`. Consumida hoje pela rota catch-all `src/app/api/auth/[...all]/route.ts` (`toNextJsHandler(auth)`). Fluxos de UI (cadastro/login/logout) chegam na feature `auth` do roadmap.
 
 ## Dependências permitidas
 

@@ -6,7 +6,10 @@ Kernel compartilhado do monolito modular: tipos de dinheiro (`Money`), datas, ut
 
 ## API pública
 
-Hoje vazia (placeholder criado no setup — Fase 1). O tipo `Money` (centavos + formatação BRL), validação de env vars e o singleton do Prisma client chegam em tasks futuras (Fase 2/3).
+- `getEnv(source?)` / `type Env` — valida as env vars da aplicação (`DATABASE_URL`, `BETTER_AUTH_SECRET`, `BETTER_AUTH_URL`) com Zod; lança erro nomeando as vars ausentes/inválidas.
+- `prisma` — singleton do Prisma Client (padrão global, seguro para hot-reload em dev).
+- `money`, `moneySchema`, `addMoney`, `subtractMoney`, `formatBRL` / `type Money` — tipo `Money` (centavos inteiros) e helpers de aritmética/formatação BRL (AD-008). Único caminho para operar valores monetários.
+- `Card`, `CardHeader`, `CardTitle`, `CardDescription`, `CardContent`, `CardAction`, `CardFooter` — componentes shadcn/ui reexportados para uso pelos módulos e por `src/app`.
 
 ## Dependências permitidas
 

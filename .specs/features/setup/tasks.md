@@ -375,9 +375,9 @@ T10 ──→ T11 ──→ T12 ──→ T13 ──→ T14
 
 **Done when**:
 
-- [ ] README com todos os itens do AC-1 (incl. badge de CI funcional)
-- [ ] ARCHITECTURE.md com AC-2; TESTING.md com AC-3 (READMEs de módulo já entregues em T2 — AC-4)
-- [ ] Build gate passa
+- [x] README com todos os itens do AC-1 — badge aponta para `https://github.com/vbotelhoo/prumo/actions/workflows/ci.yml`; como o workflow real ainda não rodou no remoto (pendência do usuário — ver T12), o badge estará "unknown"/sem execução até o primeiro push real, mas a URL e o markup estão corretos
+- [x] ARCHITECTURE.md com AC-2; TESTING.md com AC-3 (READMEs de módulo já entregues em T2 — AC-4; `auth` e `shared` atualizados nesta task para refletir a API pública real)
+- [x] Build gate passa
 
 **Tests**: none · **Gate**: build
 **Commit**: `docs(setup): readme, arquitetura e estratégia de testes`
