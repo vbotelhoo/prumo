@@ -114,11 +114,11 @@ T10 ──→ T11 ──→ T12 ──→ T13 ──→ T14
 
 **Done when**:
 
-- [ ] Todos os diretórios existem (`.gitkeep` nos vazios); `index.ts` de cada módulo com comentário do contrato
-- [ ] README de cada módulo declara responsabilidade, API pública e dependências (grafo AD-010)
-- [ ] Build gate passa
+- [x] Todos os diretórios existem (`.gitkeep` nos vazios); `index.ts` de cada módulo com comentário do contrato
+- [x] README de cada módulo declara responsabilidade, API pública e dependências (grafo AD-010)
+- [x] Build gate passa
 
-**Tests**: none · **Gate**: build
+**Tests**: none · **Gate**: build — ✅ passou
 **Commit**: `chore(setup): estrutura de módulos do monolito modular`
 
 ---
