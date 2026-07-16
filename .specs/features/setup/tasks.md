@@ -335,7 +335,7 @@ T10 ──→ T11 ──→ T12 ──→ T13 ──→ T14
 
 - [x] Workflow dispara em push/PR para `main` com os 5 jobs (AC-1) — verificado no `ci.yml`: `on.push`/`on.pull_request` restritos a `main`; jobs `lint-typecheck`, `unit`, `integration`, `e2e`, `build` presentes
 - [x] Falha em qualquer etapa falha o workflow (AC-2); artifact Playwright em falha de E2E (AC-3) — comportamento padrão do GitHub Actions (qualquer step com exit != 0 falha o job/workflow) + `actions/upload-artifact` com `if: failure()` no job `e2e`
-- [ ] Push real → workflow completo verde no GitHub (AC-4) — **pendência do usuário**: não há credencial válida de push para o remoto neste ambiente (`gh auth status` inválido); todos os comandos de cada job foram validados localmente com as mesmas env vars (ver resumo da Fase 4), mas o disparo real no GitHub não pôde ser executado por este agente
+- [x] Push real → workflow completo verde no GitHub (AC-4) — **concluído em 2026-07-16**: usuário fez o push para `origin/main` e o workflow CI completou com sucesso (run 29521931576, 5/5 jobs verdes); branch protection aplicada em `main` exigindo os 5 checks + merge só via PR
 
 **Tests**: none (config; a verificação é o workflow verde real) · **Gate**: build + workflow verde no GitHub (verificação real do workflow verde é pendência do usuário — ver nota acima)
 **Commit**: `ci(setup): workflow com lint, typecheck, unit, integração, e2e e build`
@@ -355,9 +355,9 @@ T10 ──→ T11 ──→ T12 ──→ T13 ──→ T14
 
 **Done when**:
 
-- [ ] Build no Railway conclui (AC-1) — **pendência do usuário**: sem acesso à conta Railway; localmente verificado que `pnpm install --frozen-lockfile && pnpm build` (mesmo comando do `railway.json`) conclui sem erros
+- [x] Build no Railway conclui (AC-1) — **concluído em 2026-07-16**: usuário criou o serviço `prumo` + PostgreSQL gerenciado no Railway, configurou as env vars (`DATABASE_URL` via `${{Postgres.DATABASE_URL}}`, `BETTER_AUTH_SECRET` de produção, `BETTER_AUTH_URL` via `https://${{RAILWAY_PUBLIC_DOMAIN}}`) e o build/deploy concluiu sem erros
 - [x] `migrate deploy` roda antes de servir e aborta em falha (AC-2, edge case) — verificado localmente: `pnpm start:prod` com `DATABASE_URL` inválida falha com exit 1 e NÃO inicia `next start`; com banco válido, migra (idempotente) e sobe o servidor
-- [ ] URL pública responde 200 com o placeholder (AC-3) — **pendência do usuário**: requer o deploy real no Railway (fora do alcance deste agente)
+- [x] URL pública responde 200 com o placeholder (AC-3) — **concluído em 2026-07-16**: `https://prumo.up.railway.app/` responde 200 com o placeholder do Prumo; `GET /api/auth/ok` responde 200 `{"ok":true}` (Better Auth + banco + migrations funcionando em produção) — verificado via `curl` real
 - [x] Passos manuais documentados no README
 
 **Tests**: none (verificação = URL pública no ar) · **Gate**: build + verificação manual da URL (verificação real no Railway é pendência do usuário — ver notas acima)
@@ -377,7 +377,7 @@ T10 ──→ T11 ──→ T12 ──→ T13 ──→ T14
 
 **Done when**:
 
-- [x] README com todos os itens do AC-1 — badge aponta para `https://github.com/vbotelhoo/prumo/actions/workflows/ci.yml`; como o workflow real ainda não rodou no remoto (pendência do usuário — ver T12), o badge estará "unknown"/sem execução até o primeiro push real, mas a URL e o markup estão corretos
+- [x] README com todos os itens do AC-1 — badge aponta para `https://github.com/vbotelhoo/prumo/actions/workflows/ci.yml`; após o primeiro push real (ver T12, concluído), o workflow rodou verde e o badge está ativo
 - [x] ARCHITECTURE.md com AC-2; TESTING.md com AC-3 (READMEs de módulo já entregues em T2 — AC-4; `auth` e `shared` atualizados nesta task para refletir a API pública real)
 - [x] Build gate passa
 
