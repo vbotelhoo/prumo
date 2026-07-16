@@ -126,9 +126,9 @@
 
 - **Feature**: auth (Roadmap item 2) — Tasks em Draft (Design Approved, Abordagem A)
 - **Phase / Task**: Tasks T1..T10 em 4 fases; aguardando aprovação do usuário antes de Execute
-- **Completed**: Specify + Design (AD-014/015); `tasks.md` com matriz de testes, gates, validações de granularidade/diagrama/co-location — 14/14 AUTH mapeados.
+- **Completed**: Specify + Design (AD-014/015); `tasks.md` com matriz de testes, gates, validações de granularidade/diagrama/co-location — 14/14 AUTH mapeados. Revisão técnica de `design.md`/`tasks.md` em 2026-07-16 (feitos por um modelo mais simples originalmente): corrigido bug real confirmado no código do Better Auth 1.6.23 — `termsAcceptedAt` (`input: false`) não pode ser setado no `body` de `auth.api.signUpEmail`, nem server-side (lança `FIELD_NOT_ALLOWED`); o design tratava `databaseHooks.user.create.before` como fallback opcional, quando na verdade é o único caminho válido. Corrigido nos componentes 1/4, tabelas de Risks/Tech Decisions do design, e nas tasks T3/T7. Também adicionado a T7 um teste de cadastro concorrente (`Promise.all`, mesmo CPF/e-mail) que cobre o edge case de concorrência já presente no spec.md mas ausente do checklist de tasks.
 - **In-progress** (file:line): nenhum
-- **Next step**: Usuário aprova `.specs/features/auth/tasks.md` → Execute (oferecer 1 worker por fase, pois há 4 fases).
+- **Next step**: Usuário aprova `.specs/features/auth/tasks.md` (revisado) → Execute (oferecer 1 worker por fase, pois há 4 fases).
 - **Blockers**: nenhum.
 - **Uncommitted files**: tasks + sync design/spec/STATE (commit na branch abaixo)
 - **Branch**: docs/setup-pendencias-concluidas (PR para `main`)

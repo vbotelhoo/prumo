@@ -132,9 +132,9 @@ T8, T9 ──→ T10
 
 ---
 
-### T3: Better Auth additionalFields + minPasswordLength [P]
+### T3: Better Auth additionalFields + minPasswordLength + hook do termsAcceptedAt [P]
 
-**What**: Estender `betterAuth({...})` com `user.additionalFields` (perfil + `termsAcceptedAt` `input: false`) e `emailAndPassword.minPasswordLength: 8`.
+**What**: Estender `betterAuth({...})` com `user.additionalFields` (perfil + `termsAcceptedAt` `input: false`), `emailAndPassword.minPasswordLength: 8` e `databaseHooks.user.create.before` para injetar `termsAcceptedAt`.
 **Where**: `src/modules/auth/domain/auth.ts`
 **Depends on**: None
 **Reuses**: Instância atual em `domain/auth.ts`
@@ -142,10 +142,13 @@ T8, T9 ──→ T10
 
 **Tools**: MCP: NONE · Skill: `tlc-spec-driven`
 
+**Nota técnica (confirmado no código do Better Auth 1.6.23)**: `termsAcceptedAt` **não pode** ser setado no `body` de `auth.api.signUpEmail`, nem em chamada server-side — campos `input: false` com valor truthy no body sempre lançam `FIELD_NOT_ALLOWED` (`db/schema.mjs`, `parseInputData`), sem distinguir origem confiável. `databaseHooks.user.create.before` é o único ponto de escrita válido: `async (user) => ({ data: { termsAcceptedAt: new Date().toISOString() } })` — roda depois do filtro de input, direto sobre os dados que vão para o adapter.
+
 **Done when**:
 
 - [ ] Todos os campos do design presentes; `termsAcceptedAt.input === false`
 - [ ] `minPasswordLength: 8`
+- [ ] `databaseHooks.user.create.before` injeta `termsAcceptedAt` (ISO datetime) em todo `User` criado
 - [ ] Gate: `pnpm lint && pnpm typecheck && pnpm test:unit`
 
 **Tests**: none · **Gate**: build
@@ -217,7 +220,7 @@ T8, T9 ──→ T10
 
 ### T7: Server actions + integration tests
 
-**What**: `signUpAction`, `lookupCepAction`, `signInAction`, `signOutAction` — Zod, `termsAcceptedAt` server-side, erros genéricos, sessão.
+**What**: `signUpAction`, `lookupCepAction`, `signInAction`, `signOutAction` — Zod, erros genéricos, sessão. `termsAcceptedAt` **não** é setado aqui (já é injetado pelo `databaseHooks.user.create.before` de T3) — a action só monta o `body` de `signUpEmail` com os campos de perfil normais.
 **Where**: `src/modules/auth/actions/*.ts`, `src/modules/auth/__tests__/*.integration.test.ts`
 **Depends on**: T1, T2, T3, T4
 **Reuses**: Domain schemas, `auth.api.*`, `viacep`, `next/headers`
@@ -227,8 +230,9 @@ T8, T9 ──→ T10
 
 **Done when**:
 
-- [ ] Signup válido cria User com perfil + `termsAcceptedAt` e inicia sessão
+- [ ] Signup válido cria User com perfil + `termsAcceptedAt` (setado pelo hook de T3, não pela action) e inicia sessão
 - [ ] E-mail duplicado e CPF duplicado → mesma `GENERIC_SIGNUP_ERROR`; sem conta parcial
+- [ ] Dois `signUpAction` disparados concorrentemente (`Promise.all`) com o mesmo CPF (e, em teste separado, o mesmo e-mail) → exatamente um sucede, o outro recebe `GENERIC_SIGNUP_ERROR` (edge case da spec: unicidade pela constraint do banco, não só pré-check)
 - [ ] Senha fraca / menor de 18 / CPF inválido → rejeição Zod, zero users criados
 - [ ] Login inválido → `GENERIC_LOGIN_ERROR`; login válido cria sessão
 - [ ] `lookupCepAction` delega ao service (fail-open)

@@ -78,8 +78,9 @@ flowchart TD
     - `birthDate: { type: "string" }` — `YYYY-MM-DD` (tipo string: Better Auth documenta string/number/boolean; evita inventar tipo `date`)
     - `zipCode`, `street`, `addressNumber`, `neighborhood`, `city`, `state`: `{ type: "string" }`
     - `complement: { type: "string", required: false }`
-    - `termsAcceptedAt: { type: "string", input: false }` — ISO datetime; setado só no server action / hook, nunca pelo client cru
+    - `termsAcceptedAt: { type: "string", input: false }` — ISO datetime; **nunca** aceito vindo do body (nem de chamada server "confiável" — ver `databaseHooks` abaixo)
   - `emailAndPassword: { enabled: true, minPasswordLength: 8 }` — piso; regras de complexidade ficam no Zod (domínio)
+  - `databaseHooks.user.create.before` — **único caminho válido para setar `termsAcceptedAt`** (não é fallback, é o mecanismo): `async (user) => ({ data: { termsAcceptedAt: new Date().toISOString() } })`. Confirmado no código do Better Auth 1.6.23 (`db/schema.mjs`, `parseInputData`): campos `input: false` presentes com valor truthy no body de `signUpEmail` lançam `FIELD_NOT_ALLOWED` **mesmo quando a chamada é feita server-side** pela nossa própria action — o filtro não distingue "cliente" de "server confiável", só olha se o campo veio no body. O hook `create.before` roda depois desse filtro, direto sobre os dados que vão para o adapter (`db/with-hooks.mjs`), por isso contorna o `input: false` sem violá-lo.
   - Sessão: defaults do Better Auth (7d, renovação) — sem config extra
 - **Dependencies**: `better-auth`, `prismaAdapter`, `@/shared` prisma
 - **Reuses**: instância existente
@@ -120,11 +121,10 @@ flowchart TD
 - **Location**: `src/modules/auth/actions/`
 - **Interfaces**:
   - `signUpAction(input): Promise<{ ok: true } | { ok: false; error: string; fieldErrors?: ... }>`
-    1. Parse `signUpInputSchema`
-    2. Set `termsAcceptedAt = new Date().toISOString()`
-    3. `auth.api.signUpEmail({ body: { name, email, password, ...profile }, headers })` para gravar cookie de sessão
-    4. Em falha de unicidade (e-mail/CPF) ou erro genérico do BA → `{ ok: false, error: GENERIC_SIGNUP_ERROR }` (mesmo texto)
-    5. Sucesso → caller faz `redirect("/app")`
+    1. Parse `signUpInputSchema` (inclui `termsAccepted: z.literal(true)` — só valida o aceite, não persiste esse booleano)
+    2. `auth.api.signUpEmail({ body: { name, email, password, ...profile }, headers })` para gravar cookie de sessão — `profile` **não inclui** `termsAcceptedAt`; o timestamp é injetado pelo `databaseHooks.user.create.before` (componente 1), nunca pela action (ver nota técnica no componente 1)
+    3. Em falha de unicidade (e-mail/CPF) ou erro genérico do BA → `{ ok: false, error: GENERIC_SIGNUP_ERROR }` (mesmo texto)
+    4. Sucesso → caller faz `redirect("/app")`
   - `lookupCepAction(cep): Promise<LookupResult>` — thin wrapper sobre o service
   - `signInAction` (opcional mas preferida para mensagens genéricas) OU login só via client com mapeamento de erro para `GENERIC_LOGIN_ERROR`
   - `signOutAction` — `auth.api.signOut` + `redirect("/")`
@@ -184,7 +184,7 @@ flowchart TD
 | ------ | ----- | ---- |
 | Unit | CPF válido/inválido; idade 18+; passwordSchema (todas as regras); normalização CPF/CEP; schemas Zod | `src/modules/auth/__tests__/*.test.ts` |
 | Unit | `lookupCep` com `fetch` mockado: found / not_found / timeout→unavailable | idem |
-| Integração | `signUpAction` cria User com CPF único; segundo signup mesmo e-mail ou CPF → erro genérico idêntico; senha fraca / menor de idade rejeitados sem linha no banco | `*.integration.test.ts` |
+| Integração | `signUpAction` cria User com CPF único; segundo signup mesmo e-mail ou CPF → erro genérico idêntico; senha fraca / menor de idade rejeitados sem linha no banco; **dois `signUpAction` disparados concorrentemente (`Promise.all`) com mesmo CPF ou e-mail → exatamente um sucede** (edge case da spec: unicidade garantida pela constraint do banco, não só pelo pré-check) | `*.integration.test.ts` |
 | E2E | Cadastro válido → `/app` com nome → logout → `/` → login → `/app` → logout | `e2e/auth.spec.ts` |
 
 ---
@@ -263,7 +263,7 @@ type SignUpInput = {
 | Concern | Location | Impact | Mitigation |
 | ------- | -------- | ------ | ---------- |
 | CLI Better Auth sobrescreve `schema.prisma` | `prisma/schema.prisma` | Perde `@@unique([cpf])` e comentários | Procedure na task: após generate, reaplicar unique + comentário; migration cobre o índice |
-| `termsAcceptedAt` com `input: false` | `domain/auth.ts` | Client não pode setar; action precisa setar no body server-side ou via `databaseHooks.user.create.before` | Preferir setar no body da chamada **server** `auth.api.signUpEmail` (trusted); se a API rejeitar campo `input: false`, usar hook `before` que injeta o timestamp |
+| `termsAcceptedAt` com `input: false` | `domain/auth.ts` | Setar no body de `signUpEmail` (mesmo em chamada server) **sempre lança** `FIELD_NOT_ALLOWED` — verificado no código do BA 1.6.23, não é hipótese | Único caminho: `databaseHooks.user.create.before` injeta o timestamp após o filtro de input, direto nos dados do adapter — implementar isso é obrigatório em T3, não opcional |
 | Signup via `/api/auth/*` bypassa Zod de complexidade | API Better Auth pública | Senha só com min length 8 | Fronteira do produto = `signUpAction`; E2E e UI só usam a action. Aceito no MVP (risco residual baixo) |
 | Cookie check no proxy não valida sessão | `src/proxy.ts` | Redirect otimista falso-positivo/negativo | `getSession` obrigatório no layout `/app` (autoridade) |
 | ViaCEP instável | `services/viacep.ts` | UX degradada no preenchimento | Fail-open + timeout; nunca bloqueia submit |
@@ -278,7 +278,7 @@ type SignUpInput = {
 | -------- | ------ | --------- |
 | Persistência do perfil | `additionalFields` no `User` (Abordagem A) | Atomicidade nativa do signup; sessão já carrega perfil; menos orquestração |
 | Datas no perfil | `string` ISO (`YYYY-MM-DD` / ISO datetime) | Tipos oficiais do Better Auth são string/number/boolean |
-| `termsAcceptedAt` | `input: false`, setado no server | Impede timestamp forjado pelo client |
+| `termsAcceptedAt` | `input: false` + `databaseHooks.user.create.before` (não via body da action) | Impede timestamp forjado pelo client; body rejeita `input: false` mesmo server-side (confirmado no código do BA), então o hook é o único ponto de escrita |
 | Unicidade de CPF | `@@unique([cpf])` no Prisma (manual pós-CLI) | BA additionalFields não documenta unique; constraint no banco cobre concorrência (edge case da spec) |
 | Complexidade de senha | Zod no domínio (+ `minPasswordLength: 8` no BA) | BA não cobre regex de maiúscula/dígito/especial |
 | Proteção de rotas | Cookie otimista no `proxy` + `getSession` no layout `/app` | Padrão Better Auth Next.js 16; performance + autoridade |
