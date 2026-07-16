@@ -16,7 +16,7 @@ Ordem de implementação do MVP. Cada feature segue o fluxo spec-driven (spec �
 - `README.md`, `docs/ARCHITECTURE.md`, `docs/TESTING.md`
 - Deploy inicial no Railway (serviço `prumo` + PostgreSQL gerenciado)
 
-**Status**: pendente
+**Status**: ✅ concluída (2026-07-16) — CI verde em `main`, deploy no ar em [prumo.up.railway.app](https://prumo.up.railway.app/), branch `main` protegida (merge só via PR com os 5 checks do CI verdes). Validação em `.specs/features/setup/validation.md`.
 
 ### 2. Autenticação — módulo `auth`
 

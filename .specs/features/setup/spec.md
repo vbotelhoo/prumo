@@ -199,28 +199,28 @@ O Prumo não tem uma linha de código: sem fundação técnica não há como des
 
 | Requirement ID | Story | Phase | Status |
 | -------------- | ----- | ----- | ------ |
-| SETUP-01 | P1: Scaffold (Next.js + estrutura de módulos) | Tasks | In Tasks |
-| SETUP-02 | P1: Scaffold (lint de fronteiras deny-by-default) | Tasks | In Tasks |
-| SETUP-03 | P1: Scaffold (placeholder com identidade) | Tasks | In Tasks |
-| SETUP-04 | P1: Persistência (Prisma + migration Better Auth) | Tasks | In Tasks |
-| SETUP-05 | P1: Persistência (handler + instância Better Auth) | Tasks | In Tasks |
-| SETUP-06 | P1: Persistência (validação de env) | Tasks | In Tasks |
-| SETUP-07 | P1: Money (tipo + formatação BRL + aritmética inteira) | Tasks | In Tasks |
-| SETUP-08 | P1: Testes (unit Vitest) | Tasks | In Tasks |
-| SETUP-09 | P1: Testes (integração Testcontainers/DATABASE_URL) | Tasks | In Tasks |
-| SETUP-10 | P1: Testes (E2E Playwright smoke) | Tasks | In Tasks |
-| SETUP-11 | P1: CI (workflow completo verde) | Tasks | In Tasks |
-| SETUP-12 | P1: Deploy (Railway + migrate deploy + URL pública) | Tasks | In Tasks |
-| SETUP-13 | P2: Documentação (README, ARCHITECTURE, TESTING, READMEs de módulo) | Tasks | In Tasks |
+| SETUP-01 | P1: Scaffold (Next.js + estrutura de módulos) | Done | Verified |
+| SETUP-02 | P1: Scaffold (lint de fronteiras deny-by-default) | Done | Verified |
+| SETUP-03 | P1: Scaffold (placeholder com identidade) | Done | Verified |
+| SETUP-04 | P1: Persistência (Prisma + migration Better Auth) | Done | Verified |
+| SETUP-05 | P1: Persistência (handler + instância Better Auth) | Done | Verified |
+| SETUP-06 | P1: Persistência (validação de env) | Done | Verified |
+| SETUP-07 | P1: Money (tipo + formatação BRL + aritmética inteira) | Done | Verified |
+| SETUP-08 | P1: Testes (unit Vitest) | Done | Verified |
+| SETUP-09 | P1: Testes (integração Testcontainers/DATABASE_URL) | Done | Verified |
+| SETUP-10 | P1: Testes (E2E Playwright smoke) | Done | Verified |
+| SETUP-11 | P1: CI (workflow completo verde) | Done | Verified |
+| SETUP-12 | P1: Deploy (Railway + migrate deploy + URL pública) | Done | Verified |
+| SETUP-13 | P2: Documentação (README, ARCHITECTURE, TESTING, READMEs de módulo) | Done | Verified |
 
-**Coverage:** 13 total, 13 mapped to tasks (T1..T14), 0 unmapped ✅
+**Coverage:** 13 total, 13 mapped to tasks (T1..T14), 0 unmapped ✅ — Verifier PASS em `.specs/features/setup/validation.md`; pendências de credencial (CI real, deploy Railway, branch protection) concluídas em 2026-07-16.
 
 ---
 
 ## Success Criteria
 
-- [ ] `pnpm dev` local funciona em uma máquina limpa seguindo apenas o README
-- [ ] `pnpm lint && pnpm typecheck && pnpm test:unit && pnpm test:integration && pnpm test:e2e && pnpm build` — tudo verde localmente
-- [ ] Workflow CI verde no GitHub em push para `main`
-- [ ] URL pública do Railway responde 200 com o placeholder do Prumo
-- [ ] Import ilegal entre módulos quebra o lint (demonstrável)
+- [x] `pnpm dev` local funciona em uma máquina limpa seguindo apenas o README
+- [x] `pnpm lint && pnpm typecheck && pnpm test:unit && pnpm test:integration && pnpm test:e2e && pnpm build` — tudo verde localmente
+- [x] Workflow CI verde no GitHub em push para `main` (run 29521931576, 5/5 jobs)
+- [x] URL pública do Railway responde 200 com o placeholder do Prumo (https://prumo.up.railway.app/)
+- [x] Import ilegal entre módulos quebra o lint (demonstrável — verificado ao vivo pelo Verifier)

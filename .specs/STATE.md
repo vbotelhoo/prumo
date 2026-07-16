@@ -108,11 +108,11 @@
 
 ## Handoff
 
-- **Feature**: setup (Roadmap item 1) — ✅ Execute concluído, Verifier PASS
-- **Phase / Task**: Todas as 4 fases (T1..T14) implementadas e commitadas; Fix 1 (AC-4/SETUP-06) aplicado e re-verificado. Nenhuma task pendente.
-- **Completed**: Specify, Design, Tasks e Execute completos. 14 tasks commitadas (1 commit atômico por task, ver `git log`), Verifier independente rodou 2 iterações (1ª: FAIL com 1 gap — `getEnv()` nunca chamado no boot real; 2ª após fix: PASS). Relatório em `.specs/features/setup/validation.md`; lições candidatas L-001/L-002 em `.specs/LESSONS.md`.
+- **Feature**: setup (Roadmap item 1) — ✅ CONCLUÍDA (Execute + Verifier PASS + pendências de credencial executadas + docs sincronizadas)
+- **Phase / Task**: nenhuma — feature encerrada; próxima é a feature 2 do ROADMAP (`auth`)
+- **Completed**: Ciclo completo da feature setup: Specify, Design, Tasks, Execute (T1..T14, 1 commit atômico por task), Verifier PASS (`.specs/features/setup/validation.md`), pendências de credencial executadas em 2026-07-16 (CI verde em `main` run 29521931576; deploy Railway no ar em `https://prumo.up.railway.app/`; branch protection ativa em `main` — 5 checks obrigatórios, strict mode, `enforce_admins`, sem review obrigatório por ser mantenedor solo). Documentação sincronizada em 2026-07-16: `ROADMAP.md` (item 1 → concluída), `README.md` (URL de produção, infra provisionada, branch protection ativa em vez de "recomendada"), `spec.md` (traceability → Verified, success criteria → [x]), `tasks.md` (Status → Done).
 - **In-progress** (file:line): nenhum
-- **Next step**: Feature `setup` 100% "done" — as 3 pendências de credencial/conta foram executadas em 2026-07-16: (1) push real para `origin/main` com CI verde (run 29521931576, 5/5 jobs); (2) deploy no Railway concluído — serviço `prumo` + PostgreSQL gerenciado, env vars configuradas (`DATABASE_URL` via `${{Postgres.DATABASE_URL}}`, `BETTER_AUTH_SECRET` de produção, `BETTER_AUTH_URL` via `https://${{RAILWAY_PUBLIC_DOMAIN}}`), URL pública `https://prumo.up.railway.app/` respondendo 200 com o placeholder e `/api/auth/ok` respondendo 200; (3) branch protection ativa em `main` (5 checks do CI obrigatórios, strict mode, `enforce_admins`, sem aprovação obrigatória de review — mantenedor solo, auto-aprovação não é possível no GitHub; merge só via PR com CI verde). Repositório público auditado (varredura de secrets no working tree e em todo o histórico: nenhum vazamento). O roadmap pode avançar para a feature 2 (`auth` — UI de cadastro/login).
+- **Next step**: Specify da feature 2 (`auth`) — cadastro e login com e-mail/senha (Better Auth), sessão e logout, E2E cadastro → login → logout. Better Auth já instalado/configurado no setup (instância, handler, tabelas migradas); a feature 2 é a UI + fluxos por cima disso.
 - **Blockers**: nenhum.
-- **Uncommitted files**: nenhum além desta atualização de docs (`.specs/`), que entra via PR (push direto em `main` bloqueado pela branch protection)
-- **Branch**: main (sincronizada com `origin/main`)
+- **Uncommitted files**: nenhum (atualizações de docs commitadas na branch de docs; entram em `main` via PR — push direto bloqueado pela branch protection)
+- **Branch**: docs/setup-pendencias-concluidas (PR para `main`)

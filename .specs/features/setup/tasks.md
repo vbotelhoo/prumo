@@ -9,7 +9,7 @@ Implement these tasks with the `tlc-spec-driven` skill: **activate it by name an
 ---
 
 **Design**: `.specs/features/setup/design.md`
-**Status**: In Progress
+**Status**: Done — T1..T14 commitadas, Verifier PASS (`validation.md`); pendências de credencial (CI real, deploy Railway, branch protection) concluídas em 2026-07-16
 
 ---
 

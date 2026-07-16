@@ -71,24 +71,28 @@ Monolito modular com fronteiras entre módulos reforçadas por lint. Visão comp
 
 ## CI
 
-O workflow [`.github/workflows/ci.yml`](.github/workflows/ci.yml) roda em todo push/PR para `main`, com 5 jobs: lint + typecheck, testes unitários, testes de integração, testes E2E e build de produção. Merge em `main` só deve ocorrer com o workflow verde (ver branch protection abaixo).
+O workflow [`.github/workflows/ci.yml`](.github/workflows/ci.yml) roda em todo push/PR para `main`, com 5 jobs: lint + typecheck, testes unitários, testes de integração, testes E2E e build de produção. Merge em `main` só ocorre com o workflow verde — isso é imposto pela branch protection (ver abaixo), não apenas convenção.
 
 ## Deploy no Railway
 
+**Produção**: [https://prumo.up.railway.app/](https://prumo.up.railway.app/)
+
 Configuração de deploy (código): `railway.json` define o build (`pnpm install --frozen-lockfile && pnpm build`) e o start (`pnpm start:prod`, que roda `prisma migrate deploy && next start` — o `&&` garante que o deploy aborta e não serve tráfego se a migration falhar).
 
-A criação do serviço/projeto e a conexão com o PostgreSQL gerenciado são passos manuais, feitos uma única vez pelo mantenedor com acesso à conta do Railway:
+A infraestrutura já está provisionada (passos manuais feitos uma única vez pelo mantenedor, registrados aqui para referência/recriação):
 
-1. Criar um projeto no Railway com um serviço chamado `prumo`, conectado a este repositório na branch `main`.
-2. Adicionar um serviço PostgreSQL gerenciado ao mesmo projeto.
-3. Configurar as variáveis de ambiente do serviço `prumo`:
-   - `DATABASE_URL` — referência ao Postgres gerenciado (o Railway injeta automaticamente via variável de referência, ex.: `${{Postgres.DATABASE_URL}}`).
-   - `BETTER_AUTH_SECRET` — valor secreto gerado para produção (nunca reaproveitar o valor usado em desenvolvimento/CI).
-   - `BETTER_AUTH_URL` — URL pública do serviço no Railway.
-4. Após o primeiro deploy, confirmar que a URL pública responde 200 com o placeholder do Prumo.
+1. Projeto no Railway com um serviço chamado `prumo`, conectado a este repositório na branch `main`.
+2. Serviço PostgreSQL gerenciado no mesmo projeto.
+3. Variáveis de ambiente do serviço `prumo`:
+   - `DATABASE_URL` — referência ao Postgres gerenciado, injetada via variável de referência (`${{Postgres.DATABASE_URL}}`).
+   - `BETTER_AUTH_SECRET` — valor secreto gerado exclusivamente para produção (nunca reaproveitado de desenvolvimento/CI).
+   - `BETTER_AUTH_URL` — URL pública do serviço, via `https://${{RAILWAY_PUBLIC_DOMAIN}}`.
+4. Cada push em `main` dispara um novo deploy; a URL pública responde 200 com o placeholder do Prumo.
 
-### Branch protection recomendada no GitHub
+### Branch protection em `main`
 
-- Proteger a branch `main`: exigir que o workflow `ci.yml` passe (todos os 5 jobs) antes de permitir merge.
-- Exigir revisão de pull request antes do merge.
-- Não permitir push direto para `main`.
+A branch `main` é protegida no GitHub — não há push direto; toda mudança entra via pull request:
+
+- Os 5 jobs do workflow `ci.yml` (lint + typecheck, unit, integração, E2E, build) são checks obrigatórios, em strict mode (a branch do PR precisa estar atualizada com `main`).
+- A proteção vale também para administradores (`enforce_admins`).
+- Sem aprovação obrigatória de review: o projeto tem mantenedor solo e o GitHub não permite auto-aprovação — o portão de qualidade é o CI verde.
