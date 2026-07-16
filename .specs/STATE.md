@@ -108,11 +108,11 @@
 
 ## Handoff
 
-- **Feature**: setup (Roadmap item 1)
-- **Phase / Task**: Tasks — tasks.md escrito (T1..T14 em 4 fases), aguardando aprovação do usuário
-- **Completed**: Specify (SETUP-01..13), context.md, design.md aprovado, AD-013, tasks.md com Test Coverage Matrix, Parallelism Assessment, Gate Commands e os 3 checks de validação (todos ✅)
+- **Feature**: setup (Roadmap item 1) — ✅ Execute concluído, Verifier PASS
+- **Phase / Task**: Todas as 4 fases (T1..T14) implementadas e commitadas; Fix 1 (AC-4/SETUP-06) aplicado e re-verificado. Nenhuma task pendente.
+- **Completed**: Specify, Design, Tasks e Execute completos. 14 tasks commitadas (1 commit atômico por task, ver `git log`), Verifier independente rodou 2 iterações (1ª: FAIL com 1 gap — `getEnv()` nunca chamado no boot real; 2ª após fix: PASS). Relatório em `.specs/features/setup/validation.md`; lições candidatas L-001/L-002 em `.specs/LESSONS.md`.
 - **In-progress** (file:line): nenhum
-- **Next step**: aprovação das tasks → Execute; 4 fases → apresentar oferta de sub-agents (1 worker/fase) antes de iniciar; T13 (Railway) exige passos manuais do usuário
-- **Blockers**: aguardando aprovação do usuário sobre .specs/features/setup/tasks.md
-- **Uncommitted files**: PROJECT.md, ROADMAP.md, .specs/STATE.md, .specs/features/setup/{spec.md,context.md,design.md,tasks.md}
+- **Next step**: Pendências que só o usuário pode executar (fora do alcance deste ambiente sandboxed): (1) `git push` para `origin/main` com credencial válida do GitHub (token do `gh auth` local está inválido) para disparar o CI real e confirmar o workflow verde (AC-4 da story CI); (2) criar o serviço `prumo` + PostgreSQL gerenciado no Railway, conectar o repositório, configurar `DATABASE_URL`/`BETTER_AUTH_SECRET`/`BETTER_AUTH_URL` no painel e validar a URL pública (story "Deploy inicial no Railway"); (3) configurar branch protection recomendada no GitHub (documentado no README). Depois disso, feature `setup` 100% "done" e o roadmap pode avançar para a feature 2 (`auth` — UI de cadastro/login).
+- **Blockers**: nenhum bloqueio técnico; as 3 pendências acima são de credencial/conta do usuário, não de código.
+- **Uncommitted files**: nenhum (`git status` limpo em `main`, 17 commits ahead de `origin/main`, aguardando push do usuário)
 - **Branch**: main
