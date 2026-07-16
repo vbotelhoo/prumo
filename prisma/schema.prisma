@@ -31,6 +31,14 @@ datasource db {
 
 // Models abaixo gerados por `@better-auth/cli generate` (design.md, Data
 // Models) — aceitos como gerados, não customizados (design.md).
+//
+// NOTA: os campos `cpf`..`termsAcceptedAt` abaixo e `@@unique([cpf])` foram
+// adicionados manualmente (AD-015 / design.md, Risks & Concerns) para
+// persistir o perfil cadastral do usuário como `user.additionalFields` do
+// Better Auth. Rodar `@better-auth/cli generate` de novo SOBRESCREVE este
+// arquivo por completo e derruba esses campos + o `@@unique([cpf])` — se
+// regenerado, reaplicar manualmente os campos de perfil, o unique de `cpf`
+// e este comentário.
 model User {
   id            String    @id
   name          String
@@ -42,7 +50,19 @@ model User {
   sessions      Session[]
   accounts      Account[]
 
+  cpf             String
+  birthDate       String // YYYY-MM-DD
+  zipCode         String
+  street          String
+  addressNumber   String
+  complement      String?
+  neighborhood    String
+  city            String
+  state           String // UF, 2 chars
+  termsAcceptedAt String // ISO-8601 datetime
+
   @@unique([email])
+  @@unique([cpf])
   @@map("user")
 }
 
