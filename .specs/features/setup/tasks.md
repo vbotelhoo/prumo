@@ -353,11 +353,12 @@ T10 ──→ T11 ──→ T12 ──→ T13 ──→ T14
 
 **Done when**:
 
-- [ ] Build no Railway conclui (AC-1); `migrate deploy` roda antes de servir e aborta em falha (AC-2, edge case)
-- [ ] URL pública responde 200 com o placeholder (AC-3)
-- [ ] Passos manuais documentados no README
+- [ ] Build no Railway conclui (AC-1) — **pendência do usuário**: sem acesso à conta Railway; localmente verificado que `pnpm install --frozen-lockfile && pnpm build` (mesmo comando do `railway.json`) conclui sem erros
+- [x] `migrate deploy` roda antes de servir e aborta em falha (AC-2, edge case) — verificado localmente: `pnpm start:prod` com `DATABASE_URL` inválida falha com exit 1 e NÃO inicia `next start`; com banco válido, migra (idempotente) e sobe o servidor
+- [ ] URL pública responde 200 com o placeholder (AC-3) — **pendência do usuário**: requer o deploy real no Railway (fora do alcance deste agente)
+- [x] Passos manuais documentados no README
 
-**Tests**: none (verificação = URL pública no ar) · **Gate**: build + verificação manual da URL
+**Tests**: none (verificação = URL pública no ar) · **Gate**: build + verificação manual da URL (verificação real no Railway é pendência do usuário — ver notas acima)
 **Commit**: `chore(setup): configuração de deploy no railway`
 
 ---
