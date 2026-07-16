@@ -243,9 +243,9 @@ T10 ──→ T11 ──→ T12 ──→ T13 ──→ T14
 
 **Done when**:
 
-- [ ] `pnpm prisma generate` funciona; client importável de `src/shared`
-- [ ] Output padrão do generator (risco flagado no design mitigado)
-- [ ] Build gate passa
+- [x] `pnpm prisma generate` funciona; client importável de `src/shared`
+- [x] Output padrão do generator (risco flagado no design mitigado)
+- [x] Build gate passa
 
 **Tests**: none — integração coberta em T10 (**merge forward**: Testcontainers nasce lá)
 **Gate**: build

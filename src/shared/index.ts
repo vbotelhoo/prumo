@@ -9,6 +9,8 @@
 export { getEnv } from "./env";
 export type { Env } from "./env";
 
+export { prisma } from "./db";
+
 export { addMoney, formatBRL, money, moneySchema, subtractMoney } from "./money";
 export type { Money } from "./money";
 

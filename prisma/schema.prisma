@@ -1,0 +1,27 @@
+// Schema Prisma do Prumo (design.md, componente 3).
+//
+// Generator SEM `output` customizado — exigência do Better Auth CLI
+// (`@better-auth/cli generate` espera o client no local padrão; ver
+// Risks & Concerns do design). Não adicionar `output` aqui.
+//
+// SPEC_DEVIATION: `prisma`/`@prisma/client` fixados em 6.18.0 (não a major
+// mais recente, 7.x). Reason: Prisma 7 remove `datasource.url` do schema
+// (exige `prisma.config.ts`) e passa a exigir `output` explícito no
+// generator — o oposto do que o design pede. O CLI do Better Auth
+// (`@better-auth/cli generate`) ainda gera schema no formato clássico do
+// Prisma 6 e não emite `prisma.config.ts`, ficando incompatível com o
+// Prisma 7 sem patches manuais pós-geração (ver github.com/better-auth/
+// better-auth issues #6277/#6112). Dentro da linha 6.x, 6.19.x quebra
+// `prisma generate`/`migrate` com "Cannot find module '@prisma/config'"
+// (bug conhecido introduzido na preparação para o Prisma 7); 6.18.0 é a
+// última versão 6.x sem esse problema e mantém o fluxo documentado no
+// design (url via env() no schema, output padrão) funcionando sem
+// improviso.
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
