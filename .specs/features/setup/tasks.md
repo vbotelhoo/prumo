@@ -221,9 +221,9 @@ T10 ──→ T11 ──→ T12 ──→ T13 ──→ T14
 
 **Done when**:
 
-- [ ] Home renderiza nome, tagline "Sua vida financeira alinhada." e significado
-- [ ] Página 100% estática (nenhum import de db/auth) — garante edge case "banco fora do ar"
-- [ ] Build gate passa
+- [x] Home renderiza nome, tagline "Sua vida financeira alinhada." e significado
+- [x] Página 100% estática (nenhum import de db/auth) — garante edge case "banco fora do ar"
+- [x] Build gate passa
 
 **Tests**: none — e2e smoke coberto em T11 (**merge forward**: a infraestrutura Playwright nasce lá; regra de resolução de dependência de compilação do tasks.md)
 **Gate**: build
