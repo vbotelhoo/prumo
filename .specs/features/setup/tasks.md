@@ -92,12 +92,12 @@ T10 ──→ T11 ──→ T12 ──→ T13 ──→ T14
 
 **Done when**:
 
-- [ ] `pnpm dev` serve a app sem erros; `pnpm build` conclui
-- [ ] TS `strict: true`; App Router; Tailwind ativo
-- [ ] Node LTS fixado em `.nvmrc` + `engines` (verificado suporte no Railway — resolver incerteza flagada no design)
-- [ ] Scripts base: `dev`, `build`, `start`, `lint`, `typecheck`
+- [x] `pnpm dev` serve a app sem erros; `pnpm build` conclui
+- [x] TS `strict: true`; App Router; Tailwind ativo
+- [x] Node LTS fixado em `.nvmrc` + `engines` (Node 24.x Active LTS; validação contra o runtime do Railway fica para a Fase 4/T13, conforme instrução do orquestrador)
+- [x] Scripts base: `dev`, `build`, `start`, `lint`, `typecheck`
 
-**Tests**: none · **Gate**: build (`pnpm lint && pnpm typecheck && pnpm build`)
+**Tests**: none · **Gate**: build (`pnpm lint && pnpm typecheck && pnpm build`) — ✅ passou
 **Commit**: `chore(setup): scaffold next.js 16 com pnpm e node fixado`
 
 ---
