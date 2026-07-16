@@ -114,13 +114,21 @@
 - **Date**: 2026-07-16
 - **Status**: active
 
+### AD-015
+- **Decision**: Dados cadastrais do usuário (CPF, nascimento, endereço, aceite de termos) vivem como `user.additionalFields` do Better Auth no model `User`, não em tabela `UserProfile` separada — enquanto não houver motivo claro para separar.
+- **Reason**: Signup atômico via `signUpEmail`; sessão já carrega o perfil; menos orquestração e superfície de falha parcial.
+- **Trade-off**: Model `User` cresce; regenerar o CLI do Better Auth exige reaplicar constraints manuais (ex.: `@@unique([cpf])`).
+- **Scope**: Módulo `auth` e schema Prisma `User`.
+- **Date**: 2026-07-16
+- **Status**: active
+
 ## Handoff
 
-- **Feature**: auth (Roadmap item 2) — Specify ✅ confirmado (assumptions fechadas + AD-014)
-- **Phase / Task**: Specify concluída; próxima fase = Design
-- **Completed**: Spec + context da feature auth; 4 assumptions abertas confirmadas pelo usuário (paths em inglês como regra → AD-014; pós-logout → `/`; `/app` com saudação + logout; senha exige também dígito numérico). Feature setup permanece concluída.
+- **Feature**: auth (Roadmap item 2) — Design em Draft (Abordagem A)
+- **Phase / Task**: Design escrito; aguardando aprovação do usuário antes de Tasks
+- **Completed**: Specify confirmado; design.md com componentes, data model, erros, riscos e mapeamento AUTH-01..14; AD-015 registrada.
 - **In-progress** (file:line): nenhum
-- **Next step**: Design da feature `auth` — arquitetura (perfil vs. campos no User, ViaCEP, proteção de rotas via `proxy.ts`, schemas Zod, componentes/páginas).
+- **Next step**: Usuário aprova `.specs/features/auth/design.md` → fase Tasks.
 - **Blockers**: nenhum.
-- **Uncommitted files**: nenhum (docs na branch abaixo)
+- **Uncommitted files**: design + AD-015 (commit na branch abaixo)
 - **Branch**: docs/setup-pendencias-concluidas (PR para `main`)

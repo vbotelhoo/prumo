@@ -37,9 +37,9 @@ O Prumo está no ar com Better Auth instalado, mas sem nenhum fluxo de usuário:
 | Resposta a e-mail OU CPF já cadastrados | Mesma mensagem genérica de falha do cadastro, sem indicar o campo causador | Anti-enumeração | y |
 | Idioma da UI | pt-BR | Produto brasileiro | y |
 | Política de senha | ≥8 chars, 1 minúscula, 1 maiúscula, 1 dígito e 1 caractere especial | Confirmado pelo usuário (dígito incluído) | y |
-| Persistência do perfil (nascimento, CPF, endereço, aceite) | Vinculada 1:1 ao usuário Better Auth; modelagem exata (campos extras vs. tabela própria) é decisão de Design | Spec define O QUE persistir; COMO é do Design | n (Design) |
+| Persistência do perfil (nascimento, CPF, endereço, aceite) | `user.additionalFields` no model `User` (Abordagem A / AD-015) | Atomicidade do signup; confirmado no Design | y |
 
-**Open questions:** none — all product assumptions confirmed; only Design-level modeling remains.
+**Open questions:** none — all assumptions confirmed.
 
 ---
 
