@@ -135,12 +135,12 @@ T10 ──→ T11 ──→ T12 ──→ T13 ──→ T14
 
 **Done when**:
 
-- [ ] Import interno de outro módulo (fora do `index.ts`) → `pnpm lint` falha (demonstrado com arquivo temporário, depois removido)
-- [ ] Import violando o grafo (ex.: `categories` → `transactions`) → `pnpm lint` falha (idem)
-- [ ] Arquivo fora dos elementos declarados → erro (deny-by-default do preset strict)
-- [ ] Código atual passa `pnpm lint` limpo
+- [x] Import interno de outro módulo (fora do `index.ts`) → `pnpm lint` falha (demonstrado com arquivo temporário, depois removido)
+- [x] Import violando o grafo (ex.: `categories` → `transactions`) → `pnpm lint` falha (idem)
+- [x] Arquivo fora dos elementos declarados → erro (deny-by-default do preset strict)
+- [x] Código atual passa `pnpm lint` limpo
 
-**Tests**: none · **Gate**: build
+**Tests**: none · **Gate**: build — ✅ passou
 **Commit**: `feat(setup): lint de fronteiras de módulos (eslint-plugin-boundaries)`
 
 ---
