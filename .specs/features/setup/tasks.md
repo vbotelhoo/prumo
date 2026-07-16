@@ -199,10 +199,10 @@ T10 ──→ T11 ──→ T12 ──→ T13 ──→ T14
 
 **Done when**:
 
-- [ ] 123456 centavos → "R$ 1.234,56" (AC-1); aritmética inteira exata (AC-2)
-- [ ] Não-inteiro/NaN/Infinity rejeitados, nunca truncados (AC-3)
-- [ ] Zero deps de Next/React/Prisma no diretório
-- [ ] Unit tests 1:1 com os 3 ACs + edge cases (zero, negativo, valores grandes); quick gate passa
+- [x] 123456 centavos → "R$ 1.234,56" (AC-1); aritmética inteira exata (AC-2)
+- [x] Não-inteiro/NaN/Infinity rejeitados, nunca truncados (AC-3)
+- [x] Zero deps de Next/React/Prisma no diretório
+- [x] Unit tests 1:1 com os 3 ACs + edge cases (zero, negativo, valores grandes); quick gate passa
 
 **Tests**: unit · **Gate**: quick
 **Commit**: `feat(shared): tipo money em centavos com formatação brl`
