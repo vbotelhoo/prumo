@@ -265,10 +265,10 @@ T10 ──→ T11 ──→ T12 ──→ T13 ──→ T14
 
 **Done when**:
 
-- [ ] `pnpm prisma migrate dev` contra Postgres vazio cria as tabelas Better Auth (AC-1)
-- [ ] Com a app rodando, endpoint GET embutido do handler (ex.: `/api/auth/ok`) responde sucesso (AC-2; ver nota do design se `/ok` não existir na versão)
-- [ ] Instância com adapter Prisma + e-mail/senha, exposta só via `index.ts` (AC-3); `pnpm lint` (fronteiras) limpo
-- [ ] Build gate passa
+- [x] `pnpm prisma migrate dev` contra Postgres vazio cria as tabelas Better Auth (AC-1)
+- [x] Com a app rodando, endpoint GET embutido do handler (ex.: `/api/auth/ok`) responde sucesso (AC-2; ver nota do design se `/ok` não existir na versão)
+- [x] Instância com adapter Prisma + e-mail/senha, exposta só via `index.ts` (AC-3); `pnpm lint` (fronteiras) limpo
+- [x] Build gate passa
 
 **Tests**: none — verificação automatizada em T10 (integração: tabelas) e T11 (pipeline completo); AC-2 verificado manualmente nesta task e de forma automatizada pelo smoke do CI
 **Gate**: build
