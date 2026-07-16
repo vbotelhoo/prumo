@@ -331,11 +331,11 @@ T10 ──→ T11 ──→ T12 ──→ T13 ──→ T14
 
 **Done when**:
 
-- [ ] Workflow dispara em push/PR para `main` com os 5 jobs (AC-1)
-- [ ] Falha em qualquer etapa falha o workflow (AC-2); artifact Playwright em falha de E2E (AC-3)
-- [ ] Push real → workflow completo verde no GitHub (AC-4)
+- [x] Workflow dispara em push/PR para `main` com os 5 jobs (AC-1) — verificado no `ci.yml`: `on.push`/`on.pull_request` restritos a `main`; jobs `lint-typecheck`, `unit`, `integration`, `e2e`, `build` presentes
+- [x] Falha em qualquer etapa falha o workflow (AC-2); artifact Playwright em falha de E2E (AC-3) — comportamento padrão do GitHub Actions (qualquer step com exit != 0 falha o job/workflow) + `actions/upload-artifact` com `if: failure()` no job `e2e`
+- [ ] Push real → workflow completo verde no GitHub (AC-4) — **pendência do usuário**: não há credencial válida de push para o remoto neste ambiente (`gh auth status` inválido); todos os comandos de cada job foram validados localmente com as mesmas env vars (ver resumo da Fase 4), mas o disparo real no GitHub não pôde ser executado por este agente
 
-**Tests**: none (config; a verificação é o workflow verde real) · **Gate**: build + workflow verde no GitHub
+**Tests**: none (config; a verificação é o workflow verde real) · **Gate**: build + workflow verde no GitHub (verificação real do workflow verde é pendência do usuário — ver nota acima)
 **Commit**: `ci(setup): workflow com lint, typecheck, unit, integração, e2e e build`
 
 ---

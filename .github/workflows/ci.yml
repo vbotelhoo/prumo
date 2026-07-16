@@ -1,0 +1,122 @@
+name: CI
+
+# Portão de qualidade antes de main → Railway (design.md, componente 6;
+# spec.md, story "CI como portão de qualidade" AC-1/AC-2/AC-3; AD-011).
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+env:
+  # Env de teste fixas no workflow (design.md, Risks & Concerns — mitigação
+  # da flakiness de E2E/integração). Não são segredos de produção.
+  DATABASE_URL: postgresql://prumo:prumo@localhost:5432/prumo_test
+  BETTER_AUTH_SECRET: ci-test-secret-not-for-production
+  BETTER_AUTH_URL: http://localhost:3000
+
+jobs:
+  lint-typecheck:
+    name: Lint & Typecheck
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm lint
+      - run: pnpm typecheck
+
+  unit:
+    name: Unit tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm vitest run --project unit --coverage
+
+  integration:
+    name: Integration tests
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_USER: prumo
+          POSTGRES_PASSWORD: prumo
+          POSTGRES_DB: prumo_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd="pg_isready -U prumo"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+    steps:
+      - uses: actions/checkout@v5
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm prisma migrate deploy
+      - run: pnpm test:integration
+
+  e2e:
+    name: E2E tests
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_USER: prumo
+          POSTGRES_PASSWORD: prumo
+          POSTGRES_DB: prumo_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd="pg_isready -U prumo"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+    steps:
+      - uses: actions/checkout@v5
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm exec playwright install --with-deps chromium
+      # Schema migrado antes do webServer do Playwright buildar/subir a app
+      # de produção (design.md, Risks & Concerns: mitigação de flakiness).
+      - run: pnpm prisma migrate deploy
+      - run: pnpm test:e2e
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 7
+
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build

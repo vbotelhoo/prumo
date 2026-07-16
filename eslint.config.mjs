@@ -89,6 +89,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Gerado pelo provider de cobertura do Vitest (T12: job `unit` do CI).
+    "coverage/**",
   ]),
 ]);
 
