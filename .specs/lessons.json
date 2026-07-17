@@ -3,7 +3,7 @@
   "promote_threshold": 2,
   "window_days": 45,
   "quarantine_threshold": 2,
-  "next_id": 3,
+  "next_id": 6,
   "lessons": [
     {
       "id": "L-001",
@@ -40,6 +40,60 @@
       ],
       "created": "2026-07-16T16:56:15Z",
       "last_seen": "2026-07-16T16:56:15Z"
+    },
+    {
+      "id": "L-003",
+      "key": "gate_fail::when e2e tests target a persistent non ephemeral test database generate unique deterministic values cpf email etc from the full entropy of the random seed not just its last digit or a narrow modulo band low cardinality generators collide against accumulated rows across repeated local ci runs",
+      "text": "When E2E tests target a persistent (non-ephemeral) test database, generate unique deterministic values (CPF, email, etc.) from the full entropy of the random seed, not just its last digit or a narrow modulo band — low-cardinality generators collide against accumulated rows across repeated local/CI runs.",
+      "signal": "gate_fail",
+      "scope": "e2e",
+      "status": "candidate",
+      "features": [
+        "auth"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "e2e/auth.spec.ts:11-32 — first pnpm test:e2e run failed with P2002 unique constraint on cpf (e2e)"
+      ],
+      "created": "2026-07-17T00:33:31Z",
+      "last_seen": "2026-07-17T00:33:31Z"
+    },
+    {
+      "id": "L-004",
+      "key": "spec_precision_gap::when a spec ac describes behavior that is entirely delegated to a third party library s default configuration e g session ttl flag it explicitly as delegated not independently tested in the design tasks test matrix rather than silently marking it none build gate only so the verifier does not have to infer the gap",
+      "text": "When a spec AC describes behavior that is entirely delegated to a third-party library's default configuration (e.g. session TTL), flag it explicitly as 'delegated, not independently tested' in the design/tasks test matrix rather than silently marking it none/build-gate-only, so the Verifier does not have to infer the gap.",
+      "signal": "spec_precision_gap",
+      "scope": "auth",
+      "status": "candidate",
+      "features": [
+        "auth"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "spec.md AC-login.4 (session persists 7d, Better Auth default) — no test exercises the expiry boundary (auth)"
+      ],
+      "created": "2026-07-17T00:33:37Z",
+      "last_seen": "2026-07-17T00:33:37Z"
+    },
+    {
+      "id": "L-005",
+      "key": "spec_precision_gap::when a spec ac asserts a ui affordance remains available editable after an automated action not just that the action itself succeeds add a direct test interacting with the field post action rather than relying on code inspection of the absence of disabled readonly attributes",
+      "text": "When a spec AC asserts a UI affordance remains available/editable after an automated action (not just that the action itself succeeds), add a direct test interacting with the field post-action rather than relying on code inspection of the absence of disabled/readOnly attributes.",
+      "signal": "spec_precision_gap",
+      "scope": "auth",
+      "status": "candidate",
+      "features": [
+        "auth"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "spec.md AC-CEP.3 (fields remain editable after CEP auto-fill) — no test asserts post-fill editability, only code inspection (auth)"
+      ],
+      "created": "2026-07-17T00:33:42Z",
+      "last_seen": "2026-07-17T00:33:42Z"
     }
   ]
 }

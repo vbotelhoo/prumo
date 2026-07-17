@@ -124,11 +124,11 @@
 
 ## Handoff
 
-- **Feature**: auth (Roadmap item 2) — Tasks em Draft (Design Approved, Abordagem A)
-- **Phase / Task**: Tasks T1..T10 em 4 fases; aguardando aprovação do usuário antes de Execute
-- **Completed**: Specify + Design (AD-014/015); `tasks.md` com matriz de testes, gates, validações de granularidade/diagrama/co-location — 14/14 AUTH mapeados. Revisão técnica de `design.md`/`tasks.md` em 2026-07-16 (feitos por um modelo mais simples originalmente): corrigido bug real confirmado no código do Better Auth 1.6.23 — `termsAcceptedAt` (`input: false`) não pode ser setado no `body` de `auth.api.signUpEmail`, nem server-side (lança `FIELD_NOT_ALLOWED`); o design tratava `databaseHooks.user.create.before` como fallback opcional, quando na verdade é o único caminho válido. Corrigido nos componentes 1/4, tabelas de Risks/Tech Decisions do design, e nas tasks T3/T7. Também adicionado a T7 um teste de cadastro concorrente (`Promise.all`, mesmo CPF/e-mail) que cobre o edge case de concorrência já presente no spec.md mas ausente do checklist de tasks.
+- **Feature**: auth (Roadmap item 2) — Execute concluído, Verifier PASS ✅
+- **Phase / Task**: T1..T10 implementadas em 4 fases (sub-agents por fase) + Verifier independente. Todas as 10 tasks commitadas.
+- **Completed**: Specify, Design, Tasks e Execute completos. Commits `5b21ed9`..`c32e2c8` na branch `feat/auth` (validators/schemas, viacep, better auth config + databaseHooks, migration do User, auth client, shadcn kit, server actions + testes de integração, SignUpForm, LoginForm/LogoutButton, páginas/proxy/E2E). Verificação independente: 92 testes verdes (69 unit + 19 integration + 4 e2e), sensor de mutação P0 com 7/7 mutações mortas, 15/17 ACs com evidência exata de spec-outcome (3 spec-precision gaps não-bloqueantes documentados em `.specs/features/auth/validation.md`). Report completo em `.specs/features/auth/validation.md`.
 - **In-progress** (file:line): nenhum
-- **Next step**: Usuário aprova `.specs/features/auth/tasks.md` (revisado) → Execute (oferecer 1 worker por fase, pois há 4 fases).
+- **Next step**: UAT manual do usuário (pendente — Verifier não teve usuário interativo disponível); depois, PR de `feat/auth` para `main`. Gaps informacionais opcionais para uma iteração futura: (1) `e2e/auth.spec.ts:11-32` gerador de CPF com baixa cardinalidade pode colidir em banco de teste local não resetado; (2) sem teste de fronteira dos 7 dias de expiração de sessão (delegado aos defaults do Better Auth); (3) AC-CEP.3 (campos editáveis pós-preenchimento) verificado só por inspeção de código, não por teste direto.
 - **Blockers**: nenhum.
-- **Uncommitted files**: tasks + sync design/spec/STATE (commit na branch abaixo)
-- **Branch**: docs/setup-pendencias-concluidas (PR para `main`)
+- **Uncommitted files**: nenhum (validation.md e lessons candidatas do Verifier já persistidos pelo sub-agent)
+- **Branch**: feat/auth (criada a partir de docs/setup-pendencias-concluidas, pois os docs da feature ainda não estão em `main`)
