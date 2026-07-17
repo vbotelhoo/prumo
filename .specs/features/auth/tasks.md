@@ -297,11 +297,11 @@ T8, T9 ──→ T10
 
 **Done when**:
 
-- [ ] Deslogado em `/app` → `/login`; logado em `/login`|/signup` → `/app`
-- [ ] `/terms` público com placeholder; `/app` saudação + logout
-- [ ] E2E: cadastro → `/app` → logout → `/` → login → `/app` → logout
-- [ ] README do módulo atualizado com a API pública
-- [ ] Gate: `pnpm lint && pnpm typecheck && pnpm test:unit && pnpm test:integration && pnpm test:e2e && pnpm build`
+- [x] Deslogado em `/app` → `/login`; logado em `/login`|/signup` → `/app`
+- [x] `/terms` público com placeholder; `/app` saudação + logout
+- [x] E2E: cadastro → `/app` → logout → `/` → login → `/app` → logout
+- [x] README do módulo atualizado com a API pública
+- [x] Gate: `pnpm lint && pnpm typecheck && pnpm test:unit && pnpm test:integration && pnpm test:e2e && pnpm build`
 
 **Tests**: e2e · **Gate**: full
 **Commit**: `feat(auth): rotas protegidas proxy e e2e do fluxo de auth`
