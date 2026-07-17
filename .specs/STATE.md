@@ -106,13 +106,29 @@
 - **Date**: 2026-07-16
 - **Status**: active
 
+### AD-014
+- **Decision**: Paths de URL da aplicação em inglês (`/signup`, `/login`, `/terms`, `/app`, etc.). Texto da UI permanece em pt-BR.
+- **Reason**: Convenção única e estável para rotas técnicas; evita mistura `/termos` vs `/terms` e facilita consistência entre features.
+- **Trade-off**: URL e copy da UI ficam em idiomas diferentes; aceitável porque o produto é brasileiro e as rotas são superfície técnica.
+- **Scope**: Todas as rotas em `src/app` e links internos.
+- **Date**: 2026-07-16
+- **Status**: active
+
+### AD-015
+- **Decision**: Dados cadastrais do usuário (CPF, nascimento, endereço, aceite de termos) vivem como `user.additionalFields` do Better Auth no model `User`, não em tabela `UserProfile` separada — enquanto não houver motivo claro para separar.
+- **Reason**: Signup atômico via `signUpEmail`; sessão já carrega o perfil; menos orquestração e superfície de falha parcial.
+- **Trade-off**: Model `User` cresce; regenerar o CLI do Better Auth exige reaplicar constraints manuais (ex.: `@@unique([cpf])`).
+- **Scope**: Módulo `auth` e schema Prisma `User`.
+- **Date**: 2026-07-16
+- **Status**: active
+
 ## Handoff
 
-- **Feature**: setup (Roadmap item 1) — ✅ Execute concluído, Verifier PASS
-- **Phase / Task**: Todas as 4 fases (T1..T14) implementadas e commitadas; Fix 1 (AC-4/SETUP-06) aplicado e re-verificado. Nenhuma task pendente.
-- **Completed**: Specify, Design, Tasks e Execute completos. 14 tasks commitadas (1 commit atômico por task, ver `git log`), Verifier independente rodou 2 iterações (1ª: FAIL com 1 gap — `getEnv()` nunca chamado no boot real; 2ª após fix: PASS). Relatório em `.specs/features/setup/validation.md`; lições candidatas L-001/L-002 em `.specs/LESSONS.md`.
+- **Feature**: auth (Roadmap item 2) — Tasks em Draft (Design Approved, Abordagem A)
+- **Phase / Task**: Tasks T1..T10 em 4 fases; aguardando aprovação do usuário antes de Execute
+- **Completed**: Specify + Design (AD-014/015); `tasks.md` com matriz de testes, gates, validações de granularidade/diagrama/co-location — 14/14 AUTH mapeados. Revisão técnica de `design.md`/`tasks.md` em 2026-07-16 (feitos por um modelo mais simples originalmente): corrigido bug real confirmado no código do Better Auth 1.6.23 — `termsAcceptedAt` (`input: false`) não pode ser setado no `body` de `auth.api.signUpEmail`, nem server-side (lança `FIELD_NOT_ALLOWED`); o design tratava `databaseHooks.user.create.before` como fallback opcional, quando na verdade é o único caminho válido. Corrigido nos componentes 1/4, tabelas de Risks/Tech Decisions do design, e nas tasks T3/T7. Também adicionado a T7 um teste de cadastro concorrente (`Promise.all`, mesmo CPF/e-mail) que cobre o edge case de concorrência já presente no spec.md mas ausente do checklist de tasks.
 - **In-progress** (file:line): nenhum
-- **Next step**: Pendências que só o usuário pode executar (fora do alcance deste ambiente sandboxed): (1) `git push` para `origin/main` com credencial válida do GitHub (token do `gh auth` local está inválido) para disparar o CI real e confirmar o workflow verde (AC-4 da story CI); (2) criar o serviço `prumo` + PostgreSQL gerenciado no Railway, conectar o repositório, configurar `DATABASE_URL`/`BETTER_AUTH_SECRET`/`BETTER_AUTH_URL` no painel e validar a URL pública (story "Deploy inicial no Railway"); (3) configurar branch protection recomendada no GitHub (documentado no README). Depois disso, feature `setup` 100% "done" e o roadmap pode avançar para a feature 2 (`auth` — UI de cadastro/login).
-- **Blockers**: nenhum bloqueio técnico; as 3 pendências acima são de credencial/conta do usuário, não de código.
-- **Uncommitted files**: nenhum (`git status` limpo em `main`, 17 commits ahead de `origin/main`, aguardando push do usuário)
-- **Branch**: main
+- **Next step**: Usuário aprova `.specs/features/auth/tasks.md` (revisado) → Execute (oferecer 1 worker por fase, pois há 4 fases).
+- **Blockers**: nenhum.
+- **Uncommitted files**: tasks + sync design/spec/STATE (commit na branch abaixo)
+- **Branch**: docs/setup-pendencias-concluidas (PR para `main`)
