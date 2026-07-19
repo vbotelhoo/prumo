@@ -8,6 +8,34 @@ import {
 import { signUpCore } from "../../../modules/auth/actions/sign-up-core";
 import { TRANSACTION_NOT_FOUND_ERROR } from "../domain/constants";
 
+// Gera um CPF matematicamente válido e único por seed (algoritmo oficial),
+// já que a criação de usuário passa pela validação real de checksum.
+function checkDigit(digits: number[], startWeight: number): number {
+  const sum = digits.reduce((acc, digit, index) => acc + digit * (startWeight - index), 0);
+  const remainder = (sum * 10) % 11;
+  return remainder === 10 ? 0 : remainder;
+}
+
+let cpfSeed = 0;
+function uniqueValidCpf(): string {
+  cpfSeed += 1;
+  const base = Array.from({ length: 9 }, (_, i) => (cpfSeed + i) % 10);
+  const d1 = checkDigit(base, 10);
+  const d2 = checkDigit([...base, d1], 11);
+  return [...base, d1, d2].join("");
+}
+
+// Repassa só o par nome=valor de cada cookie (sem atributos como Path,
+// HttpOnly) — formato esperado pelo header `Cookie` de uma request, a
+// partir do `Set-Cookie` retornado por signUpCore.
+function buildCookieHeader(result: { ok: boolean; responseHeaders?: Headers }): string {
+  const setCookie = result.responseHeaders?.get("set-cookie") ?? "";
+  return setCookie
+    .split(/,(?=\s*[^=;\s]+=)/)
+    .map((part) => part.split(";")[0]!.trim())
+    .join("; ");
+}
+
 describe("updateTransactionAction", () => {
   let userId: string;
   let userBId: string;
@@ -27,7 +55,7 @@ describe("updateTransactionAction", () => {
     const userInput = {
       name: "Test User",
       birthDate: "1990-01-01",
-      cpf: "12345678901",
+      cpf: uniqueValidCpf(),
       zipCode: "01310100",
       street: "Test Street",
       addressNumber: "123",
@@ -58,7 +86,7 @@ describe("updateTransactionAction", () => {
     const userBInput = {
       name: "Test User B",
       birthDate: "1990-01-02",
-      cpf: "12345678902",
+      cpf: uniqueValidCpf(),
       zipCode: "01310100",
       street: "Test Street",
       addressNumber: "124",
@@ -117,8 +145,9 @@ describe("updateTransactionAction", () => {
     });
     transactionId = txn.id;
 
-    // Create a mock headers object
-    testHeaders = new Headers();
+    // Build request headers carrying the real session cookie so
+    // getSession() inside updateTransactionCore can resolve the user.
+    testHeaders = new Headers({ cookie: buildCookieHeader(userSignUp) });
   });
 
   afterEach(async () => {
@@ -256,7 +285,7 @@ describe("deleteTransactionAction", () => {
     const userInput = {
       name: "Test User",
       birthDate: "1990-01-01",
-      cpf: "12345678901",
+      cpf: uniqueValidCpf(),
       zipCode: "01310100",
       street: "Test Street",
       addressNumber: "123",
@@ -305,8 +334,9 @@ describe("deleteTransactionAction", () => {
     });
     transactionId = txn.id;
 
-    // Create a mock headers object
-    testHeaders = new Headers();
+    // Build request headers carrying the real session cookie so
+    // getSession() inside deleteTransactionCore can resolve the user.
+    testHeaders = new Headers({ cookie: buildCookieHeader(userSignUp) });
   });
 
   afterEach(async () => {

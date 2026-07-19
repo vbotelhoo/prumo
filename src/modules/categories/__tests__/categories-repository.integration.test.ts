@@ -351,7 +351,7 @@ describe("categories-repository", () => {
       const category = allCategories[0];
 
       // Create a transaction using this category
-      await prisma.transaction.create({
+      const txn = await prisma.transaction.create({
         data: {
           type: category.type,
           date: "2025-01-15",
@@ -363,6 +363,10 @@ describe("categories-repository", () => {
 
       const inUse = await isCategoryInUse(category.id);
       expect(inUse).toBe(true);
+
+      // References a default category (not tracked by categoriesToCleanup),
+      // so it must be removed explicitly before afterEach deletes the user.
+      await prisma.transaction.delete({ where: { id: txn.id } });
     });
   });
 

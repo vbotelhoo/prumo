@@ -8,6 +8,34 @@ import {
   CATEGORY_NOT_FOUND_ERROR,
 } from "../domain/constants";
 
+// Gera um CPF matematicamente válido e único por seed (algoritmo oficial),
+// já que a criação de usuário passa pela validação real de checksum.
+function checkDigit(digits: number[], startWeight: number): number {
+  const sum = digits.reduce((acc, digit, index) => acc + digit * (startWeight - index), 0);
+  const remainder = (sum * 10) % 11;
+  return remainder === 10 ? 0 : remainder;
+}
+
+let cpfSeed = 0;
+function uniqueValidCpf(): string {
+  cpfSeed += 1;
+  const base = Array.from({ length: 9 }, (_, i) => (cpfSeed + i) % 10);
+  const d1 = checkDigit(base, 10);
+  const d2 = checkDigit([...base, d1], 11);
+  return [...base, d1, d2].join("");
+}
+
+// Repassa só o par nome=valor de cada cookie (sem atributos como Path,
+// HttpOnly) — formato esperado pelo header `Cookie` de uma request, a
+// partir do `Set-Cookie` retornado por signUpCore.
+function buildCookieHeader(result: { ok: boolean; responseHeaders?: Headers }): string {
+  const setCookie = result.responseHeaders?.get("set-cookie") ?? "";
+  return setCookie
+    .split(/,(?=\s*[^=;\s]+=)/)
+    .map((part) => part.split(";")[0]!.trim())
+    .join("; ");
+}
+
 describe("deleteCategoryAction", () => {
   let userId: string;
   let userBId: string;
@@ -25,7 +53,7 @@ describe("deleteCategoryAction", () => {
     const userAInput = {
       name: "Test User A",
       birthDate: "1990-01-01",
-      cpf: "12345678901",
+      cpf: uniqueValidCpf(),
       zipCode: "01310100",
       street: "Test Street",
       addressNumber: "123",
@@ -55,7 +83,7 @@ describe("deleteCategoryAction", () => {
     const userBInput = {
       name: "Test User B",
       birthDate: "1990-01-02",
-      cpf: "12345678902",
+      cpf: uniqueValidCpf(),
       zipCode: "01310100",
       street: "Test Street",
       addressNumber: "124",
@@ -82,8 +110,9 @@ describe("deleteCategoryAction", () => {
 
     userBId = userB.id;
 
-    // Create a mock headers object
-    testHeaders = new Headers();
+    // Build request headers carrying user A's real session cookie so
+    // getSession() inside deleteCategoryCore can resolve the user.
+    testHeaders = new Headers({ cookie: buildCookieHeader(userASignUp) });
   });
 
   afterEach(async () => {
@@ -156,13 +185,10 @@ describe("deleteCategoryAction", () => {
   });
 
   it("should reject deletion of default category (userId=null)", async () => {
-    // Create a default category (no userId)
-    const category = await prisma.category.create({
-      data: {
-        name: "Salário",
-        type: "entrada",
-        userId: null,
-      },
+    // Use a seeded default category (no userId) instead of creating a
+    // duplicate, which would collide with the seeded "Salário"/entrada.
+    const category = await prisma.category.findFirstOrThrow({
+      where: { userId: null, type: "entrada" },
     });
 
     const result = await deleteCategoryCore(category.id, testHeaders);

@@ -5,6 +5,34 @@ import { CATEGORY_NAME_IN_USE_ERROR } from "../domain/constants";
 // eslint-disable-next-line boundaries/entry-point
 import { signUpCore } from "../../../modules/auth/actions/sign-up-core";
 
+// Gera um CPF matematicamente válido e único por seed (algoritmo oficial),
+// já que a criação de usuário passa pela validação real de checksum.
+function checkDigit(digits: number[], startWeight: number): number {
+  const sum = digits.reduce((acc, digit, index) => acc + digit * (startWeight - index), 0);
+  const remainder = (sum * 10) % 11;
+  return remainder === 10 ? 0 : remainder;
+}
+
+let cpfSeed = 0;
+function uniqueValidCpf(): string {
+  cpfSeed += 1;
+  const base = Array.from({ length: 9 }, (_, i) => (cpfSeed + i) % 10);
+  const d1 = checkDigit(base, 10);
+  const d2 = checkDigit([...base, d1], 11);
+  return [...base, d1, d2].join("");
+}
+
+// Repassa só o par nome=valor de cada cookie (sem atributos como Path,
+// HttpOnly) — formato esperado pelo header `Cookie` de uma request, a
+// partir do `Set-Cookie` retornado por signUpCore.
+function buildCookieHeader(result: { ok: boolean; responseHeaders?: Headers }): string {
+  const setCookie = result.responseHeaders?.get("set-cookie") ?? "";
+  return setCookie
+    .split(/,(?=\s*[^=;\s]+=)/)
+    .map((part) => part.split(";")[0]!.trim())
+    .join("; ");
+}
+
 describe("createCategoryAction", () => {
   let userId: string;
   let testHeaders: Headers;
@@ -21,7 +49,7 @@ describe("createCategoryAction", () => {
     const signUpInput = {
       name: "Test User",
       birthDate: "1990-01-01",
-      cpf: "12345678901",
+      cpf: uniqueValidCpf(),
       zipCode: "01310100",
       street: "Test Street",
       addressNumber: "123",
@@ -49,8 +77,9 @@ describe("createCategoryAction", () => {
 
     userId = user.id;
 
-    // Create a mock headers object
-    testHeaders = new Headers();
+    // Build request headers carrying the real session cookie so
+    // getSession() inside createCategoryCore can resolve the user.
+    testHeaders = new Headers({ cookie: buildCookieHeader(signUpResult) });
   });
 
   afterEach(async () => {
@@ -112,10 +141,12 @@ describe("createCategoryAction", () => {
   });
 
   it("should allow duplicate name for different type", async () => {
-    // Create category for "saida"
+    // "Presente" is not a default category name for either type, so it
+    // only collides if the (name, type, userId) uniqueness check is
+    // incorrectly scoped across types.
     await prisma.category.create({
       data: {
-        name: "Outros",
+        name: "Presente",
         type: "saida",
         userId,
       },
@@ -124,7 +155,7 @@ describe("createCategoryAction", () => {
     // Create category for "entrada" with same name
     const result = await createCategoryCore(
       {
-        name: "Outros",
+        name: "Presente",
         type: "entrada",
       },
       testHeaders
@@ -207,7 +238,7 @@ describe("createCategoryAction", () => {
     const userBInput = {
       name: "Test User B",
       birthDate: "1990-01-02",
-      cpf: "12345678902",
+      cpf: uniqueValidCpf(),
       zipCode: "01310100",
       street: "Test Street",
       addressNumber: "124",
@@ -233,12 +264,13 @@ describe("createCategoryAction", () => {
     }
 
     // User B tries to use the name "Viagem" - should be allowed (not taken for them)
+    const userBHeaders = new Headers({ cookie: buildCookieHeader(userBSignUp) });
     const result = await createCategoryCore(
       {
         name: "Viagem",
         type: "saida",
       },
-      testHeaders
+      userBHeaders
     );
 
     expect(result.ok).toBe(true);
