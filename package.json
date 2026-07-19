@@ -10,7 +10,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "start:prod": "prisma migrate deploy && next start",
+    "start:prod": "prisma migrate deploy && prisma db seed && next start",
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
     "test:unit": "vitest run --project unit",

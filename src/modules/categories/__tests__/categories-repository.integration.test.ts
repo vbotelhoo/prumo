@@ -62,9 +62,9 @@ describe("categories-repository", () => {
 
       const categories = await listCategoriesByUser(user.id);
 
-      // Should include all 13 default categories
+      // Should include all 23 default categories
       const defaultCategories = categories.filter((c) => c.userId === null);
-      expect(defaultCategories.length).toBe(13);
+      expect(defaultCategories.length).toBe(23);
     });
 
     it("returns user's custom categories plus defaults", async () => {
@@ -84,7 +84,7 @@ describe("categories-repository", () => {
       // Should have defaults + 1 custom
       const defaults = categories.filter((c) => c.userId === null);
       const customs = categories.filter((c) => c.userId === user.id);
-      expect(defaults.length).toBe(13);
+      expect(defaults.length).toBe(23);
       expect(customs.length).toBe(1);
       expect(customs[0].name).toBe("Minha Categoria");
     });

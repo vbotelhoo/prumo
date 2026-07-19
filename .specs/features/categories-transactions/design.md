@@ -66,7 +66,7 @@ flowchart TD
   TxnComponents --> SharedUI
 
   DB --> Postgres[("PostgreSQL\nCategory · Transaction")]
-  Seed["prisma/seed.ts\n13 categorias padrão idempotente"] --> DB
+  Seed["prisma/seed.ts\n23 categorias padrão idempotente"] --> DB
 ```
 
 ---
@@ -170,7 +170,7 @@ CREATE UNIQUE INDEX category_custom_unique_name_type_user
 
 ```typescript
 const DEFAULT_CATEGORIES = [
-  // saida (9)
+  // saida (17)
   { name: "Alimentação",             type: "saida" },
   { name: "Moradia",                 type: "saida" },
   { name: "Transporte",              type: "saida" },
@@ -179,17 +179,28 @@ const DEFAULT_CATEGORIES = [
   { name: "Lazer",                   type: "saida" },
   { name: "Vestuário",               type: "saida" },
   { name: "Assinaturas e serviços",  type: "saida" },
+  { name: "Aluguel",                 type: "saida" },
+  { name: "Investimentos",           type: "saida" },
+  { name: "Conta de água",           type: "saida" },
+  { name: "Conta de luz",            type: "saida" },
+  { name: "Financiamento",           type: "saida" },
+  { name: "Dívidas",                 type: "saida" },
+  { name: "Cartão de crédito",       type: "saida" },
+  { name: "Boletos",                 type: "saida" },
   { name: "Outros",                  type: "saida" },
-  // entrada (4)
+  // entrada (6)
   { name: "Salário",                 type: "entrada" },
   { name: "Renda extra",             type: "entrada" },
   { name: "Investimentos",           type: "entrada" },
+  { name: "Aluguel",                 type: "entrada" },
+  { name: "Pagamentos",              type: "entrada" },
   { name: "Outros",                  type: "entrada" },
 ] as const
 ```
 
 - **Idempotência**: `prisma.category.createMany({ data: DEFAULT_CATEGORIES, skipDuplicates: true })` — o índice parcial `category_default_unique_name_type` absorve duplicatas em re-execuções.
 - **Integração CI**: o seed é chamado no `global-setup` dos testes de integração (ou em script separado `pnpm prisma db seed`) antes de cada ambiente de teste.
+- **Produção**: `package.json > scripts.start:prod` também roda `prisma db seed` após `prisma migrate deploy` — sem isso, o seed nunca era executado fora de CI/testes e bancos de produção ficavam sem nenhuma categoria padrão (bug pós-lançamento corrigido em 2026-07-19).
 
 ---
 

@@ -40,6 +40,11 @@ type FormState = {
 
 type FieldErrors = Record<string, string[] | undefined>;
 
+const TYPE_ITEMS = [
+  { value: "entrada", label: "Entrada" },
+  { value: "saida", label: "Saída" },
+];
+
 /**
  * TransactionModal is a unified modal for creating and editing transactions.
  * In create mode (no transaction prop), it shows a blank form.
@@ -62,7 +67,7 @@ export function TransactionModal({
       return {
         type: transaction.type,
         date: transaction.date,
-        amountRaw: "", // Will format on demand
+        amountRaw: (transaction.amount / 100).toFixed(2).replace(".", ","),
         description: transaction.description || "",
         categoryId: transaction.categoryId,
       };
@@ -139,6 +144,7 @@ export function TransactionModal({
 
   // Filter categories by selected type
   const availableCategories = categories.filter((cat) => cat.type === form.type);
+  const categoryItems = availableCategories.map((cat) => ({ value: cat.id, label: cat.name }));
 
   const minDate = "2000-01-01";
   const maxDate = useMemo(() => {
@@ -162,7 +168,11 @@ export function TransactionModal({
           {/* Type select */}
           <div className="flex flex-col gap-1">
             <Label htmlFor="txn-type">Tipo</Label>
-            <Select value={form.type} onValueChange={(value) => updateField("type", value as "entrada" | "saida")}>
+            <Select
+              value={form.type}
+              onValueChange={(value) => updateField("type", value as "entrada" | "saida")}
+              items={TYPE_ITEMS}
+            >
               <SelectTrigger id="txn-type" disabled={isSubmitting}>
                 <SelectValue />
               </SelectTrigger>
@@ -215,7 +225,11 @@ export function TransactionModal({
           {/* Category select */}
           <div className="flex flex-col gap-1">
             <Label htmlFor="txn-category">Categoria</Label>
-            <Select value={form.categoryId || ""} onValueChange={(value) => updateField("categoryId", value || "")}>
+            <Select
+              value={form.categoryId || ""}
+              onValueChange={(value) => updateField("categoryId", value || "")}
+              items={categoryItems}
+            >
               <SelectTrigger id="txn-category" disabled={isSubmitting || availableCategories.length === 0}>
                 <SelectValue placeholder="Selecione uma categoria" />
               </SelectTrigger>

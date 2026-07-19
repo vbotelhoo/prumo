@@ -95,6 +95,7 @@ export function TransactionsPageClient({
         )}
 
         <TransactionModal
+          key={editingTransaction?.id ?? "create"}
           categories={categories}
           transaction={editingTransaction ?? undefined}
           open={modalOpen}
