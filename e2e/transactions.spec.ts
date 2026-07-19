@@ -99,7 +99,7 @@ test.describe("Fluxo de transações", () => {
     // 5. Verify first transaction is visible in the list
     await expect(page.getByText("Salário")).toBeVisible();
     await expect(page.getByText("R$ 5.000,00")).toBeVisible();
-    await expect(page.getByText("Entrada", { selector: 'span' })).toBeVisible();
+    await expect(page.getByText("Entrada")).toBeVisible();
 
     // 6. Create second transaction (saída)
     await page.getByRole("button", { name: "Nova transação" }).click();
@@ -142,10 +142,10 @@ test.describe("Fluxo de transações", () => {
     // Verify type badges are distinct
     // This is a bit tricky since both "Entrada" and "Saída" might appear
     // We'll verify the page has both by checking multiple elements
-    const entradaBadges = page.getByText("Entrada", { selector: 'span' });
+    const entradaBadges = page.getByText("Entrada");
     await expect(entradaBadges).toHaveCount(1); // Only one entrada badge
 
-    const saidaBadges = page.getByText("Saída", { selector: 'span' });
+    const saidaBadges = page.getByText("Saída");
     await expect(saidaBadges).toHaveCount(1); // Only one saída badge
   });
 });
