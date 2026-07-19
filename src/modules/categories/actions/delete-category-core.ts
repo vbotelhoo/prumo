@@ -7,7 +7,6 @@ import {
   CATEGORY_IN_USE_ERROR,
   CATEGORY_NOT_FOUND_ERROR,
 } from "../domain/constants";
-import type { Headers } from "next/headers";
 
 type Result =
   | { ok: true }
@@ -27,7 +26,8 @@ type Result =
  */
 export async function deleteCategoryCore(
   categoryId: string,
-  headers: Headers
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  headers: any
 ): Promise<Result> {
   // 1. Get session and extract userId
   const session = await auth.api.getSession({ headers });

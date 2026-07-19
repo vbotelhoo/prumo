@@ -1,13 +1,13 @@
 import { describe, it, expect, beforeEach, afterEach } from "vitest";
 import { prisma } from "@/shared";
 import { createCategoryCore } from "../actions/create-category-core";
-import { headers } from "next/headers";
-import { signUpUser } from "@/modules/auth/__tests__/helpers";
 import { CATEGORY_NAME_IN_USE_ERROR } from "../domain/constants";
+// eslint-disable-next-line boundaries/entry-point
+import { signUpCore } from "../../../modules/auth/actions/sign-up-core";
 
 describe("createCategoryAction", () => {
   let userId: string;
-  let testHeaders: ReturnType<typeof headers>;
+  let testHeaders: Headers;
 
   beforeEach(async () => {
     // Clean up test data
@@ -17,24 +17,40 @@ describe("createCategoryAction", () => {
     });
     await prisma.user.deleteMany({});
 
-    // Create a test user
-    const user = await signUpUser({
-      email: `test-cat-${Date.now()}@example.com`,
-      password: "TestPassword123!",
+    // Create a test user using signUpCore
+    const signUpInput = {
       name: "Test User",
       birthDate: "1990-01-01",
+      cpf: "12345678901",
+      zipCode: "01310100",
+      street: "Test Street",
+      addressNumber: "123",
+      neighborhood: "Test Hood",
+      city: "Test City",
+      state: "TS",
+      email: `test-cat-${Date.now()}@example.com`,
+      password: "TestPassword123!",
+      confirmPassword: "TestPassword123!",
+      termsAccepted: true,
+    };
+
+    const signUpResult = await signUpCore(signUpInput, new Headers());
+    if (!signUpResult.ok) {
+      throw new Error("Failed to create test user");
+    }
+
+    // Get the created user
+    const user = await prisma.user.findUnique({
+      where: { email: signUpInput.email },
     });
+    if (!user) {
+      throw new Error("User not found after signup");
+    }
+
     userId = user.id;
 
     // Create a mock headers object
-    testHeaders = {
-      get: (name: string) => {
-        if (name === "cookie") {
-          return ""; // Mock cookie (will be set by session)
-        }
-        return null;
-      },
-    } as any;
+    testHeaders = new Headers();
   });
 
   afterEach(async () => {
@@ -179,7 +195,7 @@ describe("createCategoryAction", () => {
 
   it("should enforce isolation: user B cannot see category of user A", async () => {
     // Create category for user A
-    const categoryA = await prisma.category.create({
+    await prisma.category.create({
       data: {
         name: "Viagem",
         type: "saida",
@@ -188,12 +204,33 @@ describe("createCategoryAction", () => {
     });
 
     // Create user B
-    const userB = await signUpUser({
+    const userBInput = {
+      name: "Test User B",
+      birthDate: "1990-01-02",
+      cpf: "12345678902",
+      zipCode: "01310100",
+      street: "Test Street",
+      addressNumber: "124",
+      neighborhood: "Test Hood",
+      city: "Test City",
+      state: "TS",
       email: `test-cat-b-${Date.now()}@example.com`,
       password: "TestPassword123!",
-      name: "Test User B",
-      birthDate: "1990-01-01",
+      confirmPassword: "TestPassword123!",
+      termsAccepted: true,
+    };
+
+    const userBSignUp = await signUpCore(userBInput, new Headers());
+    if (!userBSignUp.ok) {
+      throw new Error("Failed to create user B");
+    }
+
+    const userB = await prisma.user.findUnique({
+      where: { email: userBInput.email },
     });
+    if (!userB) {
+      throw new Error("User B not found");
+    }
 
     // User B tries to use the name "Viagem" - should be allowed (not taken for them)
     const result = await createCategoryCore(

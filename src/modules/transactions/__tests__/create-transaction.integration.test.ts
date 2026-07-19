@@ -1,8 +1,8 @@
 import { describe, it, expect, beforeEach, afterEach } from "vitest";
 import { prisma } from "@/shared";
 import { createTransactionCore } from "../actions/create-transaction-core";
-import { headers } from "next/headers";
-import { signUpUser } from "@/modules/auth/__tests__/helpers";
+// eslint-disable-next-line boundaries/entry-point
+import { signUpCore } from "../../../modules/auth/actions/sign-up-core";
 import {
   INVALID_AMOUNT_ERROR,
   INVALID_CATEGORY_ERROR,
@@ -11,7 +11,7 @@ import {
 describe("createTransactionAction", () => {
   let userId: string;
   let userBId: string;
-  let testHeaders: ReturnType<typeof headers>;
+  let testHeaders: Headers;
   let categoryId: string;
 
   beforeEach(async () => {
@@ -23,21 +23,65 @@ describe("createTransactionAction", () => {
     await prisma.user.deleteMany({});
 
     // Create a test user
-    const user = await signUpUser({
-      email: `test-txn-${Date.now()}@example.com`,
-      password: "TestPassword123!",
+    const userInput = {
       name: "Test User",
       birthDate: "1990-01-01",
+      cpf: "12345678901",
+      zipCode: "01310100",
+      street: "Test Street",
+      addressNumber: "123",
+      neighborhood: "Test Hood",
+      city: "Test City",
+      state: "TS",
+      email: `test-txn-${Date.now()}@example.com`,
+      password: "TestPassword123!",
+      confirmPassword: "TestPassword123!",
+      termsAccepted: true,
+    };
+
+    const userSignUp = await signUpCore(userInput, new Headers());
+    if (!userSignUp.ok) {
+      throw new Error("Failed to create test user");
+    }
+
+    const user = await prisma.user.findUnique({
+      where: { email: userInput.email },
     });
+    if (!user) {
+      throw new Error("User not found");
+    }
+
     userId = user.id;
 
     // Create user B for isolation tests
-    const userB = await signUpUser({
+    const userBInput = {
+      name: "Test User B",
+      birthDate: "1990-01-02",
+      cpf: "12345678902",
+      zipCode: "01310100",
+      street: "Test Street",
+      addressNumber: "124",
+      neighborhood: "Test Hood",
+      city: "Test City",
+      state: "TS",
       email: `test-txn-b-${Date.now()}@example.com`,
       password: "TestPassword123!",
-      name: "Test User B",
-      birthDate: "1990-01-01",
+      confirmPassword: "TestPassword123!",
+      termsAccepted: true,
+    };
+
+    const userBSignUp = await signUpCore(userBInput, new Headers());
+    if (!userBSignUp.ok) {
+      throw new Error("Failed to create user B");
+    }
+
+    const userB = await prisma.user.findUnique({
+      where: { email: userBInput.email },
     });
+    if (!userB) {
+      throw new Error("User B not found");
+    }
+
     userBId = userB.id;
 
     // Create a custom category for the user
@@ -51,14 +95,7 @@ describe("createTransactionAction", () => {
     categoryId = category.id;
 
     // Create a mock headers object
-    testHeaders = {
-      get: (name: string) => {
-        if (name === "cookie") {
-          return "";
-        }
-        return null;
-      },
-    } as any;
+    testHeaders = new Headers();
   });
 
   afterEach(async () => {

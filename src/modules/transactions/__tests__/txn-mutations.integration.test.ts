@@ -4,14 +4,14 @@ import {
   updateTransactionCore,
   deleteTransactionCore,
 } from "../actions";
-import { headers } from "next/headers";
-import { signUpUser } from "@/modules/auth/__tests__/helpers";
+// eslint-disable-next-line boundaries/entry-point
+import { signUpCore } from "../../../modules/auth/actions/sign-up-core";
 import { TRANSACTION_NOT_FOUND_ERROR } from "../domain/constants";
 
 describe("updateTransactionAction", () => {
   let userId: string;
   let userBId: string;
-  let testHeaders: ReturnType<typeof headers>;
+  let testHeaders: Headers;
   let categoryId: string;
   let transactionId: string;
 
@@ -24,21 +24,65 @@ describe("updateTransactionAction", () => {
     await prisma.user.deleteMany({});
 
     // Create a test user
-    const user = await signUpUser({
-      email: `test-upd-${Date.now()}@example.com`,
-      password: "TestPassword123!",
+    const userInput = {
       name: "Test User",
       birthDate: "1990-01-01",
+      cpf: "12345678901",
+      zipCode: "01310100",
+      street: "Test Street",
+      addressNumber: "123",
+      neighborhood: "Test Hood",
+      city: "Test City",
+      state: "TS",
+      email: `test-upd-${Date.now()}@example.com`,
+      password: "TestPassword123!",
+      confirmPassword: "TestPassword123!",
+      termsAccepted: true,
+    };
+
+    const userSignUp = await signUpCore(userInput, new Headers());
+    if (!userSignUp.ok) {
+      throw new Error("Failed to create test user");
+    }
+
+    const user = await prisma.user.findUnique({
+      where: { email: userInput.email },
     });
+    if (!user) {
+      throw new Error("User not found");
+    }
+
     userId = user.id;
 
     // Create user B for isolation tests
-    const userB = await signUpUser({
+    const userBInput = {
+      name: "Test User B",
+      birthDate: "1990-01-02",
+      cpf: "12345678902",
+      zipCode: "01310100",
+      street: "Test Street",
+      addressNumber: "124",
+      neighborhood: "Test Hood",
+      city: "Test City",
+      state: "TS",
       email: `test-upd-b-${Date.now()}@example.com`,
       password: "TestPassword123!",
-      name: "Test User B",
-      birthDate: "1990-01-01",
+      confirmPassword: "TestPassword123!",
+      termsAccepted: true,
+    };
+
+    const userBSignUp = await signUpCore(userBInput, new Headers());
+    if (!userBSignUp.ok) {
+      throw new Error("Failed to create user B");
+    }
+
+    const userB = await prisma.user.findUnique({
+      where: { email: userBInput.email },
     });
+    if (!userB) {
+      throw new Error("User B not found");
+    }
+
     userBId = userB.id;
 
     // Create categories for the user
@@ -74,14 +118,7 @@ describe("updateTransactionAction", () => {
     transactionId = txn.id;
 
     // Create a mock headers object
-    testHeaders = {
-      get: (name: string) => {
-        if (name === "cookie") {
-          return "";
-        }
-        return null;
-      },
-    } as any;
+    testHeaders = new Headers();
   });
 
   afterEach(async () => {
@@ -203,7 +240,7 @@ describe("updateTransactionAction", () => {
 
 describe("deleteTransactionAction", () => {
   let userId: string;
-  let testHeaders: ReturnType<typeof headers>;
+  let testHeaders: Headers;
   let categoryId: string;
   let transactionId: string;
 
@@ -216,12 +253,34 @@ describe("deleteTransactionAction", () => {
     await prisma.user.deleteMany({});
 
     // Create a test user
-    const user = await signUpUser({
-      email: `test-del-txn-${Date.now()}@example.com`,
-      password: "TestPassword123!",
+    const userInput = {
       name: "Test User",
       birthDate: "1990-01-01",
+      cpf: "12345678901",
+      zipCode: "01310100",
+      street: "Test Street",
+      addressNumber: "123",
+      neighborhood: "Test Hood",
+      city: "Test City",
+      state: "TS",
+      email: `test-del-txn-${Date.now()}@example.com`,
+      password: "TestPassword123!",
+      confirmPassword: "TestPassword123!",
+      termsAccepted: true,
+    };
+
+    const userSignUp = await signUpCore(userInput, new Headers());
+    if (!userSignUp.ok) {
+      throw new Error("Failed to create test user");
+    }
+
+    const user = await prisma.user.findUnique({
+      where: { email: userInput.email },
     });
+    if (!user) {
+      throw new Error("User not found");
+    }
+
     userId = user.id;
 
     // Create a category
@@ -247,14 +306,7 @@ describe("deleteTransactionAction", () => {
     transactionId = txn.id;
 
     // Create a mock headers object
-    testHeaders = {
-      get: (name: string) => {
-        if (name === "cookie") {
-          return "";
-        }
-        return null;
-      },
-    } as any;
+    testHeaders = new Headers();
   });
 
   afterEach(async () => {

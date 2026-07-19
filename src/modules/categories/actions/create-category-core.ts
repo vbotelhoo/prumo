@@ -6,7 +6,6 @@ import {
   isCategoryNameTaken,
 } from "../data/categories-repository";
 import { CATEGORY_NAME_IN_USE_ERROR } from "../domain/constants";
-import type { Headers } from "next/headers";
 
 type Result =
   | { ok: true; category: Category }
@@ -18,7 +17,8 @@ type Result =
  */
 export async function createCategoryCore(
   input: unknown,
-  headers: Headers
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  headers: any
 ): Promise<Result> {
   // 1. Get session and extract userId
   const session = await auth.api.getSession({ headers });
@@ -30,12 +30,13 @@ export async function createCategoryCore(
   const parseResult = createCategoryInputSchema.safeParse(input);
   if (!parseResult.success) {
     const fieldErrors: Record<string, string[]> = {};
-    parseResult.error.errors.forEach((error) => {
-      const path = error.path.join(".");
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    parseResult.error.issues.forEach((issue: any) => {
+      const path = issue.path.join(".");
       if (!fieldErrors[path]) {
         fieldErrors[path] = [];
       }
-      fieldErrors[path].push(error.message);
+      fieldErrors[path].push(issue.message);
     });
     return { ok: false, error: "Validação falhou", fieldErrors };
   }

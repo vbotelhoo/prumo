@@ -1,4 +1,5 @@
 import { auth } from "@/modules/auth";
+// eslint-disable-next-line boundaries/entry-point
 import { parseBRL } from "@/shared/money";
 import { z } from "zod";
 import type { Transaction } from "../domain/types";
@@ -10,7 +11,6 @@ import {
   TRANSACTION_NOT_FOUND_ERROR,
 } from "../domain/constants";
 import { findCategoryForUser } from "@/modules/categories";
-import type { Headers } from "next/headers";
 
 type Result =
   | { ok: true; transaction: Transaction }
@@ -25,7 +25,8 @@ type Result =
 export async function updateTransactionCore(
   id: string,
   input: unknown,
-  headers: Headers
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  headers: any
 ): Promise<Result> {
   // 1. Get session and extract userId
   const session = await auth.api.getSession({ headers });
@@ -37,12 +38,13 @@ export async function updateTransactionCore(
   const parseResult = transactionInputSchema.safeParse(input);
   if (!parseResult.success) {
     const fieldErrors: Record<string, string[]> = {};
-    parseResult.error.errors.forEach((error) => {
-      const path = error.path.join(".");
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    parseResult.error.issues.forEach((issue: any) => {
+      const path = issue.path.join(".");
       if (!fieldErrors[path]) {
         fieldErrors[path] = [];
       }
-      fieldErrors[path].push(error.message);
+      fieldErrors[path].push(issue.message);
     });
     return { ok: false, error: "Validação falhou", fieldErrors };
   }
@@ -71,7 +73,8 @@ export async function updateTransactionCore(
     return {
       ok: false,
       error: INVALID_AMOUNT_ERROR,
-      fieldErrors: { amountRaw: amountValidation.error.errors.map((e) => e.message) },
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      fieldErrors: { amountRaw: amountValidation.error.issues.map((e: any) => e.message) },
     };
   }
 

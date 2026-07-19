@@ -1,6 +1,5 @@
 import { auth } from "@/modules/auth";
 import { deleteTransaction as deleteTransactionRepo } from "../data/transactions-repository";
-import type { Headers } from "next/headers";
 
 type Result =
   | { ok: true }
@@ -16,7 +15,8 @@ type Result =
  */
 export async function deleteTransactionCore(
   id: string,
-  headers: Headers
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  headers: any
 ): Promise<Result> {
   // 1. Get session and extract userId
   const session = await auth.api.getSession({ headers });
