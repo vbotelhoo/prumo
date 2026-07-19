@@ -124,11 +124,11 @@
 
 ## Handoff
 
-- **Feature**: categories-transactions (Roadmap item 3) — Specify concluído, aguardando confirmação do usuário
-- **Phase / Task**: Specify. Spec completa escrita em `.specs/features/categories-transactions/spec.md` (escopo Large: 2 módulos novos + schema + UI + E2E). Auth (item 2) foi mergeada em `main` via PR #2.
-- **Completed**: Spec com 5 user stories (4 P1 + 1 P2/E2E), 15 requirement IDs (CAT-01..06, TXN-01..09), edge cases, dimensions sweep completo e closure gate aplicado. Todas as áreas cinzentas foram resolvidas autonomamente como assumptions (Confirmed? = n) por execução não-interativa: categorias padrão globais com seed idempotente, categoria tipada entrada/saída, conjunto de padrões BR, valor >0 até R$10M em centavos, data date-only 2000→+100 anos, descrição 1–140, nome de categoria 1–40 único case-insensitive, listagem data desc paginada em 20, rotas `/app/transactions` e `/app/categories`.
+- **Feature**: categories-transactions (Roadmap item 3) — Specify concluído e confirmado pelo usuário ✅
+- **Phase / Task**: Specify + Discuss concluídos. Spec em `.specs/features/categories-transactions/spec.md`; decisões do usuário em `.specs/features/categories-transactions/context.md` (escopo Large: 2 módulos novos + schema + UI + E2E). Auth (item 2) mergeada em `main` via PR #2.
+- **Completed**: Spec com 6 user stories (5 P1 + 1 P2/E2E), 16 requirement IDs (CAT-01..06, TXN-01..10), edge cases, dimensions sweep e closure gate. Usuário revisou as 14 áreas cinzentas em 2026-07-18 e todas as assumptions estão confirmadas. Mudanças vs. defaults do agente: descrição da transação é OPCIONAL (≤140 quando presente, "—" na listagem); paginação NUMERADA (páginas de 20) em vez de "carregar mais"; formulário de transação em MODAL sobre a listagem; EXCLUSÃO de transações incluída no escopo (confirmação + hard delete + AD-012). Exclusão/edição de categorias e edição de transações seguem fora do escopo.
 - **In-progress** (file:line): nenhum
-- **Next step**: Usuário revisa a coluna "Confirmed?" da tabela de Assumptions da spec (defaults escolhidos pelo agente, nenhum confirmado ainda). Depois: Design (feature Large — fase necessária: schema Prisma dos 2 módulos, APIs públicas, contratos entre `transactions` e `categories`).
+- **Next step**: Design (feature Large — fase necessária): schema Prisma dos 2 módulos (Category global+personalizada tipada, Transaction), APIs públicas de `categories` e `transactions`, contrato entre módulos (transactions → categories via index.ts, AD-010), estratégia do seed idempotente, componentes de UI (modal, paginação numerada).
 - **Blockers**: nenhum.
 - **Uncommitted files**: nenhum
 - **Branch**: cursor/spec-categories-transactions-55cc (a partir de `main` já com auth mergeada)
