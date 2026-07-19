@@ -62,9 +62,9 @@ describe("categories-repository", () => {
 
       const categories = await listCategoriesByUser(user.id);
 
-      // Should include all 13 default categories
+      // Should include all 23 default categories
       const defaultCategories = categories.filter((c) => c.userId === null);
-      expect(defaultCategories.length).toBe(13);
+      expect(defaultCategories.length).toBe(23);
     });
 
     it("returns user's custom categories plus defaults", async () => {
@@ -84,7 +84,7 @@ describe("categories-repository", () => {
       // Should have defaults + 1 custom
       const defaults = categories.filter((c) => c.userId === null);
       const customs = categories.filter((c) => c.userId === user.id);
-      expect(defaults.length).toBe(13);
+      expect(defaults.length).toBe(23);
       expect(customs.length).toBe(1);
       expect(customs[0].name).toBe("Minha Categoria");
     });
@@ -121,11 +121,15 @@ describe("categories-repository", () => {
 
       const categories = await listCategoriesByUser(user.id);
 
-      // Check ordering by comparing consecutive names
+      // Check ordering by comparing consecutive names. Postgres sorts `name ASC`
+      // using locale-aware collation (e.g. "água" before "luz"), so the comparison
+      // here must use localeCompare, not code-unit `<=` — plain accented characters
+      // like "á" have a higher code point than unaccented ASCII letters and would
+      // otherwise sort after them, which does not match the DB's actual order.
       for (let i = 0; i < categories.length - 1; i++) {
         const current = categories[i].name.toLowerCase();
         const next = categories[i + 1].name.toLowerCase();
-        expect(current <= next).toBe(true);
+        expect(current.localeCompare(next, "pt-BR") <= 0).toBe(true);
       }
     });
   });
