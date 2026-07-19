@@ -39,8 +39,17 @@ Decisões tomadas pelo usuário na revisão da spec (respostas à numeração 1�
 
 ### Escopo
 
-- **(13)** Usuário questionou a exclusão fora do escopo → **exclusão de transações incluída** nesta feature (story P1: confirmação obrigatória, hard delete, só o próprio dado). Exclusão/edição de **categorias** permanece fora (cascata sobre transações classificadas fica para iteração futura). Edição de transações permanece fora.
+- **(13)** Usuário questionou a exclusão fora do escopo → **exclusão de transações incluída** nesta feature (story P1: confirmação obrigatória, hard delete, só o próprio dado).
 - **(14)** Confirmado: E2E de isolamento com 2 contas fica no item 5 (`projections`); aqui isolamento é coberto por testes de integração (AD-012).
+
+### 2ª revisão (2026-07-18, mesma data)
+
+- **Exclusão de categoria personalizada incluída**, com regras definidas pelo usuário:
+  - Bloqueada enquanto houver transações vinculadas à categoria.
+  - Quando sem uso: confirmação exige digitar o texto exato **"excluir permanentemente"** e o diálogo deve deixar claro que **não existe reversão**.
+  - Só categorias personalizadas do próprio usuário; padrão (globais) não são excluíveis.
+  - Integridade garantida por FK RESTRICT no banco (corrida checagem × confirmação).
+- **Edição de transações incluída** — usuário considera edição ponto essencial do MVP para este tipo de produto. Story P1: mesmo modal do cadastro pré-preenchido, mesmas validações, re-filtro de categoria ao trocar tipo, só o próprio dado (AD-012).
 
 ### Agent's Discretion
 
@@ -62,6 +71,5 @@ Nenhuma referência externa de produto citada — aberto a abordagens padrão de
 
 ## Deferred Ideas
 
-- Edição de transações (CRUD completo) — iteração futura.
-- Edição/exclusão/arquivamento de categorias — exige decidir efeito cascata (bloquear? reatribuir? arquivar?).
+- Edição (renomear/mudar tipo) e arquivamento de categorias — renomear categoria em uso muda retroativamente o rótulo de transações passadas; iteração futura.
 - Filtros, busca e agrupamento na listagem — visão mensal chega com `projections` (item 5).
