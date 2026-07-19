@@ -249,30 +249,30 @@ Decisões revisadas e confirmadas pelo usuário em 2026-07-18 (ver `context.md`)
 
 | Requirement ID | Story | Phase | Status |
 | -------------- | ----- | ----- | ------ |
-| CAT-01 | P1: Categorias padrão (seed global idempotente, disponível a todo usuário) | Design | Pending |
-| CAT-02 | P1: Categorias padrão (listagem em `/app/categories` separada por tipo) | Design | Pending |
-| CAT-03 | P1: Categoria personalizada (criação com nome 1–40 + tipo) | Design | Pending |
-| CAT-04 | P1: Categoria personalizada (unicidade case-insensitive por usuário/tipo, incl. vs. padrão, constraint no banco) | Design | Pending |
-| CAT-05 | P1: Categoria personalizada (validação Zod server-side na fronteira) | Design | Pending |
-| CAT-06 | P1: Categoria personalizada (isolamento por usuário — AD-012) | Design | Pending |
-| CAT-07 | P1: Excluir categoria personalizada (bloqueio em uso + confirmação digitada "excluir permanentemente" + aviso de irreversibilidade + FK RESTRICT + padrão não-excluível) | Design | Pending |
-| TXN-01 | P1: Registrar transação (formulário em modal: tipo/data/valor/descrição opcional/categoria) | Design | Pending |
-| TXN-02 | P1: Registrar transação (seletor de categoria filtrado por tipo) | Design | Pending |
-| TXN-03 | P1: Registrar transação (persistência em centavos + vínculo ao usuário da sessão) | Design | Pending |
-| TXN-04 | P1: Registrar transação (validações: valor, data, descrição ≤140 quando presente, categoria válida/visível/tipo-correto) | Design | Pending |
-| TXN-05 | P1: Registrar transação (validação Zod server-side na fronteira) | Design | Pending |
-| TXN-06 | P1: Listar transações (ordenação data desc + desempate, BRL via shared, distinção visual entrada/saída, "—" sem descrição) | Design | Pending |
-| TXN-07 | P1: Listar transações (estado vazio + paginação numerada de 20 + página fora do intervalo) | Design | Pending |
-| TXN-08 | P1: Listar transações (isolamento por usuário — AD-012) | Design | Pending |
-| TXN-09 | P1: Excluir transação (confirmação + hard delete + só o próprio dado — AD-012) | Design | Pending |
-| TXN-10 | P1: Editar transação (modal pré-preenchido + mesmas validações do cadastro + re-filtro de categoria ao trocar tipo + só o próprio dado — AD-012) | Design | Pending |
-| TXN-11 | P2: E2E (login → criar entrada → criar saída → ambas na listagem) | Design | Pending |
+| CAT-01 | P1: Categorias padrão (seed global idempotente, disponível a todo usuário) | Tasks | Pending |
+| CAT-02 | P1: Categorias padrão (listagem em `/app/categories` separada por tipo) | Tasks | Pending |
+| CAT-03 | P1: Categoria personalizada (criação com nome 1–40 + tipo) | Tasks | Pending |
+| CAT-04 | P1: Categoria personalizada (unicidade case-insensitive por usuário/tipo, incl. vs. padrão, constraint no banco) | Tasks | Pending |
+| CAT-05 | P1: Categoria personalizada (validação Zod server-side na fronteira) | Tasks | Pending |
+| CAT-06 | P1: Categoria personalizada (isolamento por usuário — AD-012) | Tasks | Pending |
+| CAT-07 | P1: Excluir categoria personalizada (bloqueio em uso + confirmação digitada "excluir permanentemente" + aviso de irreversibilidade + FK RESTRICT + padrão não-excluível) | Tasks | Pending |
+| TXN-01 | P1: Registrar transação (formulário em modal: tipo/data/valor/descrição opcional/categoria) | Tasks | Pending |
+| TXN-02 | P1: Registrar transação (seletor de categoria filtrado por tipo) | Tasks | Pending |
+| TXN-03 | P1: Registrar transação (persistência em centavos + vínculo ao usuário da sessão) | Tasks | Pending |
+| TXN-04 | P1: Registrar transação (validações: valor, data, descrição ≤140 quando presente, categoria válida/visível/tipo-correto) | Tasks | Pending |
+| TXN-05 | P1: Registrar transação (validação Zod server-side na fronteira) | Tasks | Pending |
+| TXN-06 | P1: Listar transações (ordenação data desc + desempate, BRL via shared, distinção visual entrada/saída, "—" sem descrição) | Tasks | Pending |
+| TXN-07 | P1: Listar transações (estado vazio + paginação numerada de 20 + página fora do intervalo) | Tasks | Pending |
+| TXN-08 | P1: Listar transações (isolamento por usuário — AD-012) | Tasks | Pending |
+| TXN-09 | P1: Excluir transação (confirmação + hard delete + só o próprio dado — AD-012) | Tasks | Pending |
+| TXN-10 | P1: Editar transação (modal pré-preenchido + mesmas validações do cadastro + re-filtro de categoria ao trocar tipo + só o próprio dado — AD-012) | Tasks | Pending |
+| TXN-11 | P2: E2E (login → criar entrada → criar saída → ambas na listagem) | Tasks | Pending |
 
 **ID format:** `CAT-NN` (módulo categories), `TXN-NN` (módulo transactions)
 
 **Status values:** Pending → In Design → In Tasks → Implementing → Verified
 
-**Coverage:** 18 total, 0 mapped to tasks, 18 unmapped ⚠️ (esperado — Tasks ainda não gerado)
+**Coverage:** 18 total, 18 mapped to tasks (tasks.md gerado), 0 unmapped ✅
 
 ---
 
