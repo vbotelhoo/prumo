@@ -11,7 +11,7 @@ export type { Env } from "./env";
 
 export { prisma } from "./db";
 
-export { addMoney, formatBRL, money, moneySchema, subtractMoney } from "./money";
+export { addMoney, formatBRL, money, moneySchema, parseBRL, subtractMoney } from "./money";
 export type { Money } from "./money";
 
 export {
@@ -26,5 +26,30 @@ export {
 
 export { Button, buttonVariants } from "./components/ui/button";
 export { Checkbox } from "./components/ui/checkbox";
+export {
+  Dialog,
+  DialogPortal,
+  DialogOverlay,
+  DialogClose,
+  DialogTrigger,
+  DialogContent,
+  DialogHeader,
+  DialogFooter,
+  DialogTitle,
+  DialogDescription,
+} from "./components/ui/dialog";
 export { Input } from "./components/ui/input";
 export { Label } from "./components/ui/label";
+export {
+  Select,
+  SelectGroup,
+  SelectValue,
+  SelectTrigger,
+  SelectContent,
+  SelectLabel,
+  SelectItem,
+  SelectSeparator,
+  SelectScrollUpButton,
+  SelectScrollDownButton,
+} from "./components/ui/select";
+export { Separator } from "./components/ui/separator";
