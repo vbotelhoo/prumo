@@ -24,7 +24,7 @@ Ordem de implementação do MVP. Cada feature segue o fluxo spec-driven (spec �
 - Sessão e logout
 - E2E: cadastro → login → logout
 
-**Status**: pendente
+**Status**: ✅ concluída (2026-07-17) — mergeada em `main` via [PR #2](https://github.com/vbotelhoo/prumo/pull/2), CI verde. Validação em `.specs/features/auth/validation.md`.
 
 ### 3. Categorias + Transações avulsas — módulos `categories` e `transactions`
 
@@ -33,7 +33,7 @@ Ordem de implementação do MVP. Cada feature segue o fluxo spec-driven (spec �
 - Listagem de transações
 - E2E: criar transação de entrada e de saída e vê-las na listagem
 
-**Status**: pendente
+**Status**: ✅ concluída (2026-07-19) — mergeada em `main` via PRs [#3](https://github.com/vbotelhoo/prumo/pull/3) e [#4](https://github.com/vbotelhoo/prumo/pull/4), os 5 checks de CI verdes. Validação em `.specs/features/categories-transactions/validation.md` (PASS após 4 gate failures encontrados e corrigidos no CI — lições L-006 a L-009).
 
 ### 4. Compras parceladas e financiamentos — módulo `commitments`
 
