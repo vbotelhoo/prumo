@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import type { Category } from "@/modules/categories";
 import type { Transaction } from "../domain/types";
@@ -30,6 +31,7 @@ export function TransactionsPageClient({
   totalPages,
   categories,
 }: TransactionsPageClientProps) {
+  const router = useRouter();
   const [modalOpen, setModalOpen] = useState(false);
   const [editingTransaction, setEditingTransaction] = useState<Transaction | null>(null);
   const [deletingTransaction, setDeletingTransaction] = useState<Transaction | null>(null);
@@ -53,6 +55,7 @@ export function TransactionsPageClient({
   const handleModalSuccess = () => {
     setModalOpen(false);
     setEditingTransaction(null);
+    router.refresh();
   };
 
   const handleDeleteDialogOpenChange = (open: boolean) => {
@@ -65,6 +68,7 @@ export function TransactionsPageClient({
   const handleDeleted = () => {
     setDeleteDialogOpen(false);
     setDeletingTransaction(null);
+    router.refresh();
   };
 
   return (

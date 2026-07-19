@@ -77,7 +77,7 @@ test.describe("Fluxo de transações", () => {
 
     // Modal should be visible
     await expect(page.getByRole("dialog")).toBeVisible();
-    await expect(page.getByText("Nova transação")).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Nova transação" })).toBeVisible();
 
     // Fill in the transaction form
     // Type is already set to "Entrada" by default
