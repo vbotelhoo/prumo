@@ -3,7 +3,7 @@
   "promote_threshold": 2,
   "window_days": 45,
   "quarantine_threshold": 2,
-  "next_id": 6,
+  "next_id": 10,
   "lessons": [
     {
       "id": "L-001",
@@ -94,6 +94,78 @@
       ],
       "created": "2026-07-17T00:33:42Z",
       "last_seen": "2026-07-17T00:33:42Z"
+    },
+    {
+      "id": "L-006",
+      "key": "gate_fail::playwright s getbytext does not accept a selector option scope ambiguous text matches with getbyrole instead",
+      "text": "Playwright's getByText() does not accept a selector option; scope ambiguous text matches with getByRole() instead.",
+      "signal": "gate_fail",
+      "scope": "e2e",
+      "status": "candidate",
+      "features": [
+        "categories-transactions"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "validation.md#Post-Verification-Update (row 1) (e2e)"
+      ],
+      "created": "2026-07-19T14:52:18Z",
+      "last_seen": "2026-07-19T14:52:18Z"
+    },
+    {
+      "id": "L-007",
+      "key": "gate_fail::when integration e2e tests assume seeded reference data the ci workflow must run the seed step after migrations not just prisma migrate deploy declare every cli tool a seed script shells out to e g tsx as an explicit dependency",
+      "text": "When integration/E2E tests assume seeded reference data, the CI workflow must run the seed step after migrations, not just prisma migrate deploy; declare every CLI tool a seed script shells out to (e.g. tsx) as an explicit dependency.",
+      "signal": "gate_fail",
+      "scope": "ci",
+      "status": "candidate",
+      "features": [
+        "categories-transactions"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "validation.md#Post-Verification-Update (row 2) (ci)"
+      ],
+      "created": "2026-07-19T14:52:18Z",
+      "last_seen": "2026-07-19T14:52:18Z"
+    },
+    {
+      "id": "L-008",
+      "key": "gate_fail::integration tests that sign up users through a real auth core function must use checksum valid fixture data e g real cpf cnpj check digits and must build request headers from the session cookie the signup call returns not an empty headers otherwise every session dependent action under test silently resolves to unauthorized",
+      "text": "Integration tests that sign up users through a real auth core function must use checksum-valid fixture data (e.g. real CPF/CNPJ check digits) and must build request headers from the session cookie the signup call returns, not an empty Headers() — otherwise every session-dependent action under test silently resolves to unauthorized.",
+      "signal": "gate_fail",
+      "scope": "integration-tests",
+      "status": "candidate",
+      "features": [
+        "categories-transactions"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "validation.md#Post-Verification-Update (row 3) (integration-tests)"
+      ],
+      "created": "2026-07-19T14:52:32Z",
+      "last_seen": "2026-07-19T14:52:32Z"
+    },
+    {
+      "id": "L-009",
+      "key": "gate_fail::client components that call a server action to mutate data must call router refresh or otherwise revalidate in their success handler or the server rendered list will keep showing stale data until a manual reload integration tests that call core action functions directly cannot catch this only a real e2e test that drives the ui can",
+      "text": "Client components that call a server action to mutate data must call router.refresh() (or otherwise revalidate) in their success handler, or the server-rendered list will keep showing stale data until a manual reload; integration tests that call *-core action functions directly cannot catch this, only a real E2E test that drives the UI can.",
+      "signal": "gate_fail",
+      "scope": "client-components",
+      "status": "candidate",
+      "features": [
+        "categories-transactions"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "validation.md#Post-Verification-Update (row 4) (client-components)"
+      ],
+      "created": "2026-07-19T14:52:32Z",
+      "last_seen": "2026-07-19T14:52:32Z"
     }
   ]
 }

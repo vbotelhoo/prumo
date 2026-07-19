@@ -44,6 +44,30 @@ Seen once or not yet corroborated. Tracked, not trusted.
 - evidence: spec.md AC-CEP.3 (fields remain editable after CEP auto-fill) — no test asserts post-fill editability, only code inspection (auth)
 - last seen: 2026-07-17T00:33:42Z
 
+### L-006 — Playwright's getByText() does not accept a selector option; scope ambiguous text matches with getByRole() instead.
+- signal: `gate_fail` · recurrence: 1 feature(s) · scope: `e2e` · harmful: 0
+- features: categories-transactions
+- evidence: validation.md#Post-Verification-Update (row 1) (e2e)
+- last seen: 2026-07-19T14:52:18Z
+
+### L-007 — When integration/E2E tests assume seeded reference data, the CI workflow must run the seed step after migrations, not just prisma migrate deploy; declare every CLI tool a seed script shells out to (e.g. tsx) as an explicit dependency.
+- signal: `gate_fail` · recurrence: 1 feature(s) · scope: `ci` · harmful: 0
+- features: categories-transactions
+- evidence: validation.md#Post-Verification-Update (row 2) (ci)
+- last seen: 2026-07-19T14:52:18Z
+
+### L-008 — Integration tests that sign up users through a real auth core function must use checksum-valid fixture data (e.g. real CPF/CNPJ check digits) and must build request headers from the session cookie the signup call returns, not an empty Headers() — otherwise every session-dependent action under test silently resolves to unauthorized.
+- signal: `gate_fail` · recurrence: 1 feature(s) · scope: `integration-tests` · harmful: 0
+- features: categories-transactions
+- evidence: validation.md#Post-Verification-Update (row 3) (integration-tests)
+- last seen: 2026-07-19T14:52:32Z
+
+### L-009 — Client components that call a server action to mutate data must call router.refresh() (or otherwise revalidate) in their success handler, or the server-rendered list will keep showing stale data until a manual reload; integration tests that call *-core action functions directly cannot catch this, only a real E2E test that drives the UI can.
+- signal: `gate_fail` · recurrence: 1 feature(s) · scope: `client-components` · harmful: 0
+- features: categories-transactions
+- evidence: validation.md#Post-Verification-Update (row 4) (client-components)
+- last seen: 2026-07-19T14:52:32Z
+
 ## Quarantined (failed when applied — ignore)
 
 A confirmed lesson that recurred alongside failure. Kept for the maintainer to review.
