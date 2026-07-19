@@ -16,3 +16,6 @@ export {
 // Actions: mutations
 export { createCategoryAction } from "./actions/create-category-action";
 export { deleteCategoryAction } from "./actions/delete-category-action";
+
+// Components
+export { CategoriesPageClient } from "./components/CategoriesPageClient";

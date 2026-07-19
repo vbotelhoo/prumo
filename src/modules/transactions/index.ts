@@ -13,3 +13,6 @@ export { listTransactions } from "./data/transactions-repository";
 export { createTransactionAction } from "./actions/create-transaction-action";
 export { updateTransactionAction } from "./actions/update-transaction-action";
 export { deleteTransactionAction } from "./actions/delete-transaction-action";
+
+// Components
+export { TransactionsPageClient } from "./components/TransactionsPageClient";
