@@ -124,11 +124,11 @@
 
 ## Handoff
 
-- **Feature**: auth (Roadmap item 2) — Execute concluído, Verifier PASS ✅
-- **Phase / Task**: T1..T10 implementadas em 4 fases (sub-agents por fase) + Verifier independente. Todas as 10 tasks commitadas.
-- **Completed**: Specify, Design, Tasks e Execute completos. Commits `5b21ed9`..`c32e2c8` na branch `feat/auth` (validators/schemas, viacep, better auth config + databaseHooks, migration do User, auth client, shadcn kit, server actions + testes de integração, SignUpForm, LoginForm/LogoutButton, páginas/proxy/E2E). Verificação independente: 92 testes verdes (69 unit + 19 integration + 4 e2e), sensor de mutação P0 com 7/7 mutações mortas, 15/17 ACs com evidência exata de spec-outcome (3 spec-precision gaps não-bloqueantes documentados em `.specs/features/auth/validation.md`). Report completo em `.specs/features/auth/validation.md`.
+- **Feature**: categories-transactions (Roadmap item 3) — Specify concluído, aguardando confirmação do usuário
+- **Phase / Task**: Specify. Spec completa escrita em `.specs/features/categories-transactions/spec.md` (escopo Large: 2 módulos novos + schema + UI + E2E). Auth (item 2) foi mergeada em `main` via PR #2.
+- **Completed**: Spec com 5 user stories (4 P1 + 1 P2/E2E), 15 requirement IDs (CAT-01..06, TXN-01..09), edge cases, dimensions sweep completo e closure gate aplicado. Todas as áreas cinzentas foram resolvidas autonomamente como assumptions (Confirmed? = n) por execução não-interativa: categorias padrão globais com seed idempotente, categoria tipada entrada/saída, conjunto de padrões BR, valor >0 até R$10M em centavos, data date-only 2000→+100 anos, descrição 1–140, nome de categoria 1–40 único case-insensitive, listagem data desc paginada em 20, rotas `/app/transactions` e `/app/categories`.
 - **In-progress** (file:line): nenhum
-- **Next step**: UAT manual do usuário (pendente — Verifier não teve usuário interativo disponível); depois, PR de `feat/auth` para `main`. Gaps informacionais opcionais para uma iteração futura: (1) `e2e/auth.spec.ts:11-32` gerador de CPF com baixa cardinalidade pode colidir em banco de teste local não resetado; (2) sem teste de fronteira dos 7 dias de expiração de sessão (delegado aos defaults do Better Auth); (3) AC-CEP.3 (campos editáveis pós-preenchimento) verificado só por inspeção de código, não por teste direto.
+- **Next step**: Usuário revisa a coluna "Confirmed?" da tabela de Assumptions da spec (defaults escolhidos pelo agente, nenhum confirmado ainda). Depois: Design (feature Large — fase necessária: schema Prisma dos 2 módulos, APIs públicas, contratos entre `transactions` e `categories`).
 - **Blockers**: nenhum.
-- **Uncommitted files**: nenhum (validation.md e lessons candidatas do Verifier já persistidos pelo sub-agent)
-- **Branch**: feat/auth (criada a partir de docs/setup-pendencias-concluidas, pois os docs da feature ainda não estão em `main`)
+- **Uncommitted files**: nenhum
+- **Branch**: cursor/spec-categories-transactions-55cc (a partir de `main` já com auth mergeada)
