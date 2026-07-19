@@ -19,7 +19,9 @@ function checkDigit(digits: number[], startWeight: number): number {
 }
 
 function uniqueValidCpf(): string {
-  const seed = Math.floor(Math.random() * 1_000_000_000);
+  // Use maximum entropy: combine timestamp with high-resolution random
+  // to ensure uniqueness across multiple test runs against persistent database
+  const seed = Math.floor((Date.now() + Math.random() * Number.MAX_SAFE_INTEGER) % 1_000_000_000);
   return validCpf(seed);
 }
 
