@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { addMoney, formatBRL, money, subtractMoney } from "../money";
+import { addMoney, formatBRL, money, parseBRL, subtractMoney } from "../money";
 
 describe("formatBRL", () => {
   // AC-1 (spec.md, story Money): 123456 centavos → "R$ 1.234,56" (pt-BR).
@@ -70,5 +70,40 @@ describe("money construction", () => {
 
   it("accepts large integer values", () => {
     expect(money(999_999_999)).toBe(999_999_999);
+  });
+});
+
+describe("parseBRL", () => {
+  // T3: conversão de string BRL para centavos inteiros
+  it("parses '250,37' as 25037 cents", () => {
+    expect(parseBRL("250,37")).toBe(25037);
+  });
+
+  it("parses '1.234,56' as 123456 cents", () => {
+    expect(parseBRL("1.234,56")).toBe(123456);
+  });
+
+  it("parses '5000' as 500000 cents", () => {
+    expect(parseBRL("5000")).toBe(500000);
+  });
+
+  it("parses '0,01' as 1 cent", () => {
+    expect(parseBRL("0,01")).toBe(1);
+  });
+
+  it("parses '10000000,00' as 1000000000 cents", () => {
+    expect(parseBRL("10000000,00")).toBe(1000000000);
+  });
+
+  it("returns null for invalid input 'abc'", () => {
+    expect(parseBRL("abc")).toBeNull();
+  });
+
+  it("returns null for empty string", () => {
+    expect(parseBRL("")).toBeNull();
+  });
+
+  it("parses input without comma '5000' as 500000 cents", () => {
+    expect(parseBRL("5000")).toBe(500000);
   });
 });

@@ -1,6 +1,7 @@
 import { execSync } from "node:child_process";
 
 import { PostgreSqlContainer } from "@testcontainers/postgresql";
+import { seed } from "./prisma/seed";
 
 // globalSetup do project `integration` (design.md, componente 5; spec.md,
 // story "Testes" AC-2/AC-3 e edge case "sem Docker e sem DATABASE_URL").
@@ -32,6 +33,7 @@ export default async function setup() {
 
   process.env.DATABASE_URL = container.getConnectionUri();
   execSync("pnpm prisma migrate deploy", { stdio: "inherit" });
+  await seed();
 
   return async () => {
     await container.stop();

@@ -27,3 +27,15 @@ const brlFormatter = new Intl.NumberFormat("pt-BR", {
 export function formatBRL(m: Money): string {
   return brlFormatter.format(m / 100);
 }
+
+/**
+ * Converte string BRL ("1.234,56") em centavos inteiros.
+ * Retorna null se o input não for parseável como número válido.
+ * O resultado 0 é válido (o chamador valida regras de negócio > 0).
+ */
+export function parseBRL(raw: string): number | null {
+  const digits = raw.replace(/\./g, "").replace(",", ".");
+  const value = parseFloat(digits);
+  if (isNaN(value)) return null;
+  return Math.round(value * 100);
+}

@@ -23,7 +23,7 @@ export default defineConfig({
     trace: "on-first-retry",
   },
   webServer: {
-    command: "pnpm build && pnpm start",
+    command: "npm run build && npm start",
     url: betterAuthUrl,
     reuseExistingServer: !process.env.CI,
     timeout: 180_000,
