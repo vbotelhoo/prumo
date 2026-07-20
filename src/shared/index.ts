@@ -15,6 +15,14 @@ export { addMoney, formatBRL, money, moneySchema, parseBRL, subtractMoney } from
 export type { Money } from "./money";
 
 export {
+  parseDate,
+  addMonths,
+  getLastDayOfMonth,
+  formatDateIso,
+  isDateInRange,
+} from "./date-utils";
+
+export {
   Card,
   CardAction,
   CardContent,
