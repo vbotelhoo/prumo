@@ -1,25 +1,47 @@
 import { headers } from "next/headers";
+import Link from "next/link";
 
 import { auth, LogoutButton } from "@/modules/auth";
+import { Button } from "@/shared";
 
-// Página interna placeholder `/app` (design.md, componente 7; spec.md,
-// context.md — "Página interna placeholder": saudação com o nome do
-// usuário + botão de logout, mínimo que prova sessão e viabiliza o E2E).
-// A sessão já foi validada pelo layout (`AppLayout`); esta página resolve
-// `getSession` novamente só para ler `session.user.name` (App Router não
-// repassa props customizadas de layout para page). Substituída pelo
-// dashboard em feature futura do roadmap.
 export default async function AppPage() {
   const session = await auth.api.getSession({ headers: await headers() });
   const name = session?.user.name ?? "";
 
   return (
-    <div className="flex flex-1 items-center justify-center bg-zinc-50 px-6 py-16 dark:bg-black">
-      <div className="flex flex-col items-center gap-6">
-        <p className="text-lg">
-          Olá, <span className="font-semibold">{name}</span>!
-        </p>
-        <LogoutButton />
+    <div className="max-w-4xl mx-auto py-8 px-4">
+      <div className="space-y-8">
+        <div className="text-center">
+          <p className="text-2xl">
+            Olá, <span className="font-semibold">{name}</span>!
+          </p>
+          <p className="text-gray-500 mt-2">Bem-vindo ao Prumo</p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <Link href="/app/transactions" className="block">
+            <Button variant="outline" className="w-full h-24 flex flex-col items-center justify-center gap-2">
+              <span className="text-2xl">💰</span>
+              <span>Transações</span>
+            </Button>
+          </Link>
+          <Link href="/app/commitments" className="block">
+            <Button variant="outline" className="w-full h-24 flex flex-col items-center justify-center gap-2">
+              <span className="text-2xl">📋</span>
+              <span>Compromissos</span>
+            </Button>
+          </Link>
+          <Link href="/app/categories" className="block">
+            <Button variant="outline" className="w-full h-24 flex flex-col items-center justify-center gap-2">
+              <span className="text-2xl">🏷️</span>
+              <span>Categorias</span>
+            </Button>
+          </Link>
+        </div>
+
+        <div className="flex justify-center">
+          <LogoutButton />
+        </div>
       </div>
     </div>
   );
