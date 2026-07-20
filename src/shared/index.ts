@@ -61,3 +61,9 @@ export {
   SelectScrollDownButton,
 } from "./components/ui/select";
 export { Separator } from "./components/ui/separator";
+
+export { Progress } from "./components/ui/progress";
+export {
+  RadioGroup,
+  RadioGroupItem,
+} from "./components/ui/radio-group";
