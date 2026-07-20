@@ -47,12 +47,5 @@ export async function seed() {
   }
 }
 
-// Se rodar como script (pnpm prisma db seed)
-if (require.main === module) {
-  seed()
-    .then(() => process.exit(0))
-    .catch((err) => {
-      console.error(err);
-      process.exit(1);
-    });
-}
+// Não usar require.main em ESM. O seed é chamado via vitest.global-setup
+// ou via import explícito em outros contextos.
