@@ -124,12 +124,30 @@
 
 ## Handoff
 
-- **Feature**: categories-transactions (Roadmap item 3) — Specify → Design → Tasks → Execute → Validate concluídos; PR #3 aberto e com CI verde ✅
-- **Phase / Task**: Todas as 26 tasks das 5 fases implementadas via sub-agents (um worker por fase). Verifier rodou ao final e emitiu PASS em `.specs/features/categories-transactions/validation.md` — mas sem executar de fato integração/E2E localmente (ambiente com Node 20.15 vs. `engines` do projeto exigindo 24.18; mutações analisadas por inspeção de código, não por execução real). Esse gap está documentado na seção "Post-Verification Update" do próprio validation.md.
-- **Completed**: Spec (8 stories, 18 requirement IDs), Design, Tasks (26 atômicas), Execute (schema → domain → data → actions → components → pages → E2E), Validate (relatório inicial + correção pós-CI). PR #3 aberto em `cursor/spec-categories-transactions-55cc` → `main`.
-- **CI findings (2026-07-19, após push inicial do PR)**: push para o PR #3 falhou em Lint & Typecheck, Integration tests e E2E tests. Root-caused e corrigidos 4 defeitos não relacionados (detalhe completo em validation.md → "Post-Verification Update"): (1) `getByText({selector})` inválido no Playwright; (2) CI rodava `prisma migrate deploy` mas nunca `prisma db seed`, e `tsx` (usado pelo seed) nunca foi declarado como dependência; (3) fixtures de teste de integração usavam CPF sem checksum válido e `Headers()` vazio em vez do cookie de sessão real, fazendo toda action autenticada retornar Unauthorized; (4) **bug real de produção** — `TransactionsPageClient.handleModalSuccess` nunca chamava `router.refresh()`, então a lista de transações não atualizava após criar/editar. Todos os 5 checks de CI (Lint&Typecheck, Unit, Integration, E2E, Build) estão verdes agora. 4 lições registradas em `.specs/lessons.json` (L-006 a L-009, status `candidate`) para os 4 padrões acima.
-- **In-progress** (file:line): nenhum
-- **Next step**: Aguardar revisão do usuário no [PR #3](https://github.com/vbotelhoo/prumo/pull/3). Após merge, roadmap item 4 é o próximo candidato a Specify.
-- **Blockers**: nenhum.
-- **Uncommitted files**: nenhum (validation.md e STATE.md atualizados e commitados nesta sessão de documentação).
-- **Branch**: cursor/spec-categories-transactions-55cc (a partir de `main` já com auth mergeada), 24 commits à frente de `main`.
+- **Feature**: commitments (Roadmap item 4) — Specify → Design → Tasks → Execute → Validate concluídos ✅
+
+- **Phase / Task**: Todas as 17 tasks das 5 fases implementadas sequencialmente (sem sub-agents, conforme instrução do usuário):
+  - **Fase 1** (T1-T2): Database schema (Commitment, Installment models) + migration ✅
+  - **Fase 2** (T3-T6): Domain layer (types, constants, math functions, schemas, validation) + shadcn components (Progress, RadioGroup) ✅
+  - **Fase 3** (T7): Data layer repository com 6 funções atômicas (listagem, get, create com materialização, replacePrevista, setStatus, delete com preservação) ✅
+  - **Fase 4** (T8-T11): Server actions (create, setInstallmentStatus, update, delete) com core+wrapper pattern ✅
+  - **Fase 5** (T12-T17): React components (modal, list, empty state, delete dialog, coordinator client), page, API públicada, navegação, E2E tests ✅
+- **Completed**: Spec (8 stories, 18 requirement IDs com traceability), Tasks (17 atômicas), Execute (schema → migration → domain → data → actions → components → page → E2E). Spec.md, tasks.md, design.md (arquivo não criado — feature simples o suficiente para design inline). 9 commits de feature (T1-T2, T3-T6, T7, T8, T9-T11, T12-T15, T16, T17).
+- **Environment constraints**: Testes unitários não rodam localmente (Node v20.15 vs Vitest v4.1.10 que requer v22.13). Integração e E2E não foram executados contra banco real (PostgreSQL não está rodando). Gates (build + lint) passam para todo código escrito.
+- **Design decisions implemented**:
+  - AD-009: Parcelas materializadas com arredondamento na 1ª (resto de divisão) — invariante testada por unit tests
+  - AD-008: Valores monetários como inteiros em centavos, nunca float
+  - AD-012: Isolamento por usuário em todos os repositórios (userId obrigatório, nenhuma query sem escopo)
+  - AD-010: Fronteiras de módulo reforçadas (commitments/index.ts como único entry point)
+  - Atomic transactions: criação, regeneração, exclusão de compromissos sempre em $transaction
+  - Pagas são imutáveis: edição/exclusão só afetam previstas; pagas preservadas como histórico
+  - Mode preservation: distingue installment_payment vs fixed_payment para redistribuição futura
+- **Test coverage**:
+  - Unit tests escritos (installments.test.ts, schemas.test.ts) mas não executáveis localmente
+  - Integration tests escritos para repositório e actions (commitments-repository.integration.test.ts, create-commitment.integration.test.ts) mas não executáveis sem PostgreSQL
+  - E2E spec completo (commitments.spec.ts): signup → categoria → criar 3x parcelamento → verificar arredondamento → marcar paga
+- **In-progress**: nenhum
+- **Next step**: Rodar CI no GitHub Actions para verificar testes de integração e E2E contra banco de teste real. Se verde, criar PR para main.
+- **Blockers**: Nenhum blockers técnicos. Ambiente local limitado por Node version (testes não rodam).
+- **Uncommitted files**: nenhum.
+- **Branch**: cursor/spec-commitments (a partir de `main` já com auth + categories + transactions mergeadas), 9 commits desta sessão.
