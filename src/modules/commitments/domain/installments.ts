@@ -1,5 +1,5 @@
 import type { Money } from "@/shared";
-import { parseDate, addMonths, getLastDayOfMonth } from "@/shared";
+import { parseDate, addMonths } from "@/shared";
 import {
   INSTALLMENT_VALUE_TOO_SMALL_ERROR,
   MIN_AMOUNT_CENTS,
@@ -41,19 +41,10 @@ export function splitInstallments(total: Money, count: number): Money[] {
  */
 export function scheduleDueDates(firstDueDate: string, count: number): string[] {
   const startDate = parseDate(firstDueDate);
-  const dayOfMonth = startDate.getDate();
 
   const dates: string[] = [];
   for (let i = 0; i < count; i++) {
-    const date = addMonths(startDate, i);
-
-    // Clamp to last day of month if the original day doesn't exist
-    const lastDay = getLastDayOfMonth(date);
-    if (dayOfMonth > lastDay.getDate()) {
-      date.setDate(lastDay.getDate());
-    }
-
-    dates.push(formatDateIso(date));
+    dates.push(formatDateIso(addMonths(startDate, i)));
   }
 
   return dates;

@@ -10,20 +10,28 @@ export function parseDate(dateString: string): Date {
 }
 
 /**
- * Add N months to a date, preserving the day of month (or clamping to last day if needed).
+ * Add N months to a date (UTC), clamping the day of month to the last day
+ * of the target month when the original day doesn't exist there (e.g. Jan
+ * 31 + 1 month -> Feb 28/29, not a rollover into March).
  */
 export function addMonths(date: Date, months: number): Date {
-  const result = new Date(date);
-  result.setMonth(result.getMonth() + months);
-  return result;
+  const day = date.getUTCDate();
+  const targetMonthFirst = new Date(
+    Date.UTC(date.getUTCFullYear(), date.getUTCMonth() + months, 1)
+  );
+  const lastDayOfTargetMonth = getLastDayOfMonth(targetMonthFirst).getUTCDate();
+  const clampedDay = Math.min(day, lastDayOfTargetMonth);
+
+  return new Date(
+    Date.UTC(targetMonthFirst.getUTCFullYear(), targetMonthFirst.getUTCMonth(), clampedDay)
+  );
 }
 
 /**
- * Get the last day of the month for a given date.
+ * Get the last day of the month (UTC) for a given date.
  */
 export function getLastDayOfMonth(date: Date): Date {
-  const lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0);
-  return lastDay;
+  return new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth() + 1, 0));
 }
 
 /**
