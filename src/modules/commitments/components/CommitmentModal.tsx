@@ -117,7 +117,7 @@ export function CommitmentModal({
           <div className="space-y-2">
             <Label htmlFor="categoryId">Categoria</Label>
             <Select name="categoryId" defaultValue={editingCommitment?.categoryId}>
-              <SelectTrigger>
+              <SelectTrigger id="categoryId">
                 <SelectValue placeholder="Selecione uma categoria" />
               </SelectTrigger>
               <SelectContent>
