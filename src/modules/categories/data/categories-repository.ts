@@ -23,10 +23,11 @@ export async function listCategoriesByUser(userId: string): Promise<Category[]> 
         { userId }, // personalizada do usuário
       ],
     },
-    orderBy: {
-      name: "asc",
-    },
   });
+
+  // Collation padrão do Postgres ordena por byte (não pt-BR), então
+  // "Conta de luz" viria antes de "Conta de água". Ordenamos em JS.
+  categories.sort((a, b) => a.name.localeCompare(b.name, "pt-BR"));
 
   return categories.map((cat) => ({
     id: cat.id,
