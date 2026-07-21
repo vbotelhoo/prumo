@@ -122,6 +122,14 @@
 - **Date**: 2026-07-16
 - **Status**: active
 
+### AD-016
+- **Decision**: Agregações cross-módulo sempre via API pública do módulo dono — o módulo que possui a tabela expõe a consulta agregada em seu `index.ts`; módulos consumidores (`projections`, futuro dashboard) nunca leem tabelas de outros módulos diretamente via Prisma.
+- **Reason**: Preserva ownership do schema (mudanças de tabela ficam contidas no módulo dono) e mantém a fronteira de AD-010 também na camada de dados, onde o lint de imports não alcança.
+- **Trade-off**: Features de leitura cross-módulo exigem pequenas adições nas APIs públicas dos módulos donos.
+- **Scope**: Todos os módulos; primeiro uso em `projections` (roadmap item 5).
+- **Date**: 2026-07-20
+- **Status**: active
+
 ## Handoff
 
 - **Feature**: commitments (Roadmap item 4) — Specify → Design → Tasks → Execute → Validate concluídos ✅
