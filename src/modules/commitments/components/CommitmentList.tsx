@@ -55,15 +55,15 @@ export function CommitmentList({
                 </div>
                 <div>
                   <p className="text-gray-500">Valor Total</p>
-                  <p className="font-semibold">{formatBRL(commitment.total as any)}</p>
+                  <p className="font-semibold">{formatBRL(commitment.total)}</p>
                 </div>
                 <div>
                   <p className="text-gray-500">Já Pago</p>
-                  <p className="font-semibold text-green-600">{formatBRL(progress.amountPaid as any)}</p>
+                  <p className="font-semibold text-green-600">{formatBRL(progress.amountPaid)}</p>
                 </div>
                 <div>
                   <p className="text-gray-500">Saldo</p>
-                  <p className="font-semibold text-orange-600">{formatBRL(progress.amountRemaining as any)}</p>
+                  <p className="font-semibold text-orange-600">{formatBRL(progress.amountRemaining)}</p>
                 </div>
               </div>
 
@@ -88,7 +88,7 @@ export function CommitmentList({
                         <span className="text-gray-500 ml-2">{inst.dueDate}</span>
                       </div>
                       <div className="flex items-center gap-3">
-                        <span>{formatBRL(inst.amount as any)}</span>
+                        <span>{formatBRL(inst.amount)}</span>
                         <span
                           className={`text-xs px-2 py-1 rounded ${
                             inst.status === "paga"

@@ -56,7 +56,6 @@ export function CommitmentModal({
     };
 
     startTransition(async () => {
-      const action = editingCommitment ? updateCommitmentAction : createCommitmentAction;
       const result = editingCommitment
         ? await updateCommitmentAction(editingCommitment.id, input)
         : await createCommitmentAction(input);
@@ -85,7 +84,7 @@ export function CommitmentModal({
             <Label>Tipo de Compromisso</Label>
             <RadioGroup
               defaultValue={mode}
-              onValueChange={(value) => setMode(value as any)}
+              onValueChange={(value) => setMode(value as "installment_payment" | "fixed_payment")}
               name="mode"
             >
               <div className="flex items-center space-x-2">
@@ -139,7 +138,7 @@ export function CommitmentModal({
                 name="total"
                 type="text"
                 placeholder="1.250,00"
-                defaultValue={editingCommitment ? (editingCommitment.total as any) / 100 : ""}
+                defaultValue={editingCommitment ? editingCommitment.total / 100 : ""}
                 required
               />
             </div>

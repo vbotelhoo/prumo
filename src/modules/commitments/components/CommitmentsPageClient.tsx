@@ -23,7 +23,7 @@ export function CommitmentsPageClient({
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingCommitment, setEditingCommitment] = useState<Commitment | null>(null);
   const [isDeletingCommitment, setIsDeletingCommitment] = useState<Commitment | null>(null);
-  const [isPending, startTransition] = useTransition();
+  const [, startTransition] = useTransition();
 
   const salesdaCategories = categories.filter((c) => c.type === "saida");
 
