@@ -1,3 +1,5 @@
+import { fileURLToPath } from "node:url";
+
 import { prisma } from "@/shared/db";
 
 const DEFAULT_CATEGORIES = [
@@ -47,5 +49,13 @@ export async function seed() {
   }
 }
 
-// Não usar require.main em ESM. O seed é chamado via vitest.global-setup
-// ou via import explícito em outros contextos.
+// `require.main` não existe em ESM; o equivalente é comparar a URL do
+// módulo com o argv do processo. Isso garante que `seed()` só rode
+// automaticamente quando o arquivo é executado diretamente (ex.:
+// `prisma db seed` → `tsx prisma/seed.ts`), e não quando importado
+// explicitamente por vitest.global-setup.ts (que chama `seed()` sozinho).
+if (process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1]) {
+  seed()
+    .then(() => process.exit(0))
+    .catch(() => process.exit(1));
+}
