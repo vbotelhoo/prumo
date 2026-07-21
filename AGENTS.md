@@ -35,6 +35,15 @@ await prisma.category.deleteMany({ where: { userId: { not: null } } });
 await prisma.user.deleteMany({});
 ```
 
+## Ao concluir uma feature (spec-driven)
+
+Quando uma feature do `ROADMAP.md` chega ao veredito ✅ Ready na validação (`.specs/features/[feature]/validation.md` ou `.specs/STATE.md` Handoff), atualize `ROADMAP.md` no mesmo commit da última task, antes de reportar a conclusão — não deixe para depois:
+
+- Marque o status do item como concluído, com data.
+- Se o escopo mudou durante a implementação, reconcilie a lista de bullets com o que foi de fato entregue.
+
+Já aconteceu de um commit de doc desse tipo ficar preso numa branch de feature que nunca foi mergeada em `main` (só o PR de código foi), deixando `ROADMAP.md` desatualizado silenciosamente por múltiplas features seguidas. Trate a atualização do roadmap como parte do gate de conclusão, não como um commit separado e opcional.
+
 ## Tooling
 
 | Ferramenta | Notas |

@@ -31,6 +31,31 @@ src/
 e2e/                       # testes Playwright (fora de src/)
 ```
 
+## Rotas
+
+Rotas do App Router (`src/app`), apenas composição — sem regra de negócio (regra de fronteira #2).
+
+### Páginas
+
+| Rota | Arquivo | Módulo(s) consumido(s) |
+| --- | --- | --- |
+| `/` | `src/app/page.tsx` | — |
+| `/login` | `src/app/login/page.tsx` | `auth` |
+| `/signup` | `src/app/signup/page.tsx` | `auth` |
+| `/terms` | `src/app/terms/page.tsx` | — |
+| `/app` | `src/app/app/page.tsx` (layout: `src/app/app/layout.tsx`) | `auth`, `projections` |
+| `/app/categories` | `src/app/app/categories/page.tsx` | `categories` |
+| `/app/commitments` | `src/app/app/commitments/page.tsx` | `commitments` |
+| `/app/transactions` | `src/app/app/transactions/page.tsx` | `transactions` |
+
+### API
+
+| Rota | Arquivo | Descrição |
+| --- | --- | --- |
+| `/api/auth/[...all]` | `src/app/api/auth/[...all]/route.ts` | Catch-all do Better Auth (login, sessão, etc.) |
+
+Não há `middleware.ts` no projeto. Ao adicionar uma nova rota, atualize esta tabela.
+
 ## Grafo de dependências entre módulos
 
 ```mermaid

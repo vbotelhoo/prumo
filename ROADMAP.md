@@ -24,7 +24,7 @@ Ordem de implementação do MVP. Cada feature segue o fluxo spec-driven (spec �
 - Sessão e logout
 - E2E: cadastro → login → logout
 
-**Status**: pendente
+**Status**: ✅ concluída (2026-07-17) — mergeada em `main` via [PR #2](https://github.com/vbotelhoo/prumo/pull/2), CI verde. Validação em `.specs/features/auth/validation.md`.
 
 ### 3. Categorias + Transações avulsas — módulos `categories` e `transactions`
 
@@ -33,7 +33,7 @@ Ordem de implementação do MVP. Cada feature segue o fluxo spec-driven (spec �
 - Listagem de transações
 - E2E: criar transação de entrada e de saída e vê-las na listagem
 
-**Status**: pendente
+**Status**: ✅ concluída (2026-07-19) — mergeada em `main` via PRs [#3](https://github.com/vbotelhoo/prumo/pull/3) e [#4](https://github.com/vbotelhoo/prumo/pull/4), os 5 checks de CI verdes. Validação em `.specs/features/categories-transactions/validation.md` (PASS após 4 gate failures encontrados e corrigidos no CI — lições L-006 a L-009).
 
 ### 4. Compras parceladas e financiamentos — módulo `commitments`
 
@@ -44,7 +44,7 @@ Ordem de implementação do MVP. Cada feature segue o fluxo spec-driven (spec �
 - Edição/exclusão perguntando se afeta só parcelas futuras ou todas
 - E2E: parcelamento com verificação das parcelas futuras e do arredondamento; marcar parcela como paga
 
-**Status**: pendente
+**Status**: ✅ concluída (2026-07-20) — 17 tasks implementadas (schema/migration → domain → repositório → server actions → componentes → página → E2E), todos os gates verdes (typecheck, lint, unit, integração, E2E). Validação em `.specs/STATE.md` Handoff.
 
 ### 5. Previsibilidade mensal — módulo `projections`
 
