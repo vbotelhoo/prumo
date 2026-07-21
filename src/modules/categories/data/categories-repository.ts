@@ -107,14 +107,17 @@ export async function isCategoryNameTaken(
 }
 
 /**
- * Verifica se uma categoria está em uso (tem transações vinculadas).
+ * Verifica se uma categoria está em uso (tem transações ou compromissos
+ * vinculados — ambos referenciam category via FK, então qualquer um dos
+ * dois bloqueia a exclusão).
  */
 export async function isCategoryInUse(categoryId: string): Promise<boolean> {
-  const count = await prisma.transaction.count({
-    where: { categoryId },
-  });
+  const [transactionCount, commitmentCount] = await Promise.all([
+    prisma.transaction.count({ where: { categoryId } }),
+    prisma.commitment.count({ where: { categoryId } }),
+  ]);
 
-  return count > 0;
+  return transactionCount > 0 || commitmentCount > 0;
 }
 
 /**
