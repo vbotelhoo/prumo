@@ -6,29 +6,26 @@ import { expect, test } from "@playwright/test";
 // `e2e/home.spec.ts`: navegação real via `page.goto`/interações de UI, sem
 // atalhos de backend — cada teste cria seu próprio usuário via formulário.
 
-// Gera um CPF matematicamente válido (mesmo algoritmo dos testes de
-// integração de T7), único por seed, para não colidir entre execuções.
-function validCpf(seed: number): string {
-  const base = Array.from({ length: 9 }, (_, i) => (seed + i) % 10);
-  const d1 = checkDigit(base, 10);
-  const d2 = checkDigit([...base, d1], 11);
-  return [...base, d1, d2].join("");
-}
-
+// Gera um CPF matematicamente válido (algoritmo oficial dos dígitos
+// verificadores), com dígitos-base independentes para ter cardinalidade
+// real (10^9 combinações) — o Postgres de teste não é limpo entre
+// execuções locais do E2E, então CPFs precisam ser únicos entre runs, não
+// só dentro de uma run.
 function checkDigit(digits: number[], startWeight: number): number {
   const sum = digits.reduce((acc, digit, index) => acc + digit * (startWeight - index), 0);
   const remainder = (sum * 10) % 11;
   return remainder === 10 ? 0 : remainder;
 }
 
-// Semente aleatória de alta cardinalidade: `(seed + i) % 10` só depende do
-// último dígito da semente, então valores próximos (ex.: `Date.now()` em
-// execuções sucessivas) colidem com frequência — o Postgres de teste não é
-// limpo entre execuções locais do E2E, então CPFs precisam ser únicos entre
-// runs, não só dentro de uma run.
 function uniqueValidCpf(): string {
-  const seed = Math.floor(Math.random() * 1_000_000_000);
-  return validCpf(seed);
+  let base: number[];
+  do {
+    base = Array.from({ length: 9 }, () => Math.floor(Math.random() * 10));
+  } while (base.every((digit) => digit === base[0])); // evita todos-dígitos-iguais (inválido)
+
+  const d1 = checkDigit(base, 10);
+  const d2 = checkDigit([...base, d1], 11);
+  return [...base, d1, d2].join("");
 }
 
 const PASSWORD = "Senha@123";

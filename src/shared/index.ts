@@ -15,6 +15,14 @@ export { addMoney, formatBRL, money, moneySchema, parseBRL, subtractMoney } from
 export type { Money } from "./money";
 
 export {
+  parseDate,
+  addMonths,
+  getLastDayOfMonth,
+  formatDateIso,
+  isDateInRange,
+} from "./date-utils";
+
+export {
   Card,
   CardAction,
   CardContent,
@@ -53,3 +61,9 @@ export {
   SelectScrollDownButton,
 } from "./components/ui/select";
 export { Separator } from "./components/ui/separator";
+
+export { Progress } from "./components/ui/progress";
+export {
+  RadioGroup,
+  RadioGroupItem,
+} from "./components/ui/radio-group";

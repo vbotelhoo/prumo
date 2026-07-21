@@ -63,6 +63,8 @@ model User {
 
   categories   Category[]
   transactions Transaction[]
+  commitments  Commitment[]
+  installments Installment[]
 
   @@unique([email])
   @@unique([cpf])
@@ -124,6 +126,7 @@ model Category {
   userId       String?
   user         User?         @relation(fields: [userId], references: [id])
   transactions Transaction[]
+  commitments  Commitment[]
 
   @@map("category")
 }
@@ -141,5 +144,43 @@ model Transaction {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
+  @@index([userId])
   @@map("transaction")
+}
+
+model Commitment {
+  id               String        @id @default(cuid())
+  mode             String // "installment_payment" | "fixed_payment"
+  total            Int // value in cents (AD-008)
+  installmentCount Int // N in 2..360
+  firstDueDate     String // YYYY-MM-DD (AD-008)
+  description      String // required, 1-140 chars
+  categoryId       String
+  category         Category      @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+  userId           String
+  user             User          @relation(fields: [userId], references: [id])
+  installments     Installment[]
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+
+  @@index([userId])
+  @@map("commitment")
+}
+
+model Installment {
+  id           String     @id @default(cuid())
+  number       Int // 1 to N (not renumbered; order by dueDate)
+  amount       Int // value in cents (AD-008)
+  dueDate      String // YYYY-MM-DD
+  status       String // "prevista" | "paga"
+  commitmentId String
+  commitment   Commitment @relation(fields: [commitmentId], references: [id], onDelete: Cascade)
+  userId       String // denormalized for query efficiency (AD-012)
+  user         User       @relation(fields: [userId], references: [id])
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+
+  @@index([commitmentId])
+  @@index([userId])
+  @@map("installment")
 }

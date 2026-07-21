@@ -17,6 +17,7 @@ import { seed } from "./prisma/seed";
 // - Sem Docker e sem `DATABASE_URL` → erro claro orientando as duas opções.
 export default async function setup() {
   if (process.env.DATABASE_URL) {
+    await seed();
     return;
   }
 
