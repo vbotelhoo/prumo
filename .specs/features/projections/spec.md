@@ -157,26 +157,26 @@ O usuário já registra transações avulsas e compromissos parcelados, mas não
 
 | Requirement ID | Story | Phase | Status |
 | -------------- | ----- | ----- | ------ |
-| PROJ-01 | P1: Ver a projeção — página autenticada, default mês corrente | Design | Pending |
-| PROJ-02 | P1: Ver a projeção — entradas previstas do mês | Design | Pending |
-| PROJ-03 | P1: Ver a projeção — saídas previstas (avulsas + parcelas, qualquer status) | Design | Pending |
-| PROJ-04 | P1: Ver a projeção — saldo projetado isolado por mês | Design | Pending |
-| PROJ-05 | P1: Ver a projeção — total comprometido = parcelas do mês | Design | Pending |
-| PROJ-06 | P1: Ver a projeção — saldo negativo com destaque de alerta | Design | Pending |
-| PROJ-07 | P1: Ver a projeção — Money em centavos + formatação BRL via shared | Design | Pending |
-| PROJ-08 | P1: Ver a projeção — redirect de não autenticado para /login | Design | Pending |
-| PROJ-09 | P1: Navegar — mês anterior/próximo refletido em ?month | Design | Pending |
-| PROJ-10 | P1: Navegar — ?month válido exibe o mês pedido | Design | Pending |
-| PROJ-11 | P1: Navegar — ?month inválido cai no mês corrente | Design | Pending |
-| PROJ-12 | P1: Navegar — atalho "voltar ao mês atual" | Design | Pending |
-| PROJ-13 | P1: Navegar — mesma fórmula para qualquer mês | Design | Pending |
-| PROJ-14 | P1: Navegar — título do mês em pt-BR | Design | Pending |
-| PROJ-15 | P1: Isolamento — queries escopadas por userId | Design | Pending |
-| PROJ-16 | P1: Isolamento — E2E/integração com 2 contas | Design | Pending |
-| PROJ-17 | P2: Mês zerado — 4 agregados R$ 0,00 sem erro | Design | Pending |
-| PROJ-18 | P2: Navegação do app — link "Projeções" | Design | Pending |
+| PROJ-01 | P1: Ver a projeção — página autenticada, default mês corrente | Tasks | In Tasks |
+| PROJ-02 | P1: Ver a projeção — entradas previstas do mês | Tasks | In Tasks |
+| PROJ-03 | P1: Ver a projeção — saídas previstas (avulsas + parcelas, qualquer status) | Tasks | In Tasks |
+| PROJ-04 | P1: Ver a projeção — saldo projetado isolado por mês | Tasks | In Tasks |
+| PROJ-05 | P1: Ver a projeção — total comprometido = parcelas do mês | Tasks | In Tasks |
+| PROJ-06 | P1: Ver a projeção — saldo negativo com destaque de alerta | Tasks | In Tasks |
+| PROJ-07 | P1: Ver a projeção — Money em centavos + formatação BRL via shared | Tasks | In Tasks |
+| PROJ-08 | P1: Ver a projeção — redirect de não autenticado para /login | Tasks | In Tasks |
+| PROJ-09 | P1: Navegar — mês anterior/próximo refletido em ?month | Tasks | In Tasks |
+| PROJ-10 | P1: Navegar — ?month válido exibe o mês pedido | Tasks | In Tasks |
+| PROJ-11 | P1: Navegar — ?month inválido cai no mês corrente | Tasks | In Tasks |
+| PROJ-12 | P1: Navegar — atalho "voltar ao mês atual" | Tasks | In Tasks |
+| PROJ-13 | P1: Navegar — mesma fórmula para qualquer mês | Tasks | In Tasks |
+| PROJ-14 | P1: Navegar — título do mês em pt-BR | Tasks | In Tasks |
+| PROJ-15 | P1: Isolamento — queries escopadas por userId | Tasks | In Tasks |
+| PROJ-16 | P1: Isolamento — E2E/integração com 2 contas | Tasks | In Tasks |
+| PROJ-17 | P2: Mês zerado — 4 agregados R$ 0,00 sem erro | Tasks | In Tasks |
+| PROJ-18 | P2: Navegação do app — link "Projeções" | Tasks | In Tasks |
 
-**Coverage:** 18 total, 0 mapped to tasks, 18 unmapped ⚠️ (mapeamento acontece na fase Tasks)
+**Coverage:** 18 total, 18 mapped to tasks, 0 unmapped ✅ (ver .specs/features/projections/tasks.md)
 
 ---
 
