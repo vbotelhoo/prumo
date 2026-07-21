@@ -8,6 +8,7 @@ import {
   deleteCommitment,
 } from "../data/commitments-repository";
 import { materializeInstallments } from "../domain/installments";
+import { INSTALLMENT_NOT_FOUND_ERROR } from "../domain/constants";
 
 describe("commitments-repository (integration)", () => {
   const testUserId = "test-user-123";
@@ -63,17 +64,14 @@ describe("commitments-repository (integration)", () => {
   });
 
   afterAll(async () => {
-    // Clean up test data (order matters: installments → commitments → categories → users)
-    // Delete installments first (they reference commitments)
-    await prisma.installment.deleteMany({});
-    // Then commitments (they reference categories and users)
-    await prisma.commitment.deleteMany({});
-    // Then sessions (they reference users)
-    await prisma.session.deleteMany({});
-    // Then categories (they reference users)
-    await prisma.category.deleteMany({});
-    // Finally users
-    await prisma.user.deleteMany({});
+    // Clean up test data scoped to this suite's users (order matters:
+    // installments → commitments → sessions → categories → users)
+    const userIds = [testUserId, otherUserId];
+    await prisma.installment.deleteMany({ where: { userId: { in: userIds } } });
+    await prisma.commitment.deleteMany({ where: { userId: { in: userIds } } });
+    await prisma.session.deleteMany({ where: { userId: { in: userIds } } });
+    await prisma.category.deleteMany({ where: { userId: { in: userIds } } });
+    await prisma.user.deleteMany({ where: { id: { in: userIds } } });
   });
 
   beforeEach(async () => {
@@ -112,8 +110,8 @@ describe("commitments-repository (integration)", () => {
       expect(commitment.mode).toBe("installment_payment");
       expect(commitment.total).toBe(money(total));
       expect(commitment.description).toBe("Notebook");
-      expect(commitment.installments).toHaveLength(3);
-      expect(commitment.installments[0].amount).toBe(money(10000));
+      expect(commitment.installments!).toHaveLength(3);
+      expect(commitment.installments![0].amount).toBe(money(10000));
     });
 
     it("should create fixed_payment commitment", async () => {
@@ -138,8 +136,8 @@ describe("commitments-repository (integration)", () => {
       });
 
       expect(commitment.installmentCount).toBe(count);
-      expect(commitment.installments).toHaveLength(count);
-      expect(commitment.installments.every((inst) => inst.amount === money(installmentValue))).toBe(true);
+      expect(commitment.installments!).toHaveLength(count);
+      expect(commitment.installments!.every((inst) => inst.amount === money(installmentValue))).toBe(true);
     });
   });
 
@@ -249,7 +247,7 @@ describe("commitments-repository (integration)", () => {
         ],
       });
 
-      const instId = commitment.installments[0].id;
+      const instId = commitment.installments![0].id;
 
       // Mark as paid
       let updated = await setInstallmentStatus(instId, testUserId, "paga");
@@ -275,7 +273,7 @@ describe("commitments-repository (integration)", () => {
         ],
       });
 
-      const instId = commitment.installments[0].id;
+      const instId = commitment.installments![0].id;
 
       await expect(setInstallmentStatus(instId, otherUserId, "paga")).rejects.toThrow(
         INSTALLMENT_NOT_FOUND_ERROR
