@@ -41,6 +41,8 @@ export function CommitmentModal({
   const [isPending, startTransition] = useTransition();
   const [mode, setMode] = useState<"installment_payment" | "fixed_payment">("installment_payment");
 
+  const categoryItems = categories.map((cat) => ({ value: cat.id, label: cat.name }));
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
@@ -116,7 +118,11 @@ export function CommitmentModal({
 
           <div className="space-y-2">
             <Label htmlFor="categoryId">Categoria</Label>
-            <Select name="categoryId" defaultValue={editingCommitment?.categoryId}>
+            <Select
+              name="categoryId"
+              defaultValue={editingCommitment?.categoryId}
+              items={categoryItems}
+            >
               <SelectTrigger id="categoryId">
                 <SelectValue placeholder="Selecione uma categoria" />
               </SelectTrigger>
