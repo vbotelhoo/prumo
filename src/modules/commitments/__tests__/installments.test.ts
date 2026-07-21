@@ -7,17 +7,17 @@ import {
   computeCommitmentProgress,
 } from "../domain/installments";
 import type { Installment } from "../domain/types";
-import type { Money } from "@/shared";
+import { money } from "@/shared";
 import { INSTALLMENT_VALUE_TOO_SMALL_ERROR } from "../domain/constants";
 
 describe("splitInstallments", () => {
   it("should split equally when divisible", () => {
-    const amounts = splitInstallments(30000, 3); // R$ 300,00 / 3
+    const amounts = splitInstallments(money(30000), 3); // R$ 300,00 / 3
     expect(amounts).toEqual([10000, 10000, 10000]);
   });
 
   it("should distribute remainder to first installment (AD-009 invariant)", () => {
-    const amounts = splitInstallments(10000, 3); // R$ 100,00 / 3 = 33,34 + 33,33 + 33,33
+    const amounts = splitInstallments(money(10000), 3); // R$ 100,00 / 3 = 33,34 + 33,33 + 33,33
     expect(amounts[0]).toBe(3334); // 33,34
     expect(amounts[1]).toBe(3333); // 33,33
     expect(amounts[2]).toBe(3333); // 33,33
@@ -32,18 +32,18 @@ describe("splitInstallments", () => {
     ];
 
     testCases.forEach(({ total, count }) => {
-      const amounts = splitInstallments(total as Money, count);
-      const sum = amounts.reduce((a, b) => a + b, 0 as Money);
-      expect(sum).toBe(total as Money);
+      const amounts = splitInstallments(money(total), count);
+      const sum = amounts.reduce((a, b) => a + b, 0);
+      expect(sum).toBe(total);
     });
   });
 
   it("should reject when minimum installment would be < R$ 0,01", () => {
-    expect(() => splitInstallments(10, 20)).toThrow(INSTALLMENT_VALUE_TOO_SMALL_ERROR);
+    expect(() => splitInstallments(money(10), 20)).toThrow(INSTALLMENT_VALUE_TOO_SMALL_ERROR);
   });
 
   it("should reject count < 2", () => {
-    expect(() => splitInstallments(10000, 1)).toThrow();
+    expect(() => splitInstallments(money(10000), 1)).toThrow();
   });
 });
 
@@ -81,7 +81,7 @@ describe("scheduleDueDates", () => {
 
 describe("materializeInstallments", () => {
   it("should materialize installment_payment mode (split amounts)", () => {
-    const installments = materializeInstallments(10000, 3, "2026-08-15", "installment_payment");
+    const installments = materializeInstallments(money(10000), 3, "2026-08-15", "installment_payment");
     expect(installments).toHaveLength(3);
     expect(installments[0].amount).toBe(3334); // remainder in first
     expect(installments[0].status).toBe("prevista");
@@ -90,7 +90,7 @@ describe("materializeInstallments", () => {
   });
 
   it("should materialize fixed_payment mode (equal amounts)", () => {
-    const total = 57600; // R$ 576,00
+    const total = money(57600); // R$ 576,00
     const count = 48; // 48 × R$ 12,00
     const installments = materializeInstallments(total, count, "2026-09-05", "fixed_payment");
     expect(installments).toHaveLength(48);
@@ -109,7 +109,7 @@ describe("regeneratePrevistaInstallments", () => {
       {
         id: "1",
         number: 1,
-        amount: 3334,
+        amount: money(3334),
         dueDate: "2026-08-15",
         status: "paga",
         commitmentId: "c1",
@@ -120,7 +120,7 @@ describe("regeneratePrevistaInstallments", () => {
       {
         id: "2",
         number: 2,
-        amount: 3333,
+        amount: money(3333),
         dueDate: "2026-09-15",
         status: "prevista",
         commitmentId: "c1",
@@ -131,7 +131,7 @@ describe("regeneratePrevistaInstallments", () => {
       {
         id: "3",
         number: 3,
-        amount: 3333,
+        amount: money(3333),
         dueDate: "2026-10-15",
         status: "prevista",
         commitmentId: "c1",
@@ -141,7 +141,7 @@ describe("regeneratePrevistaInstallments", () => {
       },
     ];
 
-    const result = regeneratePrevistaInstallments(12000, 3, "2026-08-15", existing, "todas");
+    const result = regeneratePrevistaInstallments(money(12000), 3, "2026-08-15", existing, "todas");
     expect(result.success).toBe(true);
     if (result.success) {
       expect(result.regenerated).toHaveLength(2); // 3 total - 1 paid
@@ -155,7 +155,7 @@ describe("regeneratePrevistaInstallments", () => {
       {
         id: "1",
         number: 1,
-        amount: 5000,
+        amount: money(5000),
         dueDate: "2026-08-15",
         status: "paga",
         commitmentId: "c1",
@@ -166,7 +166,7 @@ describe("regeneratePrevistaInstallments", () => {
       {
         id: "2",
         number: 2,
-        amount: 5000,
+        amount: money(5000),
         dueDate: "2026-09-15",
         status: "prevista",
         commitmentId: "c1",
@@ -176,7 +176,7 @@ describe("regeneratePrevistaInstallments", () => {
       },
     ];
 
-    const result = regeneratePrevistaInstallments(8000, 2, "2026-08-15", existing, "todas");
+    const result = regeneratePrevistaInstallments(money(8000), 2, "2026-08-15", existing, "todas");
     expect(result.success).toBe(false);
   });
 
@@ -185,7 +185,7 @@ describe("regeneratePrevistaInstallments", () => {
       {
         id: "1",
         number: 1,
-        amount: 5000,
+        amount: money(5000),
         dueDate: "2026-08-15",
         status: "paga",
         commitmentId: "c1",
@@ -196,7 +196,7 @@ describe("regeneratePrevistaInstallments", () => {
       {
         id: "2",
         number: 2,
-        amount: 5000,
+        amount: money(5000),
         dueDate: "2026-09-15",
         status: "paga",
         commitmentId: "c1",
@@ -206,7 +206,7 @@ describe("regeneratePrevistaInstallments", () => {
       },
     ];
 
-    const result = regeneratePrevistaInstallments(15000, 1, "2026-08-15", existing, "todas");
+    const result = regeneratePrevistaInstallments(money(15000), 1, "2026-08-15", existing, "todas");
     expect(result.success).toBe(false);
   });
 });
@@ -217,7 +217,7 @@ describe("computeCommitmentProgress", () => {
       {
         id: "1",
         number: 1,
-        amount: 2500,
+        amount: money(2500),
         dueDate: "2026-08-15",
         status: "paga",
         commitmentId: "c1",
@@ -228,7 +228,7 @@ describe("computeCommitmentProgress", () => {
       {
         id: "2",
         number: 2,
-        amount: 2500,
+        amount: money(2500),
         dueDate: "2026-09-15",
         status: "paga",
         commitmentId: "c1",
@@ -239,7 +239,7 @@ describe("computeCommitmentProgress", () => {
       {
         id: "3",
         number: 3,
-        amount: 2500,
+        amount: money(2500),
         dueDate: "2026-10-15",
         status: "prevista",
         commitmentId: "c1",
@@ -250,7 +250,7 @@ describe("computeCommitmentProgress", () => {
       {
         id: "4",
         number: 4,
-        amount: 2500,
+        amount: money(2500),
         dueDate: "2026-11-15",
         status: "prevista",
         commitmentId: "c1",
@@ -274,7 +274,7 @@ describe("computeCommitmentProgress", () => {
       {
         id: "1",
         number: 1,
-        amount: 10000,
+        amount: money(10000),
         dueDate: "2026-08-15",
         status: "paga",
         commitmentId: "c1",
