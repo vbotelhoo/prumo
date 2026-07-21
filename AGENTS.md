@@ -10,6 +10,31 @@ pnpm lint && pnpm typecheck       # obrigatório antes de qualquer commit
 pnpm prisma migrate dev           # após alterar prisma/schema.prisma localmente
 ```
 
+## Antes de abrir PR ou mergear em main
+
+Gate obrigatório, sempre os 4 juntos e verdes — nunca abra PR nem mergeie em `main` com qualquer um pulado ou vermelho:
+
+```bash
+pnpm lint && pnpm typecheck   # 1. Lint & Typecheck
+pnpm test:unit                # 2. Unit
+pnpm test:integration         # 3. Integration
+pnpm test:e2e                 # 4. E2E
+```
+
+Rodar só unit+integration (ou pular e2e por ser mais lento) já causou PR com página quebrada em produção (rota sem `headers()` na sessão, campo de formulário sem label associado) — só o E2E real no browser pega esses casos, typecheck/lint/unit passam mesmo com a página 100% quebrada. Não pule.
+
+**Ao rodar integration e e2e em sequência contra o mesmo Postgres local** (fora do CI, onde cada job tem seu próprio Postgres efêmero): specs de E2E não limpam os dados que criam (por padrão do design — cobrem o fluxo real, não são donas do banco). Se depois disso alguma suíte de integração falhar com `Foreign key constraint violated`/`P2002` ao limpar `category`/`user`, o banco de teste local está sujo de uma run de E2E anterior, não é regressão de código — rode a limpeza abaixo e re-teste antes de investigar mais:
+
+```ts
+// node -e com require('@prisma/client'), ordem por causa das FKs:
+await prisma.installment.deleteMany({});
+await prisma.commitment.deleteMany({});
+await prisma.transaction.deleteMany({});
+await prisma.session.deleteMany({});
+await prisma.category.deleteMany({ where: { userId: { not: null } } });
+await prisma.user.deleteMany({});
+```
+
 ## Tooling
 
 | Ferramenta | Notas |
