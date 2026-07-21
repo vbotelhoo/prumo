@@ -5,13 +5,11 @@ import { expect, test } from "@playwright/test";
 // ambas visíveis na listagem com tipo, categoria e valor corretos.
 // Segue o padrão de e2e/auth.spec.ts: cada teste cria seu próprio usuário.
 
-function validCpf(seed: number): string {
-  const base = Array.from({ length: 9 }, (_, i) => (seed + i) % 10);
-  const d1 = checkDigit(base, 10);
-  const d2 = checkDigit([...base, d1], 11);
-  return [...base, d1, d2].join("");
-}
-
+// Gera um CPF matematicamente válido com dígitos-base independentes
+// (10^9 combinações reais) — o Postgres de teste não é limpo entre
+// execuções locais do E2E, então CPFs precisam ser únicos entre runs.
+// (Uma versão anterior gerava a base como `(seed + i) % 10`, que colapsa
+// para só 10 valores possíveis independente da entropia da seed.)
 function checkDigit(digits: number[], startWeight: number): number {
   const sum = digits.reduce((acc, digit, index) => acc + digit * (startWeight - index), 0);
   const remainder = (sum * 10) % 11;
@@ -19,10 +17,14 @@ function checkDigit(digits: number[], startWeight: number): number {
 }
 
 function uniqueValidCpf(): string {
-  // Use maximum entropy: combine timestamp with high-resolution random
-  // to ensure uniqueness across multiple test runs against persistent database
-  const seed = Math.floor((Date.now() + Math.random() * Number.MAX_SAFE_INTEGER) % 1_000_000_000);
-  return validCpf(seed);
+  let base: number[];
+  do {
+    base = Array.from({ length: 9 }, () => Math.floor(Math.random() * 10));
+  } while (base.every((digit) => digit === base[0])); // evita todos-dígitos-iguais (inválido)
+
+  const d1 = checkDigit(base, 10);
+  const d2 = checkDigit([...base, d1], 11);
+  return [...base, d1, d2].join("");
 }
 
 const PASSWORD = "Senha@123";
