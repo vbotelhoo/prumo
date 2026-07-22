@@ -132,19 +132,18 @@
 
 ## Handoff
 
-- **Feature**: projections (Roadmap item 5) — `.specs/features/projections/` ✅ EXECUTE COMPLETE
-- **Phase / Task**: Specify ✅ → Design ✅ (Approved) → Tasks ✅ (Approved) → Execute ✅ (All 9 tasks + Verifier running)
+- **Feature**: projections (Roadmap item 5) — `.specs/features/projections/` ✅ VALIDATED (PASS)
+- **Phase / Task**: Specify ✅ → Design ✅ (Approved) → Tasks ✅ (Approved) → Execute ✅ → Verify ✅ (PASS)
 - **Completed (Execute Phase)**:
   - Fase 1 (T1–T4): Queries (transactions, commitments) + Domain (projection formula, month parsing)
   - Fase 2 (T5): Service (composition cross-módulo via AD-016)
   - Fase 3 (T6–T9): UI (2 components) + Page (/app/projections) + E2E (6 flows) + App link
   - Commits: de6923f (T1) → 3f7fd6f (T2) → 8c52b91 (T3) → 726791b (T4) → 6f8485e (T5) → 51d89b4 (T6) → af5368a (T7) → 264d70b (T8) → 5f05e13 (T9) → 56fe572 (lint fixes)
   - Tests: 282 total (143 unit + 139 integration); lint 0 errors; build ✅
-- **In-progress**: Verifier sub-agent (spec-anchored check + discrimination sensor) running in background
-- **Expected completion**: validation.md written, gaps (if any) ranked, lessons distilled
+- **Verifier**: PASS — `.specs/features/projections/validation.md` (18/18 requisitos PROJ-01..18 mapeados, 9/9 testes do discrimination sensor, RELEASE-READY)
 - **Gates**: typecheck ✅, lint ✅ (0 errors), unit 143 ✅, integration 139 ✅, build ✅
 - **Decisões da spec (usuário)**: navegação livre passados+atual+futuros; comprometido = parcelas do mês; saldo isolado por mês; parcelas pagas contam nas saídas do mês.
 - **Environment**: Node v24 (Vitest 4); Baselines upheld: 114 → 143 unit, 123 → 139 integration.
 - **Blockers**: none.
 - **Uncommitted files**: none.
-- **Branch**: `cursor/spec-projections` (feature complete, Verifier validating).
+- **Branch**: `cursor/spec-projections` — PR [#8](https://github.com/vbotelhoo/prumo/pull/8) aberto para `main`, aguardando merge. `ROADMAP.md` item 5 atualizado para concluída.
