@@ -18,7 +18,7 @@ export default async function AppPage() {
           <p className="text-gray-500 mt-2">Bem-vindo ao Prumo</p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           <Link href="/app/transactions" className="block">
             <Button variant="outline" className="w-full h-24 flex flex-col items-center justify-center gap-2">
               <span className="text-2xl">💰</span>
@@ -35,6 +35,12 @@ export default async function AppPage() {
             <Button variant="outline" className="w-full h-24 flex flex-col items-center justify-center gap-2">
               <span className="text-2xl">🏷️</span>
               <span>Categorias</span>
+            </Button>
+          </Link>
+          <Link href="/app/projections" className="block">
+            <Button variant="outline" className="w-full h-24 flex flex-col items-center justify-center gap-2">
+              <span className="text-2xl">📈</span>
+              <span>Projeções</span>
             </Button>
           </Link>
         </div>

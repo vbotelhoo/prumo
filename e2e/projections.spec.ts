@@ -230,4 +230,35 @@ test.describe("Projections", () => {
     await page.waitForURL("/login");
     expect(page.url()).toContain("/login");
   });
+
+  test("projections link in /app home navigates to projections", async ({
+    page,
+  }) => {
+    // Sign up
+    await page.goto("/signup");
+    const uniqueEmail = `link-test-${Date.now()}@example.com`;
+    await page.fill('input[name="email"]', uniqueEmail);
+    await page.fill('input[name="password"]', "test1234");
+    await page.fill('input[name="cpf"]', "77345678901");
+    await page.fill('input[name="birthDate"]', "1996-07-07");
+    await page.fill('input[name="zipCode"]', "01310100");
+    await page.fill('input[name="street"]', "Street");
+    await page.fill('input[name="addressNumber"]', "404");
+    await page.fill('input[name="neighborhood"]', "Hood");
+    await page.fill('input[name="city"]', "City");
+    await page.fill('input[name="state"]', "SP");
+    await page.check('input[name="termsAccepted"]');
+    await page.click('button:has-text("Criar Conta")');
+    await page.waitForURL("/app");
+
+    // From /app home, click Projeções link
+    await page.click('button:has-text("Projeções")');
+
+    // Should navigate to /app/projections
+    await page.waitForURL("/app/projections");
+    expect(page.url()).toContain("/app/projections");
+
+    // Projections page should be visible
+    await expect(page.locator("text=Entradas Previstas")).toBeVisible();
+  });
 });
