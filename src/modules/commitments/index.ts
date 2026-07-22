@@ -15,7 +15,13 @@ export type {
 } from "./domain/types";
 
 // Data access (repository)
-export { listCommitmentsByUser, getCommitmentForUser, sumInstallmentsByMonth } from "./data/commitments-repository";
+export {
+  listCommitmentsByUser,
+  getCommitmentForUser,
+  sumInstallmentsByMonth,
+  getMonthlyInstallmentsByCategory,
+  listUnpaidInstallmentsForMonth,
+} from "./data/commitments-repository";
 
 // Actions (server)
 export { createCommitmentAction } from "./actions/create-commitment-action";
