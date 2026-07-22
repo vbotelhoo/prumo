@@ -7,6 +7,7 @@ import {
   deleteTransaction,
   findTransactionById,
   getMonthlyTransactionTotals,
+  getMonthlyExpensesByCategory,
 } from "../data/transactions-repository";
 import { TRANSACTION_NOT_FOUND_ERROR } from "../domain/constants";
 
@@ -33,6 +34,13 @@ async function createTestUser(cpf: string) {
 async function getDefaultCategory(type: "entrada" | "saida") {
   return prisma.category.findFirstOrThrow({
     where: { userId: null, type },
+  });
+}
+
+async function getDefaultCategories(type: "entrada" | "saida", count: number) {
+  return prisma.category.findMany({
+    where: { userId: null, type },
+    take: count,
   });
 }
 
@@ -745,6 +753,152 @@ describe("transactions-repository", () => {
       // saidas should be Money(0), not undefined
       expect(result.saidas).toBe(money(0));
       expect(result.entradas).toBe(money(100000));
+    });
+  });
+
+  describe("getMonthlyExpensesByCategory", () => {
+    it("returns empty array for a month with no transactions", async () => {
+      const user = await createTestUser("12345678931");
+      usersToCleanup.add(user.id);
+
+      const result = await getMonthlyExpensesByCategory(user.id, "2026-07");
+
+      expect(result).toEqual([]);
+    });
+
+    it("sums correctly when a category has 2 transactions", async () => {
+      const user = await createTestUser("12345678932");
+      usersToCleanup.add(user.id);
+
+      const category = await getDefaultCategory("saida");
+
+      const txn1 = await createTransaction({
+        type: "saida",
+        date: "2026-07-05",
+        amount: 5000,
+        categoryId: category.id,
+        userId: user.id,
+      });
+      transactionsToCleanup.add(txn1.id);
+
+      const txn2 = await createTransaction({
+        type: "saida",
+        date: "2026-07-15",
+        amount: 3000,
+        categoryId: category.id,
+        userId: user.id,
+      });
+      transactionsToCleanup.add(txn2.id);
+
+      const result = await getMonthlyExpensesByCategory(user.id, "2026-07");
+
+      expect(result).toEqual([
+        { categoryId: category.id, categoryName: category.name, total: money(8000) },
+      ]);
+    });
+
+    it("returns 2 entries for 2 different categories", async () => {
+      const user = await createTestUser("12345678933");
+      usersToCleanup.add(user.id);
+
+      const [categoryA, categoryB] = await getDefaultCategories("saida", 2);
+
+      const txnA = await createTransaction({
+        type: "saida",
+        date: "2026-07-05",
+        amount: 5000,
+        categoryId: categoryA!.id,
+        userId: user.id,
+      });
+      transactionsToCleanup.add(txnA.id);
+
+      const txnB = await createTransaction({
+        type: "saida",
+        date: "2026-07-10",
+        amount: 7000,
+        categoryId: categoryB!.id,
+        userId: user.id,
+      });
+      transactionsToCleanup.add(txnB.id);
+
+      const result = await getMonthlyExpensesByCategory(user.id, "2026-07");
+
+      expect(result).toHaveLength(2);
+      expect(result).toEqual(
+        expect.arrayContaining([
+          { categoryId: categoryA!.id, categoryName: categoryA!.name, total: money(5000) },
+          { categoryId: categoryB!.id, categoryName: categoryB!.name, total: money(7000) },
+        ])
+      );
+    });
+
+    it("does not leak transactions from another user", async () => {
+      const userA = await createTestUser("12345678934");
+      usersToCleanup.add(userA.id);
+      const userB = await createTestUser("12345678935");
+      usersToCleanup.add(userB.id);
+
+      const category = await getDefaultCategory("saida");
+
+      const txnA = await createTransaction({
+        type: "saida",
+        date: "2026-07-05",
+        amount: 5000,
+        categoryId: category.id,
+        userId: userA.id,
+      });
+      transactionsToCleanup.add(txnA.id);
+
+      const txnB = await createTransaction({
+        type: "saida",
+        date: "2026-07-05",
+        amount: 9000,
+        categoryId: category.id,
+        userId: userB.id,
+      });
+      transactionsToCleanup.add(txnB.id);
+
+      const resultA = await getMonthlyExpensesByCategory(userA.id, "2026-07");
+      const resultB = await getMonthlyExpensesByCategory(userB.id, "2026-07");
+
+      expect(resultA).toEqual([
+        { categoryId: category.id, categoryName: category.name, total: money(5000) },
+      ]);
+      expect(resultB).toEqual([
+        { categoryId: category.id, categoryName: category.name, total: money(9000) },
+      ]);
+    });
+
+    it("only counts type saida, ignoring entrada transactions in the same month", async () => {
+      const user = await createTestUser("12345678936");
+      usersToCleanup.add(user.id);
+
+      const categoryOut = await getDefaultCategory("saida");
+      const categoryIn = await getDefaultCategory("entrada");
+
+      const txnOut = await createTransaction({
+        type: "saida",
+        date: "2026-07-05",
+        amount: 4000,
+        categoryId: categoryOut.id,
+        userId: user.id,
+      });
+      transactionsToCleanup.add(txnOut.id);
+
+      const txnIn = await createTransaction({
+        type: "entrada",
+        date: "2026-07-05",
+        amount: 100000,
+        categoryId: categoryIn.id,
+        userId: user.id,
+      });
+      transactionsToCleanup.add(txnIn.id);
+
+      const result = await getMonthlyExpensesByCategory(user.id, "2026-07");
+
+      expect(result).toEqual([
+        { categoryId: categoryOut.id, categoryName: categoryOut.name, total: money(4000) },
+      ]);
     });
   });
 });
