@@ -1,9 +1,12 @@
 import { headers } from "next/headers";
 
 import { auth } from "@/modules/auth";
-import { getMonthlyProjection, parseMonthParam } from "@/modules/projections";
-import { ProjectionSummary } from "@/modules/projections/components/ProjectionSummary";
-import { MonthNavigator } from "@/modules/projections/components/MonthNavigator";
+import {
+  getMonthlyProjection,
+  parseMonthParam,
+  ProjectionSummary,
+  MonthNavigator,
+} from "@/modules/projections";
 
 type SearchParams = Promise<{ month?: string }>;
 

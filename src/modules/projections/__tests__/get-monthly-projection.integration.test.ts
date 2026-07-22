@@ -1,8 +1,6 @@
 import { describe, it, expect, beforeAll, afterAll, beforeEach } from "vitest";
 import { prisma, money } from "@/shared";
 import { getMonthlyProjection } from "../services/get-monthly-projection";
-import { createTransaction } from "@/modules/transactions/data/transactions-repository";
-import { createCommitmentWithInstallments } from "@/modules/commitments/data/commitments-repository";
 
 describe("getMonthlyProjection (integration)", () => {
   const testUserId = "test-user-projections";
@@ -76,34 +74,43 @@ describe("getMonthlyProjection (integration)", () => {
 
   it("calculates projection matching manual calculation", async () => {
     // Create: 1 entrada R$ 1000 + 1 saída R$ 300 + 1 parcela de 3x de R$ 200
-    await createTransaction({
-      type: "entrada",
-      date: "2026-07-10",
-      amount: 100000, // R$ 1.000
-      categoryId: testCategoryIdIn,
-      userId: testUserId,
+    await prisma.transaction.create({
+      data: {
+        type: "entrada",
+        date: "2026-07-10",
+        amount: 100000, // R$ 1.000
+        categoryId: testCategoryIdIn,
+        userId: testUserId,
+      },
     });
 
-    await createTransaction({
-      type: "saida",
-      date: "2026-07-15",
-      amount: 30000, // R$ 300
-      categoryId: testCategoryIdOut,
-      userId: testUserId,
+    await prisma.transaction.create({
+      data: {
+        type: "saida",
+        date: "2026-07-15",
+        amount: 30000, // R$ 300
+        categoryId: testCategoryIdOut,
+        userId: testUserId,
+      },
     });
 
-    await createCommitmentWithInstallments({
-      mode: "installment_payment",
-      total: 60000, // R$ 600 total
-      installmentCount: 3,
-      firstDueDate: "2026-07-20",
-      description: "Test commitment",
-      categoryId: testCategoryIdOut,
-      userId: testUserId,
-      installments: [
-        { number: 1, amount: 20000, dueDate: "2026-07-20", status: "prevista" },
-        { number: 2, amount: 20000, dueDate: "2026-08-20", status: "prevista" },
-        { number: 3, amount: 20000, dueDate: "2026-09-20", status: "prevista" },
+    const commitment = await prisma.commitment.create({
+      data: {
+        mode: "installment_payment",
+        total: 60000, // R$ 600 total
+        installmentCount: 3,
+        firstDueDate: "2026-07-20",
+        description: "Test commitment",
+        categoryId: testCategoryIdOut,
+        userId: testUserId,
+      },
+    });
+
+    await prisma.installment.createMany({
+      data: [
+        { number: 1, amount: 20000, dueDate: "2026-07-20", status: "prevista", commitmentId: commitment.id, userId: testUserId },
+        { number: 2, amount: 20000, dueDate: "2026-08-20", status: "prevista", commitmentId: commitment.id, userId: testUserId },
+        { number: 3, amount: 20000, dueDate: "2026-09-20", status: "prevista", commitmentId: commitment.id, userId: testUserId },
       ],
     });
 
@@ -123,12 +130,14 @@ describe("getMonthlyProjection (integration)", () => {
 
   it("isolates projection between two users in same month", async () => {
     // User 1: R$ 100 entrada
-    await createTransaction({
-      type: "entrada",
-      date: "2026-07-10",
-      amount: 10000,
-      categoryId: testCategoryIdIn,
-      userId: testUserId,
+    await prisma.transaction.create({
+      data: {
+        type: "entrada",
+        date: "2026-07-10",
+        amount: 10000,
+        categoryId: testCategoryIdIn,
+        userId: testUserId,
+      },
     });
 
     // User 2: R$ 200 entrada + R$ 150 saída
@@ -139,20 +148,24 @@ describe("getMonthlyProjection (integration)", () => {
       data: { name: "Outra Saída", type: "saida", userId: otherUserId },
     });
 
-    await createTransaction({
-      type: "entrada",
-      date: "2026-07-10",
-      amount: 20000,
-      categoryId: otherCatIn.id,
-      userId: otherUserId,
+    await prisma.transaction.create({
+      data: {
+        type: "entrada",
+        date: "2026-07-10",
+        amount: 20000,
+        categoryId: otherCatIn.id,
+        userId: otherUserId,
+      },
     });
 
-    await createTransaction({
-      type: "saida",
-      date: "2026-07-10",
-      amount: 15000,
-      categoryId: otherCatOut.id,
-      userId: otherUserId,
+    await prisma.transaction.create({
+      data: {
+        type: "saida",
+        date: "2026-07-10",
+        amount: 15000,
+        categoryId: otherCatOut.id,
+        userId: otherUserId,
+      },
     });
 
     const resultA = await getMonthlyProjection(testUserId, "2026-07");

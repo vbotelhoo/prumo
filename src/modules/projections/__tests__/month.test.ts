@@ -57,7 +57,7 @@ describe("month domain", () => {
 
     it("falls back to current month on non-string", () => {
       const now = new Date("2026-07-15T00:00:00Z");
-      const result = parseMonthParam("abc" as any, now);
+      const result = parseMonthParam("abc" as unknown as string, now);
       expect(result).toBe(getCurrentMonth(now));
     });
   });
