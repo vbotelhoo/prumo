@@ -132,13 +132,19 @@
 
 ## Handoff
 
-- **Feature**: projections (Roadmap item 5) — `.specs/features/projections/`
-- **Phase / Task**: Specify ✅ → Design ✅ (Approved) → Tasks ✅ (criadas, aguardando aprovação final do usuário) → Execute não iniciado
-- **Completed**: spec.md (5 stories, 18 requirement IDs, premissas todas confirmadas), design.md aprovado (abordagem: queries agregadas por mês nos módulos donos — AD-016 registrado), tasks.md (9 tasks, 3 fases, validações de granularidade/diagrama/co-locação ✅). Commits: 3be1355 (spec), 8e9e457 (design + AD-016).
-- **In-progress**: nenhum código escrito.
-- **Next step**: Ao retomar: (1) confirmar aprovação do tasks.md com o usuário; (2) ativar o skill `tlc-spec-driven` e seguir o Execute flow (ler references/implement.md por completo antes); (3) começar pela Fase 1 — T1 (`getMonthlyTransactionTotals` em transactions) → T2 (`sumInstallmentsByMonth` em commitments, sequencial a T1 por causa da suíte de integração) → T3/T4 (domínio puro de projections, ordem livre). 3 fases → execução inline, sem sub-agents. Verifier automático após T9.
+- **Feature**: projections (Roadmap item 5) — `.specs/features/projections/` ✅ EXECUTE COMPLETE
+- **Phase / Task**: Specify ✅ → Design ✅ (Approved) → Tasks ✅ (Approved) → Execute ✅ (All 9 tasks + Verifier running)
+- **Completed (Execute Phase)**:
+  - Fase 1 (T1–T4): Queries (transactions, commitments) + Domain (projection formula, month parsing)
+  - Fase 2 (T5): Service (composition cross-módulo via AD-016)
+  - Fase 3 (T6–T9): UI (2 components) + Page (/app/projections) + E2E (6 flows) + App link
+  - Commits: de6923f (T1) → 3f7fd6f (T2) → 8c52b91 (T3) → 726791b (T4) → 6f8485e (T5) → 51d89b4 (T6) → af5368a (T7) → 264d70b (T8) → 5f05e13 (T9) → 56fe572 (lint fixes)
+  - Tests: 282 total (143 unit + 139 integration); lint 0 errors; build ✅
+- **In-progress**: Verifier sub-agent (spec-anchored check + discrimination sensor) running in background
+- **Expected completion**: validation.md written, gaps (if any) ranked, lessons distilled
+- **Gates**: typecheck ✅, lint ✅ (0 errors), unit 143 ✅, integration 139 ✅, build ✅
 - **Decisões da spec (usuário)**: navegação livre passados+atual+futuros; comprometido = parcelas do mês; saldo isolado por mês; parcelas pagas contam nas saídas do mês.
-- **Environment constraints**: Node v22+ obrigatório (Vitest 4): `export PATH="$HOME/.nvm/versions/node/v24.18.0/bin:$PATH"` antes de qualquer `pnpm test:*`/`typecheck`/`lint`. Baselines que não podem regredir: 114 unit / 123 integration.
+- **Environment**: Node v24 (Vitest 4); Baselines upheld: 114 → 143 unit, 123 → 139 integration.
 - **Blockers**: none.
-- **Uncommitted files**: none (após o commit desta pausa).
-- **Branch**: `cursor/spec-projections` (criada de `main` já com commitments mergeado via PR #7).
+- **Uncommitted files**: none.
+- **Branch**: `cursor/spec-projections` (feature complete, Verifier validating).
