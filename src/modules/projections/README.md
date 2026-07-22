@@ -6,7 +6,9 @@ Previsibilidade mensal: agrega dados de `transactions` e `commitments` para calc
 
 ## API pública
 
-Hoje vazia (placeholder criado no setup — Fase 1). Exports públicos (tipos, schemas Zod, casos de uso) chegam na feature `projections` do roadmap.
+- **Domain**: tipo `MonthlyProjection`; helpers de mês `parseMonthParam`, `getCurrentMonth`, `previousMonth`, `nextMonth`, `formatMonthLabel` (`domain/month.ts`).
+- **Services**: `getMonthlyProjection` — orquestra as queries agregadas de `transactions` e `commitments` (via suas APIs públicas, AD-016) e calcula entradas/saídas previstas, saldo projetado e total comprometido do mês.
+- **Components**: `ProjectionSummary`, `MonthNavigator` — UI consumida pela rota `/app/projections` (`src/app/app/projections/page.tsx`).
 
 ## Dependências permitidas
 

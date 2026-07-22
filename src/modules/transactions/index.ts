@@ -7,7 +7,7 @@
 export type { Transaction, TransactionInput } from "./domain/types";
 
 // Data layer: repository queries
-export { listTransactions } from "./data/transactions-repository";
+export { listTransactions, getMonthlyTransactionTotals } from "./data/transactions-repository";
 
 // Actions: mutations
 export { createTransactionAction } from "./actions/create-transaction-action";

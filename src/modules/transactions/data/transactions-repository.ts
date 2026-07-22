@@ -1,4 +1,5 @@
 import { prisma, money } from "@/shared";
+import type { Money } from "@/shared";
 import type { Transaction } from "../domain/types";
 import { TRANSACTION_NOT_FOUND_ERROR } from "../domain/constants";
 
@@ -208,5 +209,40 @@ export async function findTransactionById(
     categoryName: txn.category.name,
     userId: txn.userId,
     createdAt: txn.createdAt,
+  };
+}
+
+/**
+ * Retorna totais mensais agregados de entradas e saídas do usuário.
+ * Agrupa no banco por tipo, retorna { entradas, saidas } como Money.
+ * Tipo ausente no resultado → Money(0).
+ */
+export async function getMonthlyTransactionTotals(
+  userId: string,
+  month: string
+): Promise<{ entradas: Money; saidas: Money }> {
+  const monthPrefix = `${month}-`;
+
+  const aggregates = await prisma.transaction.groupBy({
+    by: ["type"],
+    where: {
+      userId,
+      date: {
+        startsWith: monthPrefix,
+      },
+    },
+    _sum: {
+      amount: true,
+    },
+  });
+
+  const entradas =
+    aggregates.find((agg) => agg.type === "entrada")?._sum.amount ?? 0;
+  const saidas =
+    aggregates.find((agg) => agg.type === "saida")?._sum.amount ?? 0;
+
+  return {
+    entradas: money(entradas),
+    saidas: money(saidas),
   };
 }

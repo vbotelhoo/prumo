@@ -52,7 +52,7 @@ Ordem de implementação do MVP. Cada feature segue o fluxo spec-driven (spec �
 - Saldo projetado = entradas previstas − (despesas avulsas + parcelas do mês)
 - E2E: projeção mensal com saldo correto; isolamento entre usuários (2 contas)
 
-**Status**: pendente
+**Status**: ✅ concluída (2026-07-22) — 9 tasks implementadas (queries cross-módulo via AD-016 → domain → service → componentes → página → E2E), todos os gates verdes (typecheck, lint, unit 143, integração 139, build). PR [#8](https://github.com/vbotelhoo/prumo/pull/8) aberto para `main`. Validação em `.specs/features/projections/validation.md` (PASS, 18/18 requisitos, 9/9 testes do discrimination sensor).
 
 ### 6. Dashboard — composição em `app/`
 

@@ -6,6 +6,7 @@ import {
   createCommitmentWithInstallments,
   setInstallmentStatus,
   deleteCommitment,
+  sumInstallmentsByMonth,
 } from "../data/commitments-repository";
 import { materializeInstallments } from "../domain/installments";
 import { INSTALLMENT_NOT_FOUND_ERROR } from "../domain/constants";
@@ -331,6 +332,121 @@ describe("commitments-repository (integration)", () => {
       expect(remaining).not.toBeNull();
       expect(remaining!.installments).toHaveLength(1);
       expect(remaining!.installments[0].status).toBe("paga");
+    });
+  });
+
+  describe("sumInstallmentsByMonth", () => {
+    it("sums prevista and paga installments together in a month", async () => {
+      const commitment = await createCommitmentWithInstallments({
+        mode: "installment_payment",
+        total: 30000, // R$ 300
+        installmentCount: 3,
+        firstDueDate: "2026-07-10",
+        description: "Test commitment",
+        categoryId: testCategoryId,
+        userId: testUserId,
+        installments: [
+          { number: 1, amount: 10000, dueDate: "2026-07-10", status: "prevista" },
+          { number: 2, amount: 10000, dueDate: "2026-07-20", status: "paga" },
+          { number: 3, amount: 10000, dueDate: "2026-08-10", status: "prevista" },
+        ],
+      });
+
+      const result = await sumInstallmentsByMonth(testUserId, "2026-07");
+
+      // Only July installments (1 + 2), regardless of status
+      expect(result).toBe(money(20000));
+    });
+
+    it("includes installments on first day of month", async () => {
+      const commitment = await createCommitmentWithInstallments({
+        mode: "installment_payment",
+        total: 10000,
+        installmentCount: 1,
+        firstDueDate: "2026-07-01",
+        description: "Test commitment",
+        categoryId: testCategoryId,
+        userId: testUserId,
+        installments: [{ number: 1, amount: 10000, dueDate: "2026-07-01", status: "prevista" }],
+      });
+
+      const result = await sumInstallmentsByMonth(testUserId, "2026-07");
+
+      expect(result).toBe(money(10000));
+    });
+
+    it("includes installments on last day of month", async () => {
+      const commitment = await createCommitmentWithInstallments({
+        mode: "installment_payment",
+        total: 15000,
+        installmentCount: 1,
+        firstDueDate: "2026-07-31",
+        description: "Test commitment",
+        categoryId: testCategoryId,
+        userId: testUserId,
+        installments: [{ number: 1, amount: 15000, dueDate: "2026-07-31", status: "paga" }],
+      });
+
+      const result = await sumInstallmentsByMonth(testUserId, "2026-07");
+
+      expect(result).toBe(money(15000));
+    });
+
+    it("excludes installments from other months", async () => {
+      const commitment = await createCommitmentWithInstallments({
+        mode: "installment_payment",
+        total: 30000,
+        installmentCount: 3,
+        firstDueDate: "2026-06-10",
+        description: "Test commitment",
+        categoryId: testCategoryId,
+        userId: testUserId,
+        installments: [
+          { number: 1, amount: 10000, dueDate: "2026-06-10", status: "paga" },
+          { number: 2, amount: 10000, dueDate: "2026-07-10", status: "prevista" },
+          { number: 3, amount: 10000, dueDate: "2026-08-10", status: "paga" },
+        ],
+      });
+
+      const result = await sumInstallmentsByMonth(testUserId, "2026-07");
+
+      expect(result).toBe(money(10000)); // Only July (installment 2)
+    });
+
+    it("returns Money(0) for month with no installments", async () => {
+      const result = await sumInstallmentsByMonth(testUserId, "2026-09");
+
+      expect(result).toBe(money(0));
+    });
+
+    it("isolates aggregates between two users", async () => {
+      const commitmentA = await createCommitmentWithInstallments({
+        mode: "installment_payment",
+        total: 10000,
+        installmentCount: 1,
+        firstDueDate: "2026-07-10",
+        description: "User A commitment",
+        categoryId: testCategoryId,
+        userId: testUserId,
+        installments: [{ number: 1, amount: 10000, dueDate: "2026-07-10", status: "prevista" }],
+      });
+
+      const commitmentB = await createCommitmentWithInstallments({
+        mode: "installment_payment",
+        total: 20000,
+        installmentCount: 1,
+        firstDueDate: "2026-07-15",
+        description: "User B commitment",
+        categoryId: testCategoryId,
+        userId: otherUserId,
+        installments: [{ number: 1, amount: 20000, dueDate: "2026-07-15", status: "paga" }],
+      });
+
+      const resultA = await sumInstallmentsByMonth(testUserId, "2026-07");
+      const resultB = await sumInstallmentsByMonth(otherUserId, "2026-07");
+
+      expect(resultA).toBe(money(10000));
+      expect(resultB).toBe(money(20000));
     });
   });
 });

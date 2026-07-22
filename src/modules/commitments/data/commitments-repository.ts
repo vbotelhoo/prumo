@@ -1,4 +1,5 @@
 import { prisma, money } from "@/shared";
+import type { Money } from "@/shared";
 import type { Commitment, Installment } from "../domain/types";
 import {
   COMMITMENT_NOT_FOUND_ERROR,
@@ -367,6 +368,32 @@ export async function deleteCommitment(
       });
     }
   });
+}
+
+/**
+ * Retorna a soma das parcelas de um usuário com vencimento em um mês.
+ * Inclui parcelas com qualquer status (prevista ou paga).
+ * Retorna Money(0) quando não há parcelas no mês.
+ */
+export async function sumInstallmentsByMonth(
+  userId: string,
+  month: string
+): Promise<Money> {
+  const monthPrefix = `${month}-`;
+
+  const result = await prisma.installment.aggregate({
+    where: {
+      userId,
+      dueDate: {
+        startsWith: monthPrefix,
+      },
+    },
+    _sum: {
+      amount: true,
+    },
+  });
+
+  return money(result._sum.amount ?? 0);
 }
 
 export { AppError };

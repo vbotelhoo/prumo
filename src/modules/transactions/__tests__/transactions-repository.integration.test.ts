@@ -6,6 +6,7 @@ import {
   updateTransaction,
   deleteTransaction,
   findTransactionById,
+  getMonthlyTransactionTotals,
 } from "../data/transactions-repository";
 import { TRANSACTION_NOT_FOUND_ERROR } from "../domain/constants";
 
@@ -40,6 +41,14 @@ const usersToCleanup = new Set<string>();
 const transactionsToCleanup = new Set<string>();
 
 afterEach(async () => {
+  if (usersToCleanup.size > 0) {
+    // Delete all transactions for these users first (cascade cleanup)
+    await prisma.transaction.deleteMany({
+      where: { userId: { in: Array.from(usersToCleanup) } },
+    });
+    transactionsToCleanup.clear();
+  }
+
   if (transactionsToCleanup.size > 0) {
     await prisma.transaction.deleteMany({
       where: { id: { in: Array.from(transactionsToCleanup) } },
@@ -533,6 +542,209 @@ describe("transactions-repository", () => {
       // UserB tries to find UserA's transaction
       const found = await findTransactionById(txn.id, userB.id);
       expect(found).toBeNull();
+    });
+  });
+
+  describe("getMonthlyTransactionTotals", () => {
+    it("returns split entradas and saidas for a month with both types", async () => {
+      const user = await createTestUser("12345678923");
+      usersToCleanup.add(user.id);
+
+      const categoryIn = await getDefaultCategory("entrada");
+      const categoryOut = await getDefaultCategory("saida");
+
+      // Create 2 entradas
+      await createTransaction({
+        type: "entrada",
+        date: "2026-07-10",
+        amount: 100000, // R$ 1.000
+        categoryId: categoryIn.id,
+        userId: user.id,
+      });
+
+      await createTransaction({
+        type: "entrada",
+        date: "2026-07-15",
+        amount: 50000, // R$ 500
+        categoryId: categoryIn.id,
+        userId: user.id,
+      });
+
+      // Create 2 saidas
+      const out1 = await createTransaction({
+        type: "saida",
+        date: "2026-07-20",
+        amount: 30000, // R$ 300
+        categoryId: categoryOut.id,
+        userId: user.id,
+      });
+      transactionsToCleanup.add(out1.id);
+
+      const out2 = await createTransaction({
+        type: "saida",
+        date: "2026-07-25",
+        amount: 20000, // R$ 200
+        categoryId: categoryOut.id,
+        userId: user.id,
+      });
+      transactionsToCleanup.add(out2.id);
+
+      const result = await getMonthlyTransactionTotals(user.id, "2026-07");
+
+      expect(result.entradas).toBe(money(150000)); // R$ 1.500
+      expect(result.saidas).toBe(money(50000)); // R$ 500
+    });
+
+    it("includes transactions on first day of month", async () => {
+      const user = await createTestUser("12345678924");
+      usersToCleanup.add(user.id);
+
+      const categoryIn = await getDefaultCategory("entrada");
+
+      const txn = await createTransaction({
+        type: "entrada",
+        date: "2026-07-01",
+        amount: 100000,
+        categoryId: categoryIn.id,
+        userId: user.id,
+      });
+      transactionsToCleanup.add(txn.id);
+
+      const result = await getMonthlyTransactionTotals(user.id, "2026-07");
+
+      expect(result.entradas).toBe(money(100000));
+    });
+
+    it("includes transactions on last day of month", async () => {
+      const user = await createTestUser("12345678925");
+      usersToCleanup.add(user.id);
+
+      const categoryOut = await getDefaultCategory("saida");
+
+      const txn = await createTransaction({
+        type: "saida",
+        date: "2026-07-31",
+        amount: 50000,
+        categoryId: categoryOut.id,
+        userId: user.id,
+      });
+      transactionsToCleanup.add(txn.id);
+
+      const result = await getMonthlyTransactionTotals(user.id, "2026-07");
+
+      expect(result.saidas).toBe(money(50000));
+    });
+
+    it("excludes transactions from other months", async () => {
+      const user = await createTestUser("12345678926");
+      usersToCleanup.add(user.id);
+
+      const categoryIn = await getDefaultCategory("entrada");
+      const categoryOut = await getDefaultCategory("saida");
+
+      // Transaction in June (should not count)
+      const txn1 = await createTransaction({
+        type: "entrada",
+        date: "2026-06-15",
+        amount: 100000,
+        categoryId: categoryIn.id,
+        userId: user.id,
+      });
+      transactionsToCleanup.add(txn1.id);
+
+      // Transaction in August (should not count)
+      const txn2 = await createTransaction({
+        type: "saida",
+        date: "2026-08-15",
+        amount: 100000,
+        categoryId: categoryOut.id,
+        userId: user.id,
+      });
+      transactionsToCleanup.add(txn2.id);
+
+      // Transaction in July (should count)
+      const txn3 = await createTransaction({
+        type: "entrada",
+        date: "2026-07-15",
+        amount: 50000,
+        categoryId: categoryIn.id,
+        userId: user.id,
+      });
+      transactionsToCleanup.add(txn3.id);
+
+      const result = await getMonthlyTransactionTotals(user.id, "2026-07");
+
+      expect(result.entradas).toBe(money(50000));
+      expect(result.saidas).toBe(money(0)); // June and August excluded
+    });
+
+    it("returns zeroed aggregates for month with no transactions", async () => {
+      const user = await createTestUser("12345678927");
+      usersToCleanup.add(user.id);
+
+      const result = await getMonthlyTransactionTotals(user.id, "2026-07");
+
+      expect(result.entradas).toBe(money(0));
+      expect(result.saidas).toBe(money(0));
+    });
+
+    it("isolates aggregates between two users", async () => {
+      const userA = await createTestUser("12345678928");
+      const userB = await createTestUser("12345678929");
+      usersToCleanup.add(userA.id);
+      usersToCleanup.add(userB.id);
+
+      const categoryIn = await getDefaultCategory("entrada");
+      const categoryOut = await getDefaultCategory("saida");
+
+      // UserA: R$ 100 entrada
+      const txnA = await createTransaction({
+        type: "entrada",
+        date: "2026-07-10",
+        amount: 10000,
+        categoryId: categoryIn.id,
+        userId: userA.id,
+      });
+      transactionsToCleanup.add(txnA.id);
+
+      // UserB: R$ 200 entrada (should not affect UserA)
+      const txnB = await createTransaction({
+        type: "entrada",
+        date: "2026-07-10",
+        amount: 20000,
+        categoryId: categoryIn.id,
+        userId: userB.id,
+      });
+      transactionsToCleanup.add(txnB.id);
+
+      const resultA = await getMonthlyTransactionTotals(userA.id, "2026-07");
+      const resultB = await getMonthlyTransactionTotals(userB.id, "2026-07");
+
+      expect(resultA.entradas).toBe(money(10000));
+      expect(resultB.entradas).toBe(money(20000));
+    });
+
+    it("returns Money(0) when a type has no transactions in the month", async () => {
+      const user = await createTestUser("12345678930");
+      usersToCleanup.add(user.id);
+
+      const categoryIn = await getDefaultCategory("entrada");
+
+      // Only create entradas
+      const txn = await createTransaction({
+        type: "entrada",
+        date: "2026-07-10",
+        amount: 100000,
+        categoryId: categoryIn.id,
+        userId: user.id,
+      });
+      transactionsToCleanup.add(txn.id);
+
+      const result = await getMonthlyTransactionTotals(user.id, "2026-07");
+
+      // saidas should be Money(0), not undefined
+      expect(result.saidas).toBe(money(0));
+      expect(result.entradas).toBe(money(100000));
     });
   });
 });

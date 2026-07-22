@@ -43,10 +43,11 @@ Rotas do App Router (`src/app`), apenas composição — sem regra de negócio (
 | `/login` | `src/app/login/page.tsx` | `auth` |
 | `/signup` | `src/app/signup/page.tsx` | `auth` |
 | `/terms` | `src/app/terms/page.tsx` | — |
-| `/app` | `src/app/app/page.tsx` (layout: `src/app/app/layout.tsx`) | `auth`, `projections` |
+| `/app` | `src/app/app/page.tsx` (layout: `src/app/app/layout.tsx`) | `auth` |
 | `/app/categories` | `src/app/app/categories/page.tsx` | `categories` |
 | `/app/commitments` | `src/app/app/commitments/page.tsx` | `commitments` |
 | `/app/transactions` | `src/app/app/transactions/page.tsx` | `transactions` |
+| `/app/projections` | `src/app/app/projections/page.tsx` | `projections` |
 
 ### API
 
