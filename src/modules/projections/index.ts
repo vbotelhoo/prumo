@@ -1,9 +1,13 @@
-// API pública do módulo `projections`.
-// Este é o único ponto de entrada permitido para outros módulos/camadas
-// importarem código deste módulo. Nada fora deste arquivo deve ser
-// importado diretamente (reforçado por eslint-plugin-boundaries).
-//
-// Hoje vazio — placeholder criado no setup; `projections` é somente-leitura
-// sobre `transactions`/`commitments` (nunca escreve dados deles) e não é
-// importado por nenhum outro módulo. Exports públicos chegam na feature
-// `projections` (previsibilidade mensal) do roadmap.
+// Public API for projections module (AD-010, AD-016)
+// All imports from other modules must come through this file
+
+// Domain: types and helpers
+export type { MonthlyProjection } from "./domain/types";
+export { parseMonthParam, getCurrentMonth, previousMonth, nextMonth, formatMonthLabel } from "./domain/month";
+
+// Services: composition
+export { getMonthlyProjection } from "./services/get-monthly-projection";
+
+// Components: UI
+export { ProjectionSummary } from "./components/ProjectionSummary";
+export { MonthNavigator } from "./components/MonthNavigator";
