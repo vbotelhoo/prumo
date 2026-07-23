@@ -146,4 +146,4 @@
 - **Environment**: Node v24 (Vitest 4); Baselines upheld: 143 → 149 unit, 139 → 156 integration. Banco de teste local compartilhado entre integration/E2E — se integration falhar com `Foreign key constraint violated` ao limpar `category`/`user`, é banco sujo de E2E anterior (AGENTS.md), não regressão; rodar a limpeza documentada lá antes de investigar mais.
 - **Blockers**: none.
 - **Uncommitted files**: none.
-- **Branch**: `cursor/spec-projections` — mesma branch da feature `projections` anterior (PR [#8](https://github.com/vbotelhoo/prumo/pull/8) ainda aberto). `ROADMAP.md` itens 5 e 6 (todo o MVP) atualizados para concluída.
+- **Branch**: `cursor/spec-projections` (PR [#8](https://github.com/vbotelhoo/prumo/pull/8) da feature `projections` já mergeado) — PR [#9](https://github.com/vbotelhoo/prumo/pull/9) aberto para `main` com a feature `dashboard`, aguardando merge. `ROADMAP.md` itens 5 e 6 (todo o MVP) atualizados para concluída.
