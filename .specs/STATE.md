@@ -132,18 +132,18 @@
 
 ## Handoff
 
-- **Feature**: projections (Roadmap item 5) — `.specs/features/projections/` ✅ VALIDATED (PASS)
-- **Phase / Task**: Specify ✅ → Design ✅ (Approved) → Tasks ✅ (Approved) → Execute ✅ → Verify ✅ (PASS)
+- **Feature**: dashboard (Roadmap item 6, último item do MVP) — `.specs/features/dashboard/` ✅ VALIDATED (PASS, iteração 2)
+- **Phase / Task**: Specify ✅ → Design ✅ → Tasks ✅ → Execute ✅ (inline, 3 fases ≤ limite de sub-agentes) → Verify ✅ (PASS)
 - **Completed (Execute Phase)**:
-  - Fase 1 (T1–T4): Queries (transactions, commitments) + Domain (projection formula, month parsing)
-  - Fase 2 (T5): Service (composition cross-módulo via AD-016)
-  - Fase 3 (T6–T9): UI (2 components) + Page (/app/projections) + E2E (6 flows) + App link
-  - Commits: de6923f (T1) → 3f7fd6f (T2) → 8c52b91 (T3) → 726791b (T4) → 6f8485e (T5) → 51d89b4 (T6) → af5368a (T7) → 264d70b (T8) → 5f05e13 (T9) → 56fe572 (lint fixes)
-  - Tests: 282 total (143 unit + 139 integration); lint 0 errors; build ✅
-- **Verifier**: PASS — `.specs/features/projections/validation.md` (18/18 requisitos PROJ-01..18 mapeados, 9/9 testes do discrimination sensor, RELEASE-READY)
-- **Gates**: typecheck ✅, lint ✅ (0 errors), unit 143 ✅, integration 139 ✅, build ✅
-- **Decisões da spec (usuário)**: navegação livre passados+atual+futuros; comprometido = parcelas do mês; saldo isolado por mês; parcelas pagas contam nas saídas do mês.
-- **Environment**: Node v24 (Vitest 4); Baselines upheld: 114 → 143 unit, 123 → 139 integration.
+  - Fase 1 (T1–T3): Queries (`transactions.getMonthlyExpensesByCategory`, `commitments.getMonthlyInstallmentsByCategory`/`listUnpaidInstallmentsForMonth`) + `mergeCategorySpending` (função pura)
+  - Fase 2 (T4–T5): `CategorySpendingChart` (recharts, paleta validada via skill `dataviz`) + `UpcomingInstallmentsList`
+  - Fase 3 (T6): `/app` reescrita como dashboard do mês atual + `e2e/dashboard.spec.ts`
+  - Commits: e3e1b6a (T1) → 19ed41b (T2) → 937de7b (T3) → 2f440c4 (T4) → 485562f (T5) → bbfaa0b (docs spec/design/tasks) → 20f2f96 (T6) → a056b10 (fix DASH-05/17) → 9ac4911 (fix DASH-02/03/11/14) → 5311461 (validation + traceability)
+  - Tests: 149 unit + 156 integration + 22 e2e; lint 0 errors; build ✅
+- **Verifier**: PASS na iteração 2 — `.specs/features/dashboard/validation.md` (18/18 requisitos DASH-01..18 verificados, 3/3 mutações do discrimination sensor mortas). Iteração 1 encontrou 6 gaps de cobertura (DASH-02/03/05/11/14/17 — nenhum bug funcional, todos precisão/ausência de teste); corrigidos sem mocks (DASH-14 reproduz falha real via segunda sessão excluindo o compromisso dono). 6 lições candidatas registradas (L-010–L-015).
+- **Gates**: typecheck ✅, lint ✅ (0 errors), unit 149 ✅, integration 156 ✅, e2e 22 ✅, build ✅
+- **Decisões da spec (usuário)**: dashboard sempre mês atual (sem navegação); gráfico só saídas (avulsas + parcelas, agrupado por categoryId); vencimentos = parcelas `prevista` do mês; marcar como paga direto do dashboard; parcelas pagas continuam contando no saldo/gráfico.
+- **Environment**: Node v24 (Vitest 4); Baselines upheld: 143 → 149 unit, 139 → 156 integration. Banco de teste local compartilhado entre integration/E2E — se integration falhar com `Foreign key constraint violated` ao limpar `category`/`user`, é banco sujo de E2E anterior (AGENTS.md), não regressão; rodar a limpeza documentada lá antes de investigar mais.
 - **Blockers**: none.
 - **Uncommitted files**: none.
-- **Branch**: `cursor/spec-projections` — PR [#8](https://github.com/vbotelhoo/prumo/pull/8) aberto para `main`, aguardando merge. `ROADMAP.md` item 5 atualizado para concluída.
+- **Branch**: `cursor/spec-projections` (PR [#8](https://github.com/vbotelhoo/prumo/pull/8) da feature `projections` já mergeado) — PR [#9](https://github.com/vbotelhoo/prumo/pull/9) aberto para `main` com a feature `dashboard`, aguardando merge. `ROADMAP.md` itens 5 e 6 (todo o MVP) atualizados para concluída.

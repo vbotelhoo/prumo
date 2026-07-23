@@ -7,6 +7,8 @@ import {
   setInstallmentStatus,
   deleteCommitment,
   sumInstallmentsByMonth,
+  getMonthlyInstallmentsByCategory,
+  listUnpaidInstallmentsForMonth,
 } from "../data/commitments-repository";
 import { materializeInstallments } from "../domain/installments";
 import { INSTALLMENT_NOT_FOUND_ERROR } from "../domain/constants";
@@ -15,6 +17,7 @@ describe("commitments-repository (integration)", () => {
   const testUserId = "test-user-123";
   const otherUserId = "other-user-456";
   let testCategoryId = "";
+  let testCategoryId2 = "";
 
   beforeAll(async () => {
     // Create test user
@@ -62,6 +65,15 @@ describe("commitments-repository (integration)", () => {
       },
     });
     testCategoryId = cat1.id;
+
+    const cat2 = await prisma.category.create({
+      data: {
+        name: "Alimentação",
+        type: "saida",
+        userId: testUserId,
+      },
+    });
+    testCategoryId2 = cat2.id;
   });
 
   afterAll(async () => {
@@ -447,6 +459,291 @@ describe("commitments-repository (integration)", () => {
 
       expect(resultA).toBe(money(10000));
       expect(resultB).toBe(money(20000));
+    });
+  });
+
+  describe("getMonthlyInstallmentsByCategory", () => {
+    beforeEach(async () => {
+      // Testes de isolamento deste describe usam otherUserId; a limpeza
+      // global só cobre testUserId, então garantimos aqui que otherUserId
+      // também começa sem parcelas/compromissos de outros describes.
+      await prisma.installment.deleteMany({ where: { userId: otherUserId } });
+      await prisma.commitment.deleteMany({ where: { userId: otherUserId } });
+    });
+
+    it("returns empty array for a month with no installments", async () => {
+      const result = await getMonthlyInstallmentsByCategory(testUserId, "2026-07");
+
+      expect(result).toEqual([]);
+    });
+
+    it("omits a category with no installments in the month (DASH-05)", async () => {
+      await createCommitmentWithInstallments({
+        mode: "installment_payment",
+        total: 10000,
+        installmentCount: 1,
+        firstDueDate: "2026-08-10", // outro mês — não conta para 2026-07
+        description: "Compra em agosto",
+        categoryId: testCategoryId,
+        userId: testUserId,
+        installments: [{ number: 1, amount: 10000, dueDate: "2026-08-10", status: "prevista" }],
+      });
+
+      const result = await getMonthlyInstallmentsByCategory(testUserId, "2026-07");
+
+      expect(result).toEqual([]);
+      expect(result.some((slice) => slice.categoryId === testCategoryId)).toBe(false);
+    });
+
+    it("sums paga and prevista installments together in the same category", async () => {
+      await createCommitmentWithInstallments({
+        mode: "installment_payment",
+        total: 20000,
+        installmentCount: 2,
+        firstDueDate: "2026-07-10",
+        description: "Compra parcelada",
+        categoryId: testCategoryId,
+        userId: testUserId,
+        installments: [
+          { number: 1, amount: 10000, dueDate: "2026-07-10", status: "prevista" },
+          { number: 2, amount: 10000, dueDate: "2026-07-20", status: "paga" },
+        ],
+      });
+
+      const result = await getMonthlyInstallmentsByCategory(testUserId, "2026-07");
+
+      expect(result).toEqual([
+        { categoryId: testCategoryId, categoryName: "Eletrônicos", total: money(20000) },
+      ]);
+    });
+
+    it("treats fixed_payment the same as installment_payment (DASH-17)", async () => {
+      await createCommitmentWithInstallments({
+        mode: "fixed_payment",
+        total: 15000,
+        installmentCount: 1,
+        firstDueDate: "2026-07-05",
+        description: "Aluguel",
+        categoryId: testCategoryId,
+        userId: testUserId,
+        installments: [{ number: 1, amount: 15000, dueDate: "2026-07-05", status: "prevista" }],
+      });
+
+      const result = await getMonthlyInstallmentsByCategory(testUserId, "2026-07");
+
+      expect(result).toEqual([
+        { categoryId: testCategoryId, categoryName: "Eletrônicos", total: money(15000) },
+      ]);
+    });
+
+    it("returns 2 entries for 2 different categories", async () => {
+      await createCommitmentWithInstallments({
+        mode: "installment_payment",
+        total: 10000,
+        installmentCount: 1,
+        firstDueDate: "2026-07-10",
+        description: "Compra A",
+        categoryId: testCategoryId,
+        userId: testUserId,
+        installments: [{ number: 1, amount: 10000, dueDate: "2026-07-10", status: "prevista" }],
+      });
+
+      await createCommitmentWithInstallments({
+        mode: "installment_payment",
+        total: 7000,
+        installmentCount: 1,
+        firstDueDate: "2026-07-12",
+        description: "Compra B",
+        categoryId: testCategoryId2,
+        userId: testUserId,
+        installments: [{ number: 1, amount: 7000, dueDate: "2026-07-12", status: "prevista" }],
+      });
+
+      const result = await getMonthlyInstallmentsByCategory(testUserId, "2026-07");
+
+      expect(result).toHaveLength(2);
+      expect(result).toEqual(
+        expect.arrayContaining([
+          { categoryId: testCategoryId, categoryName: "Eletrônicos", total: money(10000) },
+          { categoryId: testCategoryId2, categoryName: "Alimentação", total: money(7000) },
+        ])
+      );
+    });
+
+    it("does not leak installments from another user", async () => {
+      await createCommitmentWithInstallments({
+        mode: "installment_payment",
+        total: 10000,
+        installmentCount: 1,
+        firstDueDate: "2026-07-10",
+        description: "User A commitment",
+        categoryId: testCategoryId,
+        userId: testUserId,
+        installments: [{ number: 1, amount: 10000, dueDate: "2026-07-10", status: "prevista" }],
+      });
+
+      const otherCategory = await prisma.category.create({
+        data: { name: "Categoria de Outro", type: "saida", userId: otherUserId },
+      });
+
+      await createCommitmentWithInstallments({
+        mode: "installment_payment",
+        total: 30000,
+        installmentCount: 1,
+        firstDueDate: "2026-07-10",
+        description: "User B commitment",
+        categoryId: otherCategory.id,
+        userId: otherUserId,
+        installments: [{ number: 1, amount: 30000, dueDate: "2026-07-10", status: "prevista" }],
+      });
+
+      const resultA = await getMonthlyInstallmentsByCategory(testUserId, "2026-07");
+      const resultB = await getMonthlyInstallmentsByCategory(otherUserId, "2026-07");
+
+      expect(resultA).toEqual([
+        { categoryId: testCategoryId, categoryName: "Eletrônicos", total: money(10000) },
+      ]);
+      expect(resultB).toEqual([
+        { categoryId: otherCategory.id, categoryName: "Categoria de Outro", total: money(30000) },
+      ]);
+
+      await prisma.installment.deleteMany({ where: { userId: otherUserId } });
+      await prisma.commitment.deleteMany({ where: { userId: otherUserId } });
+      await prisma.category.delete({ where: { id: otherCategory.id } });
+    });
+  });
+
+  describe("listUnpaidInstallmentsForMonth", () => {
+    beforeEach(async () => {
+      // Mesma razão do describe anterior: isola otherUserId entre testes
+      // deste describe (limpeza global só cobre testUserId).
+      await prisma.installment.deleteMany({ where: { userId: otherUserId } });
+      await prisma.commitment.deleteMany({ where: { userId: otherUserId } });
+    });
+
+    it("returns empty array for a month with no prevista installments", async () => {
+      const result = await listUnpaidInstallmentsForMonth(testUserId, "2026-07");
+
+      expect(result).toEqual([]);
+    });
+
+    it("includes fixed_payment installments the same as installment_payment (DASH-17)", async () => {
+      const commitment = await createCommitmentWithInstallments({
+        mode: "fixed_payment",
+        total: 15000,
+        installmentCount: 1,
+        firstDueDate: "2026-07-05",
+        description: "Aluguel",
+        categoryId: testCategoryId,
+        userId: testUserId,
+        installments: [{ number: 1, amount: 15000, dueDate: "2026-07-05", status: "prevista" }],
+      });
+
+      const result = await listUnpaidInstallmentsForMonth(testUserId, "2026-07");
+
+      expect(result).toHaveLength(1);
+      expect(result[0]).toEqual({
+        installmentId: commitment.installments![0]!.id,
+        commitmentId: commitment.id,
+        description: "Aluguel",
+        categoryName: "Eletrônicos",
+        amount: money(15000),
+        dueDate: "2026-07-05",
+      });
+    });
+
+    it("excludes paga installments", async () => {
+      const commitment = await createCommitmentWithInstallments({
+        mode: "installment_payment",
+        total: 20000,
+        installmentCount: 2,
+        firstDueDate: "2026-07-10",
+        description: "Compra parcelada",
+        categoryId: testCategoryId,
+        userId: testUserId,
+        installments: [
+          { number: 1, amount: 10000, dueDate: "2026-07-10", status: "prevista" },
+          { number: 2, amount: 10000, dueDate: "2026-07-20", status: "paga" },
+        ],
+      });
+
+      const result = await listUnpaidInstallmentsForMonth(testUserId, "2026-07");
+
+      expect(result).toHaveLength(1);
+      expect(result[0]).toEqual({
+        installmentId: commitment.installments![0]!.id,
+        commitmentId: commitment.id,
+        description: "Compra parcelada",
+        categoryName: "Eletrônicos",
+        amount: money(10000),
+        dueDate: "2026-07-10",
+      });
+    });
+
+    it("orders results by dueDate ascending", async () => {
+      const commitment = await createCommitmentWithInstallments({
+        mode: "installment_payment",
+        total: 30000,
+        installmentCount: 3,
+        firstDueDate: "2026-07-20",
+        description: "Compra parcelada",
+        categoryId: testCategoryId,
+        userId: testUserId,
+        installments: [
+          { number: 1, amount: 10000, dueDate: "2026-07-20", status: "prevista" },
+          { number: 2, amount: 10000, dueDate: "2026-07-05", status: "prevista" },
+          { number: 3, amount: 10000, dueDate: "2026-07-15", status: "prevista" },
+        ],
+      });
+
+      const result = await listUnpaidInstallmentsForMonth(testUserId, "2026-07");
+
+      expect(result.map((i) => i.dueDate)).toEqual(["2026-07-05", "2026-07-15", "2026-07-20"]);
+      expect(result.map((i) => i.commitmentId)).toEqual([
+        commitment.id,
+        commitment.id,
+        commitment.id,
+      ]);
+    });
+
+    it("does not leak installments from another user", async () => {
+      await createCommitmentWithInstallments({
+        mode: "installment_payment",
+        total: 10000,
+        installmentCount: 1,
+        firstDueDate: "2026-07-10",
+        description: "User A commitment",
+        categoryId: testCategoryId,
+        userId: testUserId,
+        installments: [{ number: 1, amount: 10000, dueDate: "2026-07-10", status: "prevista" }],
+      });
+
+      const otherCategory = await prisma.category.create({
+        data: { name: "Categoria de Outro", type: "saida", userId: otherUserId },
+      });
+
+      await createCommitmentWithInstallments({
+        mode: "installment_payment",
+        total: 30000,
+        installmentCount: 1,
+        firstDueDate: "2026-07-10",
+        description: "User B commitment",
+        categoryId: otherCategory.id,
+        userId: otherUserId,
+        installments: [{ number: 1, amount: 30000, dueDate: "2026-07-10", status: "prevista" }],
+      });
+
+      const resultA = await listUnpaidInstallmentsForMonth(testUserId, "2026-07");
+      const resultB = await listUnpaidInstallmentsForMonth(otherUserId, "2026-07");
+
+      expect(resultA).toHaveLength(1);
+      expect(resultA[0]!.description).toBe("User A commitment");
+      expect(resultB).toHaveLength(1);
+      expect(resultB[0]!.description).toBe("User B commitment");
+
+      await prisma.installment.deleteMany({ where: { userId: otherUserId } });
+      await prisma.commitment.deleteMany({ where: { userId: otherUserId } });
+      await prisma.category.delete({ where: { id: otherCategory.id } });
     });
   });
 });

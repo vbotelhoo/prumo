@@ -6,7 +6,10 @@ Compras parceladas e dívidas/financiamentos de longo prazo: cada compromisso ge
 
 ## API pública
 
-Hoje vazia (placeholder criado no setup — Fase 1). Exports públicos (tipos, schemas Zod, casos de uso) chegam na feature `commitments` do roadmap.
+- **Domain**: tipos `Commitment`, `Installment`, `CommitmentMode`, `InstallmentStatus`, `CommitmentProgress`, `CreateCommitmentInput`, `UpdateCommitmentInput`, `SetInstallmentStatusInput`, `EditScope` (`domain/types.ts`).
+- **Data**: `listCommitmentsByUser`, `getCommitmentForUser`, `sumInstallmentsByMonth` — queries do repositório, escopadas por `userId` (AD-012); a terceira é consumida por `projections` (AD-016).
+- **Actions**: `createCommitmentAction`, `setInstallmentStatusAction`, `updateCommitmentAction`, `deleteCommitmentAction`.
+- **Components**: `CommitmentsPageClient` — UI consumida pela rota `/app/commitments`.
 
 ## Dependências permitidas
 

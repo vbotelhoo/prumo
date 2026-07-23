@@ -246,3 +246,44 @@ export async function getMonthlyTransactionTotals(
     saidas: money(saidas),
   };
 }
+
+/**
+ * Retorna o total de saídas do usuário no mês, agrupado por categoria.
+ * Só considera transações tipo "saida". Categorias sem gasto não aparecem.
+ */
+export async function getMonthlyExpensesByCategory(
+  userId: string,
+  month: string
+): Promise<{ categoryId: string; categoryName: string; total: Money }[]> {
+  const monthPrefix = `${month}-`;
+
+  const aggregates = await prisma.transaction.groupBy({
+    by: ["categoryId"],
+    where: {
+      userId,
+      type: "saida",
+      date: {
+        startsWith: monthPrefix,
+      },
+    },
+    _sum: {
+      amount: true,
+    },
+  });
+
+  if (aggregates.length === 0) {
+    return [];
+  }
+
+  const categories = await prisma.category.findMany({
+    where: { id: { in: aggregates.map((agg) => agg.categoryId) } },
+    select: { id: true, name: true },
+  });
+  const categoryNameById = new Map(categories.map((cat) => [cat.id, cat.name]));
+
+  return aggregates.map((agg) => ({
+    categoryId: agg.categoryId,
+    categoryName: categoryNameById.get(agg.categoryId) ?? "",
+    total: money(agg._sum.amount ?? 0),
+  }));
+}

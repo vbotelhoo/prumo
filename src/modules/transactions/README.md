@@ -6,7 +6,10 @@ Entradas (receitas) e saídas (despesas) avulsas: cadastro, data, valor, descri�
 
 ## API pública
 
-Hoje vazia (placeholder criado no setup — Fase 1). Exports públicos (tipos, schemas Zod, casos de uso) chegam na feature `transactions` do roadmap.
+- **Domain**: tipos `Transaction`, `TransactionInput` (`domain/types.ts`).
+- **Data**: `listTransactions`, `getMonthlyTransactionTotals` — queries do repositório, escopadas por `userId` (AD-012); a segunda é consumida por `projections` (AD-016).
+- **Actions**: `createTransactionAction`, `updateTransactionAction`, `deleteTransactionAction`.
+- **Components**: `TransactionsPageClient` — UI consumida pela rota `/app/transactions`.
 
 ## Dependências permitidas
 

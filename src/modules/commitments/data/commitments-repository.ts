@@ -1,4 +1,4 @@
-import { prisma, money } from "@/shared";
+import { prisma, money, addMoney } from "@/shared";
 import type { Money } from "@/shared";
 import type { Commitment, Installment } from "../domain/types";
 import {
@@ -394,6 +394,111 @@ export async function sumInstallmentsByMonth(
   });
 
   return money(result._sum.amount ?? 0);
+}
+
+/**
+ * Retorna a soma das parcelas de um usuário com vencimento em um mês,
+ * agrupada pela categoria do compromisso dono. Inclui parcelas com
+ * qualquer status (prevista ou paga) — parcela paga conta igual a
+ * prevista, herdado de `sumInstallmentsByMonth`/PROJ.
+ */
+export async function getMonthlyInstallmentsByCategory(
+  userId: string,
+  month: string
+): Promise<{ categoryId: string; categoryName: string; total: Money }[]> {
+  const monthPrefix = `${month}-`;
+
+  const installments = await prisma.installment.findMany({
+    where: {
+      userId,
+      dueDate: {
+        startsWith: monthPrefix,
+      },
+    },
+    select: {
+      amount: true,
+      commitment: {
+        select: {
+          categoryId: true,
+          category: {
+            select: { name: true },
+          },
+        },
+      },
+    },
+  });
+
+  const totalsByCategory = new Map<string, { categoryName: string; total: Money }>();
+  for (const installment of installments) {
+    const { categoryId, category } = installment.commitment;
+    const amount = money(installment.amount);
+    const existing = totalsByCategory.get(categoryId);
+    totalsByCategory.set(categoryId, {
+      categoryName: category.name,
+      total: existing ? addMoney(existing.total, amount) : amount,
+    });
+  }
+
+  return Array.from(totalsByCategory.entries()).map(([categoryId, entry]) => ({
+    categoryId,
+    categoryName: entry.categoryName,
+    total: entry.total,
+  }));
+}
+
+/**
+ * Lista parcelas com status "prevista" e vencimento no mês, ordenadas
+ * por dueDate ascendente. Retorna descrição/categoria denormalizadas do
+ * compromisso dono para exibição direta em UI.
+ */
+export async function listUnpaidInstallmentsForMonth(
+  userId: string,
+  month: string
+): Promise<
+  {
+    installmentId: string;
+    commitmentId: string;
+    description: string;
+    categoryName: string;
+    amount: Money;
+    dueDate: string;
+  }[]
+> {
+  const monthPrefix = `${month}-`;
+
+  const installments = await prisma.installment.findMany({
+    where: {
+      userId,
+      status: "prevista",
+      dueDate: {
+        startsWith: monthPrefix,
+      },
+    },
+    orderBy: { dueDate: "asc" },
+    select: {
+      id: true,
+      amount: true,
+      dueDate: true,
+      commitmentId: true,
+      commitment: {
+        select: {
+          description: true,
+          category: {
+            select: { name: true },
+          },
+        },
+      },
+    },
+  });
+
+  return installments.map((installment) => ({
+    installmentId: installment.id,
+    commitmentId: installment.commitmentId,
+    description: installment.commitment.description,
+    categoryName: installment.commitment.category.name,
+    amount: money(installment.amount),
+    dueDate: installment.dueDate,
+  }));
 }
 
 export { AppError };
