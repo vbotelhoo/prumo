@@ -156,9 +156,48 @@ test.describe("Dashboard", () => {
   }) => {
     await signUp(page, "Dash Empty", `dash-empty-${Date.now()}@example.com`);
 
-    await expect(page.locator("text=R$ 0,00").first()).toBeVisible();
+    // DASH-02: os 3 valores do resumo (entradas, saídas, saldo) — não só
+    // "algum R$ 0,00 na página" — devem estar zerados individualmente.
+    const entradasText = page
+      .locator("text=Entradas Previstas")
+      .locator("..")
+      .locator("div")
+      .last();
+    const saidasText = page.locator("text=Saídas Previstas").locator("..").locator("div").last();
+    const saldoText = page.locator("text=Saldo Projetado").locator("..").locator("div").last();
+    await expect(entradasText).toContainText("R$ 0,00");
+    await expect(saidasText).toContainText("R$ 0,00");
+    await expect(saldoText).toContainText("R$ 0,00");
+
     await expect(page.getByText("Nenhum gasto neste mês")).toBeVisible();
     await expect(page.getByText("Nenhuma parcela pendente este mês")).toBeVisible();
+  });
+
+  test("negative saldo is displayed in full BRL, not hidden or truncated (DASH-03)", async ({
+    page,
+  }) => {
+    await signUp(page, "Dash Negative", `dash-negative-${Date.now()}@example.com`);
+    const today = new Date().toISOString().split("T")[0];
+
+    await page.goto("/app/transactions");
+    await createTransaction(page, {
+      type: "saida",
+      amount: "800,00",
+      category: "Alimentação",
+      date: today,
+    });
+
+    // Sem entradas no mês e uma saída de 800 -> saldo = -800,00
+    await page.goto("/app");
+    const saldoText = await page
+      .locator("text=Saldo Projetado")
+      .locator("..")
+      .locator("div")
+      .last()
+      .textContent();
+
+    expect(saldoText?.startsWith("-")).toBe(true);
+    expect(saldoText).toContain("800,00");
   });
 
   test("prevista installment appears in the list, paga installment does not (DASH-09)", async ({
@@ -192,6 +231,13 @@ test.describe("Dashboard", () => {
     await page.goto("/app");
     await expect(page.getByText("Conta a pagar")).toBeVisible();
     await expect(page.getByText("Conta ja paga")).not.toBeVisible();
+
+    // DASH-11: cada item da lista mostra descrição, categoria, valor
+    // (75,00 = 1a de 2 parcelas de 150,00) e vencimento.
+    const row = page.locator("li", { hasText: "Conta a pagar" });
+    await expect(row.getByText("Alimentação")).toBeVisible();
+    await expect(row.getByText("R$ 75,00")).toBeVisible();
+    await expect(row.getByText(today)).toBeVisible();
   });
 
   test("marking an installment as paid from the dashboard removes it from the list without a full page navigation, and the summary/chart keep counting it (DASH-13/15)", async ({
@@ -237,6 +283,51 @@ test.describe("Dashboard", () => {
     // 125 = 1a de 2 parcelas (250 / 2) no mes atual — segue contando nas
     // saidas mesmo apos marcada como paga (DASH-15)
     await expect(page.getByText("Alimentação — R$ 125,00")).toBeVisible();
+  });
+
+  test("failed mark-as-paid action keeps the item in the list and shows an inline error (DASH-14)", async ({
+    page,
+    browser,
+  }) => {
+    await signUp(page, "Dash ErrorPath", `dash-errorpath-${Date.now()}@example.com`);
+    const today = new Date().toISOString().split("T")[0];
+
+    await page.goto("/app/commitments");
+    await createInstallmentCommitment(page, {
+      description: "Parcela que vai sumir",
+      category: "Alimentação",
+      total: "100,00",
+      installmentCount: "2",
+      firstDueDate: today,
+    });
+
+    // Renderiza o dashboard com a parcela na lista — o installmentId fica
+    // preso nesse render até o próximo refresh do cliente.
+    await page.goto("/app");
+    await expect(page.getByText("Parcela que vai sumir")).toBeVisible();
+
+    // Em outra aba com a mesma sessão, exclui o compromisso dono dessa
+    // parcela: o servidor deixa de reconhecer o installmentId que o
+    // cliente acima ainda tem renderizado.
+    const context2 = await browser.newContext();
+    await context2.addCookies(await page.context().cookies());
+    const page2 = await context2.newPage();
+    await page2.goto("/app/commitments");
+    await page2.getByRole("button", { name: "Excluir" }).click();
+    await page2.getByRole("dialog").getByRole("button", { name: "Excluir" }).click();
+    await expect(page2.getByRole("dialog")).not.toBeVisible();
+    await context2.close();
+
+    // De volta à lista desatualizada: clicar em "Marcar como paga" envia
+    // um installmentId que o servidor não encontra mais -> ação falha.
+    await page
+      .locator("li", { hasText: "Parcela que vai sumir" })
+      .getByRole("button", { name: "Marcar como paga" })
+      .click();
+
+    // Item permanece na lista (ação falhou) e a mensagem de erro é exibida.
+    await expect(page.getByText("Parcela que vai sumir")).toBeVisible();
+    await expect(page.getByText("Parcela não encontrada")).toBeVisible();
   });
 
   test("two accounts in the same month only see their own dashboard data (AD-012)", async ({
