@@ -477,6 +477,24 @@ describe("commitments-repository (integration)", () => {
       expect(result).toEqual([]);
     });
 
+    it("omits a category with no installments in the month (DASH-05)", async () => {
+      await createCommitmentWithInstallments({
+        mode: "installment_payment",
+        total: 10000,
+        installmentCount: 1,
+        firstDueDate: "2026-08-10", // outro mês — não conta para 2026-07
+        description: "Compra em agosto",
+        categoryId: testCategoryId,
+        userId: testUserId,
+        installments: [{ number: 1, amount: 10000, dueDate: "2026-08-10", status: "prevista" }],
+      });
+
+      const result = await getMonthlyInstallmentsByCategory(testUserId, "2026-07");
+
+      expect(result).toEqual([]);
+      expect(result.some((slice) => slice.categoryId === testCategoryId)).toBe(false);
+    });
+
     it("sums paga and prevista installments together in the same category", async () => {
       await createCommitmentWithInstallments({
         mode: "installment_payment",
@@ -607,6 +625,31 @@ describe("commitments-repository (integration)", () => {
       const result = await listUnpaidInstallmentsForMonth(testUserId, "2026-07");
 
       expect(result).toEqual([]);
+    });
+
+    it("includes fixed_payment installments the same as installment_payment (DASH-17)", async () => {
+      const commitment = await createCommitmentWithInstallments({
+        mode: "fixed_payment",
+        total: 15000,
+        installmentCount: 1,
+        firstDueDate: "2026-07-05",
+        description: "Aluguel",
+        categoryId: testCategoryId,
+        userId: testUserId,
+        installments: [{ number: 1, amount: 15000, dueDate: "2026-07-05", status: "prevista" }],
+      });
+
+      const result = await listUnpaidInstallmentsForMonth(testUserId, "2026-07");
+
+      expect(result).toHaveLength(1);
+      expect(result[0]).toEqual({
+        installmentId: commitment.installments![0]!.id,
+        commitmentId: commitment.id,
+        description: "Aluguel",
+        categoryName: "Eletrônicos",
+        amount: money(15000),
+        dueDate: "2026-07-05",
+      });
     });
 
     it("excludes paga installments", async () => {

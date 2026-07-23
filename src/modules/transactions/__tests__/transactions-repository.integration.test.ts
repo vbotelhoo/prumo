@@ -766,6 +766,33 @@ describe("transactions-repository", () => {
       expect(result).toEqual([]);
     });
 
+    it("omits a category with no transactions in the month (DASH-05)", async () => {
+      const user = await createTestUser("12345678937");
+      usersToCleanup.add(user.id);
+
+      const [categoryWithSpend, categoryWithoutSpend] = await getDefaultCategories("saida", 2);
+
+      const txn = await createTransaction({
+        type: "saida",
+        date: "2026-07-05",
+        amount: 4000,
+        categoryId: categoryWithSpend!.id,
+        userId: user.id,
+      });
+      transactionsToCleanup.add(txn.id);
+
+      const result = await getMonthlyExpensesByCategory(user.id, "2026-07");
+
+      expect(result).toEqual([
+        {
+          categoryId: categoryWithSpend!.id,
+          categoryName: categoryWithSpend!.name,
+          total: money(4000),
+        },
+      ]);
+      expect(result.some((slice) => slice.categoryId === categoryWithoutSpend!.id)).toBe(false);
+    });
+
     it("sums correctly when a category has 2 transactions", async () => {
       const user = await createTestUser("12345678932");
       usersToCleanup.add(user.id);
