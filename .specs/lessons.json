@@ -3,7 +3,7 @@
   "promote_threshold": 2,
   "window_days": 45,
   "quarantine_threshold": 2,
-  "next_id": 10,
+  "next_id": 16,
   "lessons": [
     {
       "id": "L-001",
@@ -166,6 +166,114 @@
       ],
       "created": "2026-07-19T14:52:32Z",
       "last_seen": "2026-07-19T14:52:32Z"
+    },
+    {
+      "id": "L-010",
+      "key": "ac_gap::when a task s done when criteria include an error failure path e g an action returning ok false add an explicit test for that path instead of assuming a later e2e task will cover it implicitly",
+      "text": "When a task's Done-when criteria include an error/failure path (e.g. an action returning ok:false), add an explicit test for that path instead of assuming a later E2E task will cover it implicitly.",
+      "signal": "ac_gap",
+      "scope": "",
+      "status": "candidate",
+      "features": [
+        "dashboard"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "DASH-14"
+      ],
+      "created": "2026-07-23T00:45:39Z",
+      "last_seen": "2026-07-23T00:45:39Z"
+    },
+    {
+      "id": "L-011",
+      "key": "ac_gap::when a new feature composes around a component whose edge case behavior e g negative values was only tested by a prior feature add at least one test in the new feature that exercises that edge case in the new composition",
+      "text": "When a new feature composes around a component whose edge-case behavior (e.g. negative values) was only tested by a prior feature, add at least one test in the new feature that exercises that edge case in the new composition.",
+      "signal": "ac_gap",
+      "scope": "",
+      "status": "candidate",
+      "features": [
+        "dashboard"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "DASH-03"
+      ],
+      "created": "2026-07-23T00:45:39Z",
+      "last_seen": "2026-07-23T00:45:39Z"
+    },
+    {
+      "id": "L-012",
+      "key": "spec_precision_gap::assert every field level outcome named in a when x then y spec criterion individually not just a single matching occurrence of a value that can appear multiple times on the page",
+      "text": "Assert every field-level outcome named in a WHEN X THEN Y spec criterion individually, not just a single matching occurrence of a value that can appear multiple times on the page.",
+      "signal": "spec_precision_gap",
+      "scope": "",
+      "status": "candidate",
+      "features": [
+        "dashboard"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "DASH-02"
+      ],
+      "created": "2026-07-23T00:45:59Z",
+      "last_seen": "2026-07-23T00:45:59Z"
+    },
+    {
+      "id": "L-013",
+      "key": "spec_precision_gap::add an explicit test proving items with a zero measure are excluded from an aggregate result even when the omission is a natural side effect of a where filtered query",
+      "text": "Add an explicit test proving items with a zero measure are excluded from an aggregate result, even when the omission is a natural side effect of a WHERE-filtered query.",
+      "signal": "spec_precision_gap",
+      "scope": "",
+      "status": "candidate",
+      "features": [
+        "dashboard"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "DASH-05"
+      ],
+      "created": "2026-07-23T00:45:59Z",
+      "last_seen": "2026-07-23T00:45:59Z"
+    },
+    {
+      "id": "L-014",
+      "key": "spec_precision_gap::when a spec ac lists multiple fields a ui row must display assert each field s rendered text not just one identifying field as a stand in for the rest",
+      "text": "When a spec AC lists multiple fields a UI row must display, assert each field's rendered text, not just one identifying field as a stand-in for the rest.",
+      "signal": "spec_precision_gap",
+      "scope": "",
+      "status": "candidate",
+      "features": [
+        "dashboard"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "DASH-11"
+      ],
+      "created": "2026-07-23T00:45:59Z",
+      "last_seen": "2026-07-23T00:45:59Z"
+    },
+    {
+      "id": "L-015",
+      "key": "spec_precision_gap::when a spec edge case says a rule applies at two call sites write a test for both call sites passing one is not evidence for the other",
+      "text": "When a spec edge case says a rule applies at two call sites, write a test for both call sites; passing one is not evidence for the other.",
+      "signal": "spec_precision_gap",
+      "scope": "",
+      "status": "candidate",
+      "features": [
+        "dashboard"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "DASH-17"
+      ],
+      "created": "2026-07-23T00:45:59Z",
+      "last_seen": "2026-07-23T00:45:59Z"
     }
   ]
 }

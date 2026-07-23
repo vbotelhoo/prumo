@@ -128,24 +128,24 @@ Hoje `/app` é só uma tela de boas-vindas com 4 cards de navegação. O usuári
 
 | Requirement ID | Story | Phase | Status |
 | --------------- | ----------- | ------ | ------- |
-| DASH-01 | P1: Resumo do mês | Execute (T6) | Implementing |
-| DASH-02 | P1: Resumo do mês (estado vazio) | Execute (T6) | Implementing |
-| DASH-03 | P1: Resumo do mês (saldo negativo) | Execute (T6) | Implementing |
-| DASH-04 | P1: Gastos por categoria | Execute (T1, T2, T3, T4) | Implementing |
-| DASH-05 | P1: Gastos por categoria (omitir zero) | Execute (T1, T3) | Implementing |
-| DASH-06 | P1: Gastos por categoria (estado vazio) | Execute (T4) | Implementing |
-| DASH-07 | P1: Gastos por categoria (soma avulsa+parcela) | Execute (T1, T2, T3, T6) | Implementing |
-| DASH-08 | P1: Próximos vencimentos (listar) | Execute (T2, T5) | Implementing |
-| DASH-09 | P1: Próximos vencimentos (excluir pagas) | Execute (T2, T5, T6) | Implementing |
-| DASH-10 | P1: Próximos vencimentos (estado vazio) | Execute (T5, T6) | Implementing |
-| DASH-11 | P1: Próximos vencimentos (campos exibidos) | Execute (T2, T5) | Implementing |
-| DASH-12 | P2: Marcar como paga (chamada da action) | Execute (T5) | Implementing |
-| DASH-13 | P2: Marcar como paga (remoção da lista) | Execute (T5, T6) | Implementing |
-| DASH-14 | P2: Marcar como paga (erro mantém item) | Execute (T5) | Implementing |
-| DASH-15 | P2: Marcar como paga (não afeta saldo/gráfico) | Execute (T6) | Implementing |
-| DASH-16 | Edge: dashboard vazio sem erro | Execute (T6) | Implementing |
-| DASH-17 | Edge: fixed_payment tratado igual | Execute (T2) | Implementing |
-| DASH-18 | Edge: agrupamento por categoryId, não por nome | Execute (T1, T2, T3) | Implementing |
+| DASH-01 | P1: Resumo do mês | Execute (T6) | ✅ Verified |
+| DASH-02 | P1: Resumo do mês (estado vazio) | Execute (T6) | ✅ Verified |
+| DASH-03 | P1: Resumo do mês (saldo negativo) | Execute (T6) | ✅ Verified |
+| DASH-04 | P1: Gastos por categoria | Execute (T1, T2, T3, T4) | ✅ Verified |
+| DASH-05 | P1: Gastos por categoria (omitir zero) | Execute (T1, T3) | ✅ Verified |
+| DASH-06 | P1: Gastos por categoria (estado vazio) | Execute (T4) | ✅ Verified |
+| DASH-07 | P1: Gastos por categoria (soma avulsa+parcela) | Execute (T1, T2, T3, T6) | ✅ Verified |
+| DASH-08 | P1: Próximos vencimentos (listar) | Execute (T2, T5) | ✅ Verified |
+| DASH-09 | P1: Próximos vencimentos (excluir pagas) | Execute (T2, T5, T6) | ✅ Verified |
+| DASH-10 | P1: Próximos vencimentos (estado vazio) | Execute (T5, T6) | ✅ Verified |
+| DASH-11 | P1: Próximos vencimentos (campos exibidos) | Execute (T2, T5) | ✅ Verified |
+| DASH-12 | P2: Marcar como paga (chamada da action) | Execute (T5) | ✅ Verified |
+| DASH-13 | P2: Marcar como paga (remoção da lista) | Execute (T5, T6) | ✅ Verified |
+| DASH-14 | P2: Marcar como paga (erro mantém item) | Execute (T5) | ✅ Verified |
+| DASH-15 | P2: Marcar como paga (não afeta saldo/gráfico) | Execute (T6) | ✅ Verified |
+| DASH-16 | Edge: dashboard vazio sem erro | Execute (T6) | ✅ Verified |
+| DASH-17 | Edge: fixed_payment tratado igual | Execute (T2) | ✅ Verified |
+| DASH-18 | Edge: agrupamento por categoryId, não por nome | Execute (T1, T2, T3) | ✅ Verified |
 
 **ID format:** `DASH-NN`
 

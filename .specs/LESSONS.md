@@ -68,6 +68,42 @@ Seen once or not yet corroborated. Tracked, not trusted.
 - evidence: validation.md#Post-Verification-Update (row 4) (client-components)
 - last seen: 2026-07-19T14:52:32Z
 
+### L-010 — When a task's Done-when criteria include an error/failure path (e.g. an action returning ok:false), add an explicit test for that path instead of assuming a later E2E task will cover it implicitly.
+- signal: `ac_gap` · recurrence: 1 feature(s) · harmful: 0
+- features: dashboard
+- evidence: DASH-14
+- last seen: 2026-07-23T00:45:39Z
+
+### L-011 — When a new feature composes around a component whose edge-case behavior (e.g. negative values) was only tested by a prior feature, add at least one test in the new feature that exercises that edge case in the new composition.
+- signal: `ac_gap` · recurrence: 1 feature(s) · harmful: 0
+- features: dashboard
+- evidence: DASH-03
+- last seen: 2026-07-23T00:45:39Z
+
+### L-012 — Assert every field-level outcome named in a WHEN X THEN Y spec criterion individually, not just a single matching occurrence of a value that can appear multiple times on the page.
+- signal: `spec_precision_gap` · recurrence: 1 feature(s) · harmful: 0
+- features: dashboard
+- evidence: DASH-02
+- last seen: 2026-07-23T00:45:59Z
+
+### L-013 — Add an explicit test proving items with a zero measure are excluded from an aggregate result, even when the omission is a natural side effect of a WHERE-filtered query.
+- signal: `spec_precision_gap` · recurrence: 1 feature(s) · harmful: 0
+- features: dashboard
+- evidence: DASH-05
+- last seen: 2026-07-23T00:45:59Z
+
+### L-014 — When a spec AC lists multiple fields a UI row must display, assert each field's rendered text, not just one identifying field as a stand-in for the rest.
+- signal: `spec_precision_gap` · recurrence: 1 feature(s) · harmful: 0
+- features: dashboard
+- evidence: DASH-11
+- last seen: 2026-07-23T00:45:59Z
+
+### L-015 — When a spec edge case says a rule applies at two call sites, write a test for both call sites; passing one is not evidence for the other.
+- signal: `spec_precision_gap` · recurrence: 1 feature(s) · harmful: 0
+- features: dashboard
+- evidence: DASH-17
+- last seen: 2026-07-23T00:45:59Z
+
 ## Quarantined (failed when applied — ignore)
 
 A confirmed lesson that recurred alongside failure. Kept for the maintainer to review.
