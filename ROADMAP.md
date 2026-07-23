@@ -59,7 +59,7 @@ Ordem de implementação do MVP. Cada feature segue o fluxo spec-driven (spec �
 - Resumo do mês atual: saldo, gastos por categoria (Recharts), próximos vencimentos
 - Apenas composição, consumindo APIs públicas dos módulos
 
-**Status**: pendente
+**Status**: ✅ concluída (2026-07-22) — 6 tasks implementadas (queries cross-módulo via AD-016 → função pura de composição → componentes (gráfico Recharts + lista de vencimentos) → página → E2E), todos os gates verdes (typecheck, lint, unit 149, integração 153, E2E 20/20, build). Validação em `.specs/features/dashboard/validation.md`.
 
 ## Fases futuras (fora do MVP)
 
