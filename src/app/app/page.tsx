@@ -1,7 +1,7 @@
 import { headers } from "next/headers";
 import Link from "next/link";
 
-import { auth, LogoutButton } from "@/modules/auth";
+import { auth } from "@/modules/auth";
 import { Button, Card } from "@/shared";
 import { getMonthlyProjection, getCurrentMonth, ProjectionSummary } from "@/modules/projections";
 import { getMonthlyExpensesByCategory } from "@/modules/transactions";
@@ -88,10 +88,6 @@ export default async function AppPage() {
               <span>Projeções</span>
             </Button>
           </Link>
-        </div>
-
-        <div className="flex justify-center">
-          <LogoutButton />
         </div>
       </div>
     </div>

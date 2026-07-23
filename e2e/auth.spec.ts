@@ -67,7 +67,10 @@ test.describe("Fluxo de auth", () => {
     await page.getByRole("button", { name: "Criar conta" }).click();
 
     await expect(page).toHaveURL(/\/app$/);
-    await expect(page.getByText(name, { exact: false })).toBeVisible();
+    // .first(): o nome agora aparece 2x em /app (saudação da página +
+    // shell, SHELL-05) — ambos confirmam a mesma coisa, sem enfraquecer a
+    // asserção (lição do projeto: seletor ajustado, não a garantia).
+    await expect(page.getByText(name, { exact: false }).first()).toBeVisible();
 
     // AC-logout.1 (spec.md, Logout): logout encerra a sessão e redireciona
     // para a home.
@@ -86,7 +89,10 @@ test.describe("Fluxo de auth", () => {
     await page.getByRole("button", { name: "Entrar" }).click();
 
     await expect(page).toHaveURL(/\/app$/);
-    await expect(page.getByText(name, { exact: false })).toBeVisible();
+    // .first(): o nome agora aparece 2x em /app (saudação da página +
+    // shell, SHELL-05) — ambos confirmam a mesma coisa, sem enfraquecer a
+    // asserção (lição do projeto: seletor ajustado, não a garantia).
+    await expect(page.getByText(name, { exact: false }).first()).toBeVisible();
 
     // AC-login.6 (spec.md, Login e sessão; AUTH-11): usuário já autenticado
     // (sessão ativa desde o login em /app na linha acima) que acessa
