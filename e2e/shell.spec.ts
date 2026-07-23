@@ -136,3 +136,65 @@ test.describe("Shell — sidebar desktop (SHELL-01..07, SHELL-15..17)", () => {
     expect(asideBox?.width).toBeLessThan(400);
   });
 });
+
+test.describe("Shell — drawer mobile (SHELL-08..11)", () => {
+  test.use({ viewport: { width: 390, height: 844 } });
+
+  test("abaixo de 1024px a sidebar fica oculta e a topbar com botão de menu aparece (SHELL-08)", async ({
+    page,
+  }) => {
+    await signUp(page, "Mobile Topbar E2E", uniqueEmail("e2e-shell-mobile-topbar"));
+
+    await expect(page.locator("aside")).not.toBeVisible();
+    await expect(page.getByRole("button", { name: "Abrir menu" })).toBeVisible();
+  });
+
+  test("o menu abre um drawer com os mesmos links, marca e ações da sidebar; navegar fecha o drawer (SHELL-09/10)", async ({
+    page,
+  }) => {
+    await signUp(page, "Mobile Drawer E2E", uniqueEmail("e2e-shell-mobile-drawer"));
+
+    await page.getByRole("button", { name: "Abrir menu" }).click();
+    const dialog = page.getByRole("dialog");
+    await expect(dialog).toBeVisible();
+    await expect(dialog.getByText("Prumo")).toBeVisible();
+    await expect(dialog.getByRole("link", { name: "Transações" })).toBeVisible();
+    await expect(dialog.getByRole("button", { name: "Sair" })).toBeVisible();
+
+    await dialog.getByRole("link", { name: "Transações" }).click();
+
+    await expect(page).toHaveURL(/\/app\/transactions$/);
+    await expect(dialog).not.toBeVisible();
+  });
+
+  test("Esc fecha o drawer aberto (SHELL-11)", async ({ page }) => {
+    await signUp(page, "Mobile Esc E2E", uniqueEmail("e2e-shell-mobile-esc"));
+
+    await page.getByRole("button", { name: "Abrir menu" }).click();
+    await expect(page.getByRole("dialog")).toBeVisible();
+
+    await page.keyboard.press("Escape");
+    await expect(page.getByRole("dialog")).not.toBeVisible();
+  });
+
+  test("clicar no overlay fecha o drawer aberto (SHELL-11)", async ({ page }) => {
+    await signUp(page, "Mobile Overlay E2E", uniqueEmail("e2e-shell-mobile-overlay"));
+
+    await page.getByRole("button", { name: "Abrir menu" }).click();
+    const dialog = page.getByRole("dialog");
+    await expect(dialog).toBeVisible();
+
+    // O drawer ocupa 256px (w-64) à esquerda; um clique na borda direita da
+    // viewport de 390px cai fora do popup, sobre o overlay.
+    await page.mouse.click(370, 20);
+    await expect(dialog).not.toBeVisible();
+  });
+
+  test("acima de 1024px a topbar desaparece e a sidebar volta a aparecer", async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 800 });
+    await signUp(page, "Desktop Again E2E", uniqueEmail("e2e-shell-desktop-again"));
+
+    await expect(page.locator("aside")).toBeVisible();
+    await expect(page.getByRole("button", { name: "Abrir menu" })).not.toBeVisible();
+  });
+});
