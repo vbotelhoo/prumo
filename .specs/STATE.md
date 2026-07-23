@@ -130,6 +130,14 @@
 - **Date**: 2026-07-20
 - **Status**: active
 
+### AD-017
+- **Decision**: `PRODUCT.md` e `DESIGN.md` (skill impeccable) são a autoridade de design do produto. Direção visual firmada pelo usuário: canon da categoria (app de orçamento pessoal convencional, sem excentricidade) executado no nível de craft de YNAB/Monarch. Toda feature com UI conforma com DESIGN.md; tokens de tema em `globals.css` são a única fonte de cor; temas claro e escuro são ambos de primeira classe (WCAG AA par a par).
+- **Reason**: Fase 2 introduz identidade visual; sem autoridade documentada, cada feature reinventaria decisões visuais. O usuário recusou direções expressivas explicitamente — a convenção é o compromisso.
+- **Trade-off**: Menos espaço para expressividade visual; mudanças de identidade exigem atualizar DESIGN.md antes do código.
+- **Scope**: Todas as features com UI a partir da Fase 2.
+- **Date**: 2026-07-23
+- **Status**: active
+
 ## Handoff
 
 - **Feature**: dashboard (Roadmap item 6, último item do MVP) — `.specs/features/dashboard/` ✅ VALIDATED (PASS, iteração 2)
