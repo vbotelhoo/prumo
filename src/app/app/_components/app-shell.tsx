@@ -8,6 +8,7 @@ import { MenuIcon } from "lucide-react";
 import { LogoutButton } from "@/modules/auth";
 import { Button, Sheet, SheetContent, SheetTitle, SheetTrigger } from "@/shared";
 import { NAV_ITEMS, isActive, type NavItem } from "../_lib/nav";
+import { ThemeToggle } from "./theme-toggle";
 
 const NAV_LINK_CLASSES =
   "flex items-center rounded-md px-3 py-2 text-sm font-medium text-sidebar-foreground transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sidebar-ring";
@@ -51,10 +52,11 @@ function NavList({
 
 function UserSection({ userName }: { readonly userName: string }) {
   return (
-    <div className="flex flex-col gap-2 border-t border-sidebar-border p-4">
+    <div className="flex flex-col gap-3 border-t border-sidebar-border p-4">
       <span className="truncate text-sm text-sidebar-foreground" title={userName}>
         {userName}
       </span>
+      <ThemeToggle />
       <LogoutButton />
     </div>
   );
