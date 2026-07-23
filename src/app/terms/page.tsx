@@ -7,7 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/sha
 // Scope").
 export default function TermsPage() {
   return (
-    <div className="flex flex-1 items-center justify-center bg-zinc-50 px-6 py-16 dark:bg-black">
+    <div className="flex flex-1 items-center justify-center bg-background px-6 py-16">
       <Card className="max-w-lg">
         <CardHeader>
           <CardTitle className="text-2xl font-semibold">Termos de uso</CardTitle>
