@@ -73,7 +73,7 @@ Com o MVP funcional em produção, a Fase 2 ataca a experiência: hoje a home `/
 - Indicador de página ativa, nome do usuário e logout acessíveis de qualquer página da área logada
 - E2E: navegar entre todas as seções pelo shell; logout a partir do shell
 
-**Status**: 🔨 em especificação — `.specs/features/app-shell/`
+**Status**: ✅ concluída (2026-07-23) — 9 tasks implementadas (tokens de tema + teste de contraste → ThemeProvider global → nav config → primitivo Sheet → sidebar desktop → drawer mobile → toggle de tema → auditoria dark das páginas existentes → carbonização do DESIGN.md/detector), todos os gates verdes (typecheck, lint, unit 193, integração 156, E2E 39, build). `DESIGN.md` carbonizado com os tokens reais + sidecar `.impeccable/design.json`. Validação em `.specs/features/app-shell/validation.md`.
 
 ### 8. Landing page — `landing`
 

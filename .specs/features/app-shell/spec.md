@@ -164,29 +164,30 @@ Nenhum módulo de domínio é alterado. A feature vive em `src/app/app/` (compos
 
 | Requirement ID | Story | Phase | Status |
 | -------------- | ----- | ----- | ------ |
-| SHELL-01 | P1: Navegação global | Design | Pending |
-| SHELL-02 | P1: Navegação global | Design | Pending |
-| SHELL-03 | P1: Navegação global | Design | Pending |
-| SHELL-04 | P1: Navegação global | Design | Pending |
-| SHELL-05 | P1: Sessão e logout | Design | Pending |
-| SHELL-06 | P1: Sessão e logout | Design | Pending |
-| SHELL-07 | P1: Sessão e logout | Design | Pending |
-| SHELL-08 | P1: Shell responsivo | Design | Pending |
-| SHELL-09 | P1: Shell responsivo | Design | Pending |
-| SHELL-10 | P1: Shell responsivo | Design | Pending |
-| SHELL-11 | P1: Shell responsivo | Design | Pending |
-| SHELL-12 | P1: Fundação de design | Design | Pending |
-| SHELL-13 | P1: Fundação de design | Design | Pending |
-| SHELL-14 | P1: Fundação de design | Design | Pending |
-| SHELL-15 | P2: Acessibilidade | Design | Pending |
-| SHELL-16 | P2: Acessibilidade | Design | Pending |
-| SHELL-17 | Edge case (nome longo) | Design | Pending |
-| SHELL-18 | P1: Dark mode | Design | Pending |
-| SHELL-19 | P1: Dark mode | Design | Pending |
-| SHELL-20 | P1: Dark mode | Design | Pending |
-| SHELL-21 | P1: Dark mode | Design | Pending |
+| SHELL-01 | P1: Navegação global | Execute (T3, T5) | Implementing |
+| SHELL-02 | P1: Navegação global | Execute (T5) | Implementing |
+| SHELL-03 | P1: Navegação global | Execute (T3, T5) | Implementing |
+| SHELL-04 | P1: Navegação global | Execute (T5) | Implementing |
+| SHELL-05 | P1: Sessão e logout | Execute (T5) | Implementing |
+| SHELL-06 | P1: Sessão e logout | Execute (T5) | Implementing |
+| SHELL-07 | P1: Sessão e logout | Execute (T5) | Implementing |
+| SHELL-08 | P1: Shell responsivo | Execute (T6) | Implementing |
+| SHELL-09 | P1: Shell responsivo | Execute (T6) | Implementing |
+| SHELL-10 | P1: Shell responsivo | Execute (T6) | Implementing |
+| SHELL-11 | P1: Shell responsivo | Execute (T6) | Implementing |
+| SHELL-12 | P1: Fundação de design | Execute (T9) | Implementing |
+| SHELL-13 | P1: Fundação de design | Execute (T1) | Implementing |
+| SHELL-14 | P1: Fundação de design | Execute (T1, T8) | Implementing |
+| SHELL-15 | P2: Acessibilidade | Execute (T5) | Implementing |
+| SHELL-16 | P2: Acessibilidade | Execute (T5) | Implementing |
+| SHELL-17 | Edge case (nome longo) | Execute (T5) | Implementing |
+| SHELL-18 | P1: Dark mode | Execute (T2, T7) | Implementing |
+| SHELL-19 | P1: Dark mode | Execute (T7) | Implementing |
+| SHELL-20 | P1: Dark mode | Execute (T2, T7) | Implementing |
+| SHELL-21 | P1: Dark mode | Execute (T7) | Implementing |
 
 **Coverage:** 21 total, 21 mapped to tasks (T1–T9 em `tasks.md`), 0 unmapped ✅
+**Status**: aguardando Verifier — ver `.specs/features/app-shell/validation.md` após a validação final.
 
 ---
 

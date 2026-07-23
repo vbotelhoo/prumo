@@ -9,7 +9,7 @@ Implement these tasks with the `tlc-spec-driven` skill: **activate it by name an
 ---
 
 **Design**: `.specs/features/app-shell/design.md`
-**Status**: Draft
+**Status**: Execute complete (T1–T9) — aguardando Verifier
 
 ---
 
