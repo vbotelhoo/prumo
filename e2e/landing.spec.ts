@@ -164,3 +164,23 @@ test("clicar em âncora de seção rola até ela (LAND-10, scroll behavior)", as
   const boundingBox = await parcelasSection.boundingBox();
   expect(boundingBox?.y).toBeGreaterThan(0); // Não totalmente fora do topo
 });
+
+test("página de landing tem título correto (LAND-19)", async ({ page }) => {
+  await page.goto("/");
+  await expect(page).toHaveTitle("Prumo — Sua vida financeira alinhada.");
+});
+
+test("página de login tem título correto (LAND-19)", async ({ page }) => {
+  await page.goto("/login");
+  await expect(page).toHaveTitle("Entrar — Prumo");
+});
+
+test("página de signup tem título correto (LAND-19)", async ({ page }) => {
+  await page.goto("/signup");
+  await expect(page).toHaveTitle("Criar conta — Prumo");
+});
+
+test("página de termos tem título correto (LAND-19)", async ({ page }) => {
+  await page.goto("/terms");
+  await expect(page).toHaveTitle("Termos de uso — Prumo");
+});

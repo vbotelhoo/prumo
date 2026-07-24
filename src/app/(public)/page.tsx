@@ -1,3 +1,4 @@
+import { Metadata } from "next";
 import { Hero } from "./_components/hero";
 import { ValueSection } from "./_components/value-section";
 import {
@@ -6,6 +7,13 @@ import {
   ProjecaoVisual,
 } from "./_components/value-section-visuals";
 import { ClosingCTA } from "./_components/closing-cta";
+
+// LAND-19: Metadata da página de landing
+export const metadata: Metadata = {
+  title: "Prumo — Sua vida financeira alinhada.",
+  description:
+    "Veja quantos dos próximos meses já estão comprometidos por parcelamentos e financiamentos. Decisões mais inteligentes sobre o que você pode gastar agora.",
+};
 
 // Landing page (SETUP-03): nenhum import de banco/auth — garante o
 // edge case "home renderiza mesmo com o banco fora do ar" (spec.md, Edge
