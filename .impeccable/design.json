@@ -1,0 +1,218 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-07-23T00:00:00.000Z",
+  "title": "Design System: Prumo",
+  "extensions": {
+    "colorMeta": {
+      "prumo-blue": {
+        "role": "primary",
+        "displayName": "Azul Prumo",
+        "canonical": "oklch(0.48 0.14 250)",
+        "darkCanonical": "oklch(0.76 0.13 250)",
+        "tonalRamp": [
+          "oklch(0.15 0.10 250)",
+          "oklch(0.28 0.12 250)",
+          "oklch(0.40 0.13 250)",
+          "oklch(0.48 0.14 250)",
+          "oklch(0.58 0.13 250)",
+          "oklch(0.68 0.12 250)",
+          "oklch(0.80 0.10 250)",
+          "oklch(0.92 0.05 250)"
+        ]
+      },
+      "neutral-bg": {
+        "role": "neutral",
+        "displayName": "Fundo",
+        "canonical": "oklch(0.985 0.004 250)",
+        "darkCanonical": "oklch(0.17 0.006 250)",
+        "tonalRamp": [
+          "oklch(0.15 0.006 250)",
+          "oklch(0.27 0.006 250)",
+          "oklch(0.39 0.006 250)",
+          "oklch(0.51 0.006 250)",
+          "oklch(0.63 0.006 250)",
+          "oklch(0.75 0.006 250)",
+          "oklch(0.87 0.006 250)",
+          "oklch(0.97 0.004 250)"
+        ]
+      },
+      "neutral-fg": {
+        "role": "neutral",
+        "displayName": "Texto Primário",
+        "canonical": "oklch(0.2 0.02 250)",
+        "darkCanonical": "oklch(0.93 0.004 250)",
+        "tonalRamp": [
+          "oklch(0.15 0.02 250)",
+          "oklch(0.27 0.02 250)",
+          "oklch(0.39 0.02 250)",
+          "oklch(0.51 0.02 250)",
+          "oklch(0.63 0.02 250)",
+          "oklch(0.75 0.02 250)",
+          "oklch(0.87 0.01 250)",
+          "oklch(0.97 0.004 250)"
+        ]
+      },
+      "neutral-muted-fg": {
+        "role": "neutral",
+        "displayName": "Texto Secundário",
+        "canonical": "oklch(0.48 0.02 250)",
+        "darkCanonical": "oklch(0.66 0.012 250)"
+      },
+      "neutral-surface": {
+        "role": "neutral",
+        "displayName": "Superfície Elevada",
+        "canonical": "oklch(1 0 0)",
+        "darkCanonical": "oklch(0.22 0.007 250)"
+      },
+      "neutral-muted": {
+        "role": "neutral",
+        "displayName": "Superfície Neutra / Hover",
+        "canonical": "oklch(0.94 0.006 250)",
+        "darkCanonical": "oklch(0.27 0.01 250)"
+      },
+      "neutral-border": {
+        "role": "neutral",
+        "displayName": "Borda",
+        "canonical": "oklch(0.9 0.008 250)",
+        "darkCanonical": "oklch(1 0 0 / 10%)"
+      },
+      "entrada-verde": {
+        "role": "semantic-positive",
+        "displayName": "Entrada / Positivo",
+        "canonical": "oklch(0.45 0.15 150)",
+        "darkCanonical": "oklch(0.78 0.16 150)",
+        "tonalRamp": [
+          "oklch(0.15 0.09 150)",
+          "oklch(0.27 0.11 150)",
+          "oklch(0.39 0.13 150)",
+          "oklch(0.45 0.15 150)",
+          "oklch(0.55 0.15 150)",
+          "oklch(0.65 0.15 150)",
+          "oklch(0.78 0.16 150)",
+          "oklch(0.90 0.08 150)"
+        ]
+      },
+      "saida-vermelho": {
+        "role": "semantic-negative",
+        "displayName": "Saída / Negativo",
+        "canonical": "oklch(0.5 0.19 25)",
+        "darkCanonical": "oklch(0.76 0.17 25)",
+        "tonalRamp": [
+          "oklch(0.18 0.11 25)",
+          "oklch(0.30 0.14 25)",
+          "oklch(0.42 0.17 25)",
+          "oklch(0.5 0.19 25)",
+          "oklch(0.6 0.19 25)",
+          "oklch(0.68 0.18 25)",
+          "oklch(0.76 0.17 25)",
+          "oklch(0.88 0.09 25)"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Número-herói de uma tela (saldo do mês, saldo projetado). Um por viewport."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Texto corrente, descrições de transação, rótulos do shell."
+      },
+      "mono": {
+        "displayName": "Mono",
+        "purpose": "Reservada a dados tabulares que precisem de largura fixa; não usada no shell."
+      }
+    },
+    "shadows": [
+      {
+        "name": "floating",
+        "value": "shadow-lg (Tailwind default)",
+        "purpose": "Único uso de sombra do sistema — elementos flutuantes: drawer (Sheet), dialog, dropdown. Superfícies em repouso (cards, sidebar) são planas."
+      }
+    ],
+    "breakpoints": [
+      { "name": "lg", "value": "1024px", "purpose": "Sidebar fixa acima, topbar + drawer abaixo (SHELL-08)." }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Ação primária — fundo Azul Prumo, texto branco-sobre-acento, cantos 10px.",
+      "html": "<button class=\"ds-btn-primary\">Criar conta</button>",
+      "css": ".ds-btn-primary { background: oklch(0.48 0.14 250); color: oklch(0.99 0.002 250); border: none; border-radius: 0.625rem; padding: 0 0.625rem; height: 2rem; font-size: 0.875rem; font-weight: 500; font-family: Geist, \"Geist Fallback\", sans-serif; transition: background-color 0.15s; } .ds-btn-primary:hover { background: oklch(0.48 0.14 250 / 80%); } .ds-btn-primary:focus-visible { outline: none; box-shadow: 0 0 0 3px oklch(0.48 0.14 250 / 50%); }"
+    },
+    {
+      "name": "Outline Button",
+      "kind": "button",
+      "refersTo": "button-outline",
+      "description": "Ação secundária — fundo do tema, borda sutil, hover para superfície neutra. Usado pelo LogoutButton.",
+      "html": "<button class=\"ds-btn-outline\">Sair</button>",
+      "css": ".ds-btn-outline { background: oklch(0.985 0.004 250); color: oklch(0.2 0.02 250); border: 1px solid oklch(0.9 0.008 250); border-radius: 0.625rem; padding: 0 0.625rem; height: 2rem; font-size: 0.875rem; font-weight: 500; font-family: Geist, \"Geist Fallback\", sans-serif; transition: background-color 0.15s; } .ds-btn-outline:hover { background: oklch(0.94 0.006 250); }"
+    },
+    {
+      "name": "Sidebar Nav Item (default)",
+      "kind": "nav",
+      "refersTo": "nav-item",
+      "description": "Link de navegação da sidebar/drawer em repouso.",
+      "html": "<a class=\"ds-nav-item\" href=\"#\">Transações</a>",
+      "css": ".ds-nav-item { display: flex; align-items: center; color: oklch(0.2 0.02 250); border-radius: 0.5rem; padding: 0.5rem 0.75rem; font-size: 0.875rem; font-weight: 500; font-family: Geist, \"Geist Fallback\", sans-serif; text-decoration: none; transition: background-color 0.15s, color 0.15s; } .ds-nav-item:hover { background: oklch(0.94 0.006 250); } .ds-nav-item:focus-visible { outline: none; box-shadow: 0 0 0 2px oklch(0.48 0.14 250); }"
+    },
+    {
+      "name": "Sidebar Nav Item (active)",
+      "kind": "nav",
+      "refersTo": "nav-item-active",
+      "description": "Item ativo (aria-current=page) — texto no acento sobre superfície neutra, nunca borda lateral colorida.",
+      "html": "<a class=\"ds-nav-item-active\" href=\"#\" aria-current=\"page\">Dashboard</a>",
+      "css": ".ds-nav-item-active { display: flex; align-items: center; background: oklch(0.94 0.006 250); color: oklch(0.48 0.14 250); border-radius: 0.5rem; padding: 0.5rem 0.75rem; font-size: 0.875rem; font-weight: 500; font-family: Geist, \"Geist Fallback\", sans-serif; text-decoration: none; }"
+    },
+    {
+      "name": "Theme Toggle",
+      "kind": "custom",
+      "refersTo": "theme-toggle",
+      "description": "Grupo segmentado de 3 opções (Claro/Escuro/Sistema); estado ativo exposto via aria-pressed.",
+      "html": "<div class=\"ds-theme-toggle\" role=\"group\" aria-label=\"Tema\"><button class=\"ds-theme-toggle-btn\" aria-pressed=\"false\">Claro</button><button class=\"ds-theme-toggle-btn\" aria-pressed=\"false\">Escuro</button><button class=\"ds-theme-toggle-btn ds-theme-toggle-btn--active\" aria-pressed=\"true\">Sistema</button></div>",
+      "css": ".ds-theme-toggle { display: inline-flex; align-items: center; gap: 0.125rem; border-radius: 0.5rem; border: 1px solid oklch(0.9 0.008 250); background: oklch(0.94 0.006 250 / 50%); padding: 0.125rem; } .ds-theme-toggle-btn { border: none; background: none; border-radius: 0.25rem; padding: 0.25rem 0.5rem; font-size: 0.75rem; font-weight: 500; font-family: Geist, \"Geist Fallback\", sans-serif; color: oklch(0.48 0.02 250); cursor: pointer; } .ds-theme-toggle-btn:hover { color: oklch(0.2 0.02 250); } .ds-theme-toggle-btn--active { background: oklch(0.48 0.14 250); color: oklch(0.99 0.002 250); }"
+    },
+    {
+      "name": "Card",
+      "kind": "card",
+      "refersTo": "card",
+      "description": "Superfície elevada padrão — sem sombra em repouso, camada tonal + borda de 1px.",
+      "html": "<div class=\"ds-card\">Conteúdo do cartão</div>",
+      "css": ".ds-card { background: oklch(1 0 0); color: oklch(0.2 0.02 250); border: 1px solid oklch(0.9 0.008 250); border-radius: 0.625rem; padding: 1rem; font-family: Geist, \"Geist Fallback\", sans-serif; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "O Extrato em Ordem",
+    "overview": "O Prumo adota deliberadamente o cânone dos apps de orçamento pessoal — executado com o máximo de capricho, sem ironia nem excentricidade. A barra de qualidade é YNAB/Monarch: cada tela deve parecer que uma equipe de design madura a lapidou — hierarquia numérica exemplar, densidade calibrada, copy pt-BR clara e direta, zero atrito visual. O protagonista de toda tela é o número em BRL. Tudo o mais — navegação, cartões, gráficos — existe para dar contexto e ordem a esses números.",
+    "keyCharacteristics": [
+      "Convenção da categoria abraçada sem ironia; craft no nível YNAB/Monarch",
+      "Números tabulares protagonistas, sempre alinhados; hierarquia numérica exemplar",
+      "Neutros frios de baixo croma (hue 250°) + um único acento na mesma família de matiz",
+      "Temas claro e escuro de primeira classe, ambos WCAG AA",
+      "Duas cenas com mesma dignidade: consulta rápida mobile, planejamento desktop"
+    ],
+    "rules": [
+      { "name": "The Acento Raro Rule", "body": "O acento de marca aparece em ≤10% de qualquer tela: ação primária, navegação ativa, foco. Se o acento vira papel de parede, a hierarquia morreu.", "section": "colors" },
+      { "name": "The Semântica Só em Número Rule", "body": "Verde/vermelho financeiros só colorem valores, deltas e estados de parcela — nunca fundos inteiros, ícones decorativos ou títulos.", "section": "colors" },
+      { "name": "The Ghost Border Rule", "body": "--border/--input ficam deliberadamente abaixo de 4.5:1 — são divisores decorativos entre superfícies já diferenciadas por camada tonal. A perceptibilidade de estado interativo vem do anel de foco (--ring = acento), verificado a ≥3:1 nos dois temas.", "section": "colors" },
+      { "name": "The Número Alinhado Rule", "body": "Todo valor monetário usa numerais tabulares e alinha à direita em contexto de coluna/lista. Formatação exclusivamente via helpers de shared (AD-008).", "section": "typography" }
+    ],
+    "dos": [
+      "Do tratar o número BRL como protagonista: tabular, alinhado, com hierarquia de tamanho/peso clara.",
+      "Do manter os dois temas (claro/escuro) de primeira classe, com AA verificado par a par.",
+      "Do usar os tokens de globals.css como única fonte de cor (requisito SHELL-13).",
+      "Do escrever copy pt-BR calma e direta (\"Você tem R$ 320 livres em julho\"), no nível de cuidado YNAB.",
+      "Do indicar navegação ativa por cor de texto + fundo neutro (Azul Prumo sobre superfície de hover), nunca por borda lateral."
+    ],
+    "donts": [
+      "Don't introduzir devices expressivos (texturas, metáforas visuais literais de obra, neon, gradientes chamativos) — o canon foi escolhido de propósito.",
+      "Don't usar verde/vermelho fora de valores e estados financeiros.",
+      "Don't hardcodar cor em componente; tudo via token.",
+      "Don't usar float para dinheiro ou formatar BRL fora dos helpers de shared (AD-008).",
+      "Don't usar sombra em superfícies em repouso (cards, sidebar) — reservada a elementos flutuantes."
+    ]
+  }
+}

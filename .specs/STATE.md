@@ -130,20 +130,29 @@
 - **Date**: 2026-07-20
 - **Status**: active
 
+### AD-017
+- **Decision**: `PRODUCT.md` e `DESIGN.md` (skill impeccable) são a autoridade de design do produto. Direção visual firmada pelo usuário: canon da categoria (app de orçamento pessoal convencional, sem excentricidade) executado no nível de craft de YNAB/Monarch. Toda feature com UI conforma com DESIGN.md; tokens de tema em `globals.css` são a única fonte de cor; temas claro e escuro são ambos de primeira classe (WCAG AA par a par).
+- **Reason**: Fase 2 introduz identidade visual; sem autoridade documentada, cada feature reinventaria decisões visuais. O usuário recusou direções expressivas explicitamente — a convenção é o compromisso.
+- **Trade-off**: Menos espaço para expressividade visual; mudanças de identidade exigem atualizar DESIGN.md antes do código.
+- **Scope**: Todas as features com UI a partir da Fase 2.
+- **Date**: 2026-07-23
+- **Status**: active
+
 ## Handoff
 
-- **Feature**: dashboard (Roadmap item 6, último item do MVP) — `.specs/features/dashboard/` ✅ VALIDATED (PASS, iteração 2)
-- **Phase / Task**: Specify ✅ → Design ✅ → Tasks ✅ → Execute ✅ (inline, 3 fases ≤ limite de sub-agentes) → Verify ✅ (PASS)
+- **Feature**: app-shell (Roadmap item 7, Fase 2) — `.specs/features/app-shell/` ✅ VALIDATED (PASS, iteração 1)
+- **Phase / Task**: Specify ✅ → Discuss ✅ → Design ✅ → Tasks ✅ → Execute ✅ (inline, 3 fases ≤ limite de sub-agentes) → Verify ✅ (PASS)
 - **Completed (Execute Phase)**:
-  - Fase 1 (T1–T3): Queries (`transactions.getMonthlyExpensesByCategory`, `commitments.getMonthlyInstallmentsByCategory`/`listUnpaidInstallmentsForMonth`) + `mergeCategorySpending` (função pura)
-  - Fase 2 (T4–T5): `CategorySpendingChart` (recharts, paleta validada via skill `dataviz`) + `UpcomingInstallmentsList`
-  - Fase 3 (T6): `/app` reescrita como dashboard do mês atual + `e2e/dashboard.spec.ts`
-  - Commits: e3e1b6a (T1) → 19ed41b (T2) → 937de7b (T3) → 2f440c4 (T4) → 485562f (T5) → bbfaa0b (docs spec/design/tasks) → 20f2f96 (T6) → a056b10 (fix DASH-05/17) → 9ac4911 (fix DASH-02/03/11/14) → 5311461 (validation + traceability)
-  - Tests: 149 unit + 156 integration + 22 e2e; lint 0 errors; build ✅
-- **Verifier**: PASS na iteração 2 — `.specs/features/dashboard/validation.md` (18/18 requisitos DASH-01..18 verificados, 3/3 mutações do discrimination sensor mortas). Iteração 1 encontrou 6 gaps de cobertura (DASH-02/03/05/11/14/17 — nenhum bug funcional, todos precisão/ausência de teste); corrigidos sem mocks (DASH-14 reproduz falha real via segunda sessão excluindo o compromisso dono). 6 lições candidatas registradas (L-010–L-015).
-- **Gates**: typecheck ✅, lint ✅ (0 errors), unit 149 ✅, integration 156 ✅, e2e 22 ✅, build ✅
-- **Decisões da spec (usuário)**: dashboard sempre mês atual (sem navegação); gráfico só saídas (avulsas + parcelas, agrupado por categoryId); vencimentos = parcelas `prevista` do mês; marcar como paga direto do dashboard; parcelas pagas continuam contando no saldo/gráfico.
-- **Environment**: Node v24 (Vitest 4); Baselines upheld: 143 → 149 unit, 139 → 156 integration. Banco de teste local compartilhado entre integration/E2E — se integration falhar com `Foreign key constraint violated` ao limpar `category`/`user`, é banco sujo de E2E anterior (AGENTS.md), não regressão; rodar a limpeza documentada lá antes de investigar mais.
+  - Fase 1 (T1–T3): paleta Prumo claro/escuro em `globals.css` + `theme-contrast.test.ts` (16 pares × 2 temas) → `ThemeProvider` global (next-themes, `attribute="class"`, `defaultTheme="system"`) → `NAV_ITEMS`/`isActive()` puro
+  - Fase 2 (T4–T7): primitivo `Sheet` vendored → `AppShell` (sidebar fixa ≥lg, skip link, logout, `aria-current`) integrado em `app/layout.tsx` (removido `LogoutButton` duplicado do dashboard) → drawer mobile (`Sheet` lado esquerdo, mesmos itens) → `ThemeToggle` (3 estados, `role="group"`, hidratação via `useSyncExternalStore`)
+  - Fase 3 (T8–T9): auditoria dark via screenshots Playwright (5 páginas internas + home/login/signup/terms) — único achado real: `bg-zinc-50 dark:bg-black` (4 páginas) trocado por `bg-background`; detector do impeccable sem findings; **bug pré-existente encontrado e corrigido**: `--font-sans: var(--font-sans)` em `globals.css` era auto-referente (nunca resolvia) — o site inteiro renderizava em Times New Roman de fallback do browser em vez de Geist desde sempre; corrigido para `var(--font-geist-sans)`; `DESIGN.md` carbonizado (tokens reais, sem placeholders) + sidecar `.impeccable/design.json` gerado
+  - Commits: 2db528b (T1) → 8b001f4 (T2) → a0ff37d (T3) → 1617854 (T4) → a2d5153 (T5, ajusta seletores e2e ambíguos por `.first()`) → a57ffa4 (T6) → 82537bd (T7) → b09b6bc (T8) → 20264fe (T9) → [validação + traceability, este commit]
+  - Tests: 193 unit (149 base + 44 novos) + 156 integration (baseline mantido, feature não toca `data/`/`actions/`) + 39 e2e (22 base + 17 novos: 2 theme mecanismo, 6 shell desktop, 5 drawer mobile, 6 toggle); lint 0 errors; build ✅
+- **Verifier**: PASS na iteração 1 — `.specs/features/app-shell/validation.md` (21/21 requisitos SHELL-01..21 verificados, 3/3 mutações do discrimination sensor mortas). 1 gap de cobertura não-bloqueante encontrado (SHELL-15: e2e não itera Tab pelos 5 itens de nav nem verifica o outline computado — comportamento correto por semântica nativa, só falta o teste dedicado); registrado como lição candidata L-016.
+- **Gates**: typecheck ✅, lint ✅ (0 errors), unit 193 ✅, integration 156 ✅, e2e 39 ✅, build ✅
+- **Decisões da spec (usuário, ver `context.md`)**: shell de navegação antes da landing; fundação de design embutida nesta feature (PRODUCT.md/DESIGN.md via impeccable); sidebar fixa desktop + drawer mobile; dark mode em escopo (segue sistema por padrão, toggle persistido).
+- **Achado fora do escopo original mas corrigido nesta feature**: bug de fonte (`--font-sans` auto-referente) — pré-existente, não causado pelo app-shell, mas descoberto ao carbonizar DESIGN.md (T9) e corrigido por ser uma linha em `globals.css`, arquivo já de propriedade desta feature (SHELL-13) e coberto pela decisão de design "validar Geist no build" registrada em `design.md`. O Verifier concordou que foi uma decisão razoável, mas anotou que um fix de renderização de fonte site-wide mereceria um commit próprio para bisect mais limpo — não bloqueante.
+- **Environment**: Node v24 (Vitest 4, PATH do nvm); Postgres de teste local via container Docker `prumo-test-pg` (porta 55432) — precisa `docker start prumo-test-pg` se parado; matar servidor `next start` manual sempre por PID (`pkill` se mostrou não-confiável nesta sandbox — verificar `ss -ltnp | grep 3000` antes de subir um novo). Baselines upheld: 182 → 193 unit (T1/T3), 156 integration inalterado, 22 → 39 e2e.
 - **Blockers**: none.
 - **Uncommitted files**: none.
-- **Branch**: `cursor/spec-projections` (PR [#8](https://github.com/vbotelhoo/prumo/pull/8) da feature `projections` já mergeado) — PR [#9](https://github.com/vbotelhoo/prumo/pull/9) aberto para `main` com a feature `dashboard`, aguardando merge. `ROADMAP.md` itens 5 e 6 (todo o MVP) atualizados para concluída.
+- **Branch**: `cursor/spec-app-shell`. `ROADMAP.md` item 7 atualizado para concluída (commit de T9). Sem PR aberto ainda.

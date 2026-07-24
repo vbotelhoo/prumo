@@ -61,6 +61,36 @@ Ordem de implementação do MVP. Cada feature segue o fluxo spec-driven (spec �
 
 **Status**: ✅ concluída (2026-07-22) — 6 tasks implementadas (queries cross-módulo via AD-016 → função pura de composição → componentes (gráfico Recharts + lista de vencimentos) → página → E2E), todos os gates verdes (typecheck, lint, unit 149, integração 153, E2E 20/20, build). Validação em `.specs/features/dashboard/validation.md`.
 
+## Fase 2 — Experiência & Design
+
+Com o MVP funcional em produção, a Fase 2 ataca a experiência: hoje a home `/` é um placeholder sem direcionamento para login/registro, as páginas da área logada não se linkam entre si, e o visual é o default do shadcn/ui sem identidade própria. A fundação de design (identidade visual via skill `impeccable`: `PRODUCT.md`, `DESIGN.md`, tokens) nasce embutida na primeira feature e as demais herdam o sistema.
+
+### 7. Shell de navegação + fundação de design — `app-shell`
+
+- Identidade visual do Prumo definida via `impeccable` (PRODUCT.md + DESIGN.md, paleta, tipografia, tokens em `globals.css`) — primeira aplicação no shell
+- Dark mode: temas claro e escuro definidos nos tokens, seguindo a preferência do sistema por padrão, com toggle claro/escuro/sistema no shell e escolha persistida
+- Sidebar fixa no desktop, colapsável em drawer no mobile, com links para Dashboard, Transações, Compromissos, Categorias e Projeções
+- Indicador de página ativa, nome do usuário e logout acessíveis de qualquer página da área logada
+- E2E: navegar entre todas as seções pelo shell; logout a partir do shell
+
+**Status**: ✅ concluída (2026-07-23) — 9 tasks implementadas (tokens de tema + teste de contraste → ThemeProvider global → nav config → primitivo Sheet → sidebar desktop → drawer mobile → toggle de tema → auditoria dark das páginas existentes → carbonização do DESIGN.md/detector), todos os gates verdes (typecheck, lint, unit 193, integração 156, E2E 39, build). `DESIGN.md` carbonizado com os tokens reais + sidecar `.impeccable/design.json`. Validação em `.specs/features/app-shell/validation.md`.
+
+### 8. Landing page — `landing`
+
+- Página pública completa em `/`: hero com tagline, proposta de valor (previsibilidade, parcelas, projeção), seções de funcionalidades e CTAs de "Criar conta" e "Entrar"
+- Páginas de login e cadastro alinhadas à identidade visual
+- E2E: visitante anônimo navega da landing até o cadastro/login
+
+**Status**: ⏳ aguardando item 7
+
+### 9. Polish da área logada — `app-polish`
+
+- Aplicar o design system às páginas existentes (dashboard, transações, compromissos, categorias, projeções)
+- Estados vazios, loading e erro consistentes; responsividade revisada
+- Passes `critique`/`polish`/`harden` do `impeccable` sobre cada página
+
+**Status**: ⏳ aguardando itens 7–8
+
 ## Fases futuras (fora do MVP)
 
 Sem ordem definida — priorizar após o MVP em produção:
