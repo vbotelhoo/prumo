@@ -100,9 +100,9 @@ T14 ──→ T15 ──→ T16   (dependem de T9..T13)
 
 **Done when**:
 
-- [ ] `*.test.tsx` roda no project `unit` com ambiente jsdom; `*.test.ts` continua em node
-- [ ] Smoke test: render + click funciona
-- [ ] Gate quick passa; test count: 222 + smoke (baseline mantida, nada deletado)
+- [x] `*.test.tsx` roda no project `unit` com ambiente jsdom; `*.test.ts` continua em node
+- [x] Smoke test: render + click funciona
+- [x] Gate quick passa; test count: 222 + smoke (baseline mantida, nada deletado)
 
 **Tests**: unit · **Gate**: quick
 **Commit**: `test(infra): add React Testing Library + jsdom to unit project`
@@ -121,8 +121,8 @@ T14 ──→ T15 ──→ T16   (dependem de T9..T13)
 
 **Done when**:
 
-- [ ] EmptyState: branches com/sem description/action/icon testados; só tokens
-- [ ] Exports públicos disponíveis; gate quick passa (baseline + novos)
+- [x] EmptyState: branches com/sem description/action/icon testados; só tokens
+- [x] Exports públicos disponíveis; gate quick passa (baseline + novos)
 
 **Tests**: unit · **Gate**: quick
 **Commit**: `feat(shared): add EmptyState and Skeleton primitives`
@@ -141,8 +141,8 @@ T14 ──→ T15 ──→ T16   (dependem de T9..T13)
 
 **Done when**:
 
-- [ ] 3 tones testados (neutral/entrada/saida → tokens semânticos corretos); `tabular-nums` presente
-- [ ] Gate quick passa (baseline + novos)
+- [x] 3 tones testados (neutral/entrada/saida → tokens semânticos corretos); `tabular-nums` presente
+- [x] Gate quick passa (baseline + novos)
 
 **Tests**: unit · **Gate**: quick
 **Commit**: `feat(shared): add StatCard and PageHeader primitives`
@@ -161,8 +161,8 @@ T14 ──→ T15 ──→ T16   (dependem de T9..T13)
 
 **Done when**:
 
-- [ ] Zero hex no componente; 8 tokens presentes nos 2 temas (teste)
-- [ ] Gate quick passa (baseline + novos)
+- [x] Zero hex no componente; 8 tokens presentes nos 2 temas (teste)
+- [x] Gate quick passa (baseline + novos)
 
 **Tests**: unit · **Gate**: quick
 **Commit**: `feat(design): chart color tokens (AD-018) and chart refactor`
@@ -181,8 +181,8 @@ T14 ──→ T15 ──→ T16   (dependem de T9..T13)
 
 **Done when**:
 
-- [ ] Sem stack trace/jargão; `reset` invocado no clique (asserted)
-- [ ] Gate quick passa (baseline + novos)
+- [x] Sem stack trace/jargão; `reset` invocado no clique (asserted)
+- [x] Gate quick passa (baseline + novos)
 
 **Tests**: unit · **Gate**: quick
 **Commit**: `feat(app): shared error boundary for /app routes`
@@ -201,8 +201,8 @@ T14 ──→ T15 ──→ T16   (dependem de T9..T13)
 
 **Done when**:
 
-- [ ] 5 arquivos presentes, só tokens, formas aproximam as páginas
-- [ ] `pnpm typecheck && pnpm lint && pnpm build` passam
+- [x] 5 arquivos presentes, só tokens, formas aproximam as páginas
+- [x] `pnpm typecheck && pnpm lint && pnpm build` passam
 
 **Tests**: none (matriz: presentational puro) · **Gate**: build
 **Commit**: `feat(app): route-level loading skeletons`
