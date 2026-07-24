@@ -361,8 +361,8 @@ T14 ──→ T15 ──→ T16   (dependem de T9..T13)
 
 **Done when**:
 
-- [ ] 5 páginas × 320px sem overflow; asserts de toque/teclado verdes
-- [ ] Gate full passa
+- [x] 5 páginas × 320px sem overflow; asserts de toque/teclado verdes
+- [x] Gate full passa
 
 **Tests**: e2e · **Gate**: full
 **Commit**: `test(e2e): responsive and keyboard coverage for app pages`
@@ -381,8 +381,8 @@ T14 ──→ T15 ──→ T16   (dependem de T9..T13)
 
 **Done when**:
 
-- [ ] Grep retorna vazio (comando registrado no commit); pares novos AA nos 2 temas
-- [ ] Gate quick passa
+- [x] Grep retorna vazio (comando registrado no commit); pares novos AA nos 2 temas
+- [x] Gate quick passa
 
 **Tests**: unit · **Gate**: quick
 **Commit**: `refactor(app): eliminate remaining hardcoded palette classes`
@@ -401,8 +401,8 @@ T14 ──→ T15 ──→ T16   (dependem de T9..T13)
 
 **Done when**:
 
-- [ ] Detector: zero findings; nenhum achado dos passes ignorado sem justificativa registrada
-- [ ] Gate build passa (typecheck, lint, unit, integration, e2e, build — números finais registrados)
+- [x] Detector: zero findings; nenhum achado dos passes ignorado sem justificativa registrada
+- [x] Gate build passa (typecheck, lint, unit, integration, e2e, build — números finais registrados)
 
 **Tests**: none novos (gate completo) · **Gate**: build
 **Commit**: `polish(app): impeccable critique/polish/harden passes (item 9 complete)`
