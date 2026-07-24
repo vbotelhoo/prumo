@@ -1,7 +1,7 @@
 # App Shell + Fundação de Design — Design
 
 **Spec**: `.specs/features/app-shell/spec.md`
-**Status**: Implementing (aguardando Verifier)
+**Status**: ✅ Verified — `.specs/features/app-shell/validation.md` (PASS, 21/21 requisitos)
 
 ---
 

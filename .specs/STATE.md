@@ -140,19 +140,19 @@
 
 ## Handoff
 
-- **Feature**: app-shell (Roadmap item 7, Fase 2) — `.specs/features/app-shell/` — Execute ✅ completo (T1–T9), aguardando Verifier
-- **Phase / Task**: Specify ✅ → Discuss ✅ → Design ✅ → Tasks ✅ → Execute ✅ (inline, 3 fases ≤ limite de sub-agentes) → Verify ⏳ (dispatch imediatamente após este handoff)
+- **Feature**: app-shell (Roadmap item 7, Fase 2) — `.specs/features/app-shell/` ✅ VALIDATED (PASS, iteração 1)
+- **Phase / Task**: Specify ✅ → Discuss ✅ → Design ✅ → Tasks ✅ → Execute ✅ (inline, 3 fases ≤ limite de sub-agentes) → Verify ✅ (PASS)
 - **Completed (Execute Phase)**:
   - Fase 1 (T1–T3): paleta Prumo claro/escuro em `globals.css` + `theme-contrast.test.ts` (16 pares × 2 temas) → `ThemeProvider` global (next-themes, `attribute="class"`, `defaultTheme="system"`) → `NAV_ITEMS`/`isActive()` puro
   - Fase 2 (T4–T7): primitivo `Sheet` vendored → `AppShell` (sidebar fixa ≥lg, skip link, logout, `aria-current`) integrado em `app/layout.tsx` (removido `LogoutButton` duplicado do dashboard) → drawer mobile (`Sheet` lado esquerdo, mesmos itens) → `ThemeToggle` (3 estados, `role="group"`, hidratação via `useSyncExternalStore`)
   - Fase 3 (T8–T9): auditoria dark via screenshots Playwright (5 páginas internas + home/login/signup/terms) — único achado real: `bg-zinc-50 dark:bg-black` (4 páginas) trocado por `bg-background`; detector do impeccable sem findings; **bug pré-existente encontrado e corrigido**: `--font-sans: var(--font-sans)` em `globals.css` era auto-referente (nunca resolvia) — o site inteiro renderizava em Times New Roman de fallback do browser em vez de Geist desde sempre; corrigido para `var(--font-geist-sans)`; `DESIGN.md` carbonizado (tokens reais, sem placeholders) + sidecar `.impeccable/design.json` gerado
-  - Commits: 2db528b (T1) → 8b001f4 (T2) → a0ff37d (T3) → 1617854 (T4) → a2d5153 (T5, ajusta seletores e2e ambíguos por `.first()`) → a57ffa4 (T6) → 82537bd (T7) → b09b6bc (T8) → [T9, este commit]
+  - Commits: 2db528b (T1) → 8b001f4 (T2) → a0ff37d (T3) → 1617854 (T4) → a2d5153 (T5, ajusta seletores e2e ambíguos por `.first()`) → a57ffa4 (T6) → 82537bd (T7) → b09b6bc (T8) → 20264fe (T9) → [validação + traceability, este commit]
   - Tests: 193 unit (149 base + 44 novos) + 156 integration (baseline mantido, feature não toca `data/`/`actions/`) + 39 e2e (22 base + 17 novos: 2 theme mecanismo, 6 shell desktop, 5 drawer mobile, 6 toggle); lint 0 errors; build ✅
-- **Verifier**: ainda não rodou — próximo passo obrigatório desta sessão (spec-anchored check + discrimination sensor + `.specs/features/app-shell/validation.md`).
+- **Verifier**: PASS na iteração 1 — `.specs/features/app-shell/validation.md` (21/21 requisitos SHELL-01..21 verificados, 3/3 mutações do discrimination sensor mortas). 1 gap de cobertura não-bloqueante encontrado (SHELL-15: e2e não itera Tab pelos 5 itens de nav nem verifica o outline computado — comportamento correto por semântica nativa, só falta o teste dedicado); registrado como lição candidata L-016.
 - **Gates**: typecheck ✅, lint ✅ (0 errors), unit 193 ✅, integration 156 ✅, e2e 39 ✅, build ✅
 - **Decisões da spec (usuário, ver `context.md`)**: shell de navegação antes da landing; fundação de design embutida nesta feature (PRODUCT.md/DESIGN.md via impeccable); sidebar fixa desktop + drawer mobile; dark mode em escopo (segue sistema por padrão, toggle persistido).
-- **Achado fora do escopo original mas corrigido nesta feature**: bug de fonte (`--font-sans` auto-referente) — pré-existente, não causado pelo app-shell, mas descoberto ao carbonizar DESIGN.md (T9) e corrigido por ser uma linha em `globals.css`, arquivo já de propriedade desta feature (SHELL-13) e coberto pela decisão de design "validar Geist no build" registrada em `design.md`.
-- **Environment**: Node v24 (Vitest 4, PATH do nvm); Postgres de teste local via container Docker `prumo-test-pg` (porta 55432) — precisa `docker start prumo-test-pg` se parado. Baselines upheld: 182 → 193 unit (T1/T3), 156 integration inalterado, 22 → 39 e2e.
+- **Achado fora do escopo original mas corrigido nesta feature**: bug de fonte (`--font-sans` auto-referente) — pré-existente, não causado pelo app-shell, mas descoberto ao carbonizar DESIGN.md (T9) e corrigido por ser uma linha em `globals.css`, arquivo já de propriedade desta feature (SHELL-13) e coberto pela decisão de design "validar Geist no build" registrada em `design.md`. O Verifier concordou que foi uma decisão razoável, mas anotou que um fix de renderização de fonte site-wide mereceria um commit próprio para bisect mais limpo — não bloqueante.
+- **Environment**: Node v24 (Vitest 4, PATH do nvm); Postgres de teste local via container Docker `prumo-test-pg` (porta 55432) — precisa `docker start prumo-test-pg` se parado; matar servidor `next start` manual sempre por PID (`pkill` se mostrou não-confiável nesta sandbox — verificar `ss -ltnp | grep 3000` antes de subir um novo). Baselines upheld: 182 → 193 unit (T1/T3), 156 integration inalterado, 22 → 39 e2e.
 - **Blockers**: none.
 - **Uncommitted files**: none.
-- **Branch**: `cursor/spec-app-shell`. `ROADMAP.md` item 7 atualizado para concluída (mesmo commit de T9, regra do AGENTS.md).
+- **Branch**: `cursor/spec-app-shell`. `ROADMAP.md` item 7 atualizado para concluída (commit de T9). Sem PR aberto ainda.

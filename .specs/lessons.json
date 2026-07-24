@@ -3,7 +3,7 @@
   "promote_threshold": 2,
   "window_days": 45,
   "quarantine_threshold": 2,
-  "next_id": 16,
+  "next_id": 17,
   "lessons": [
     {
       "id": "L-001",
@@ -274,6 +274,24 @@
       ],
       "created": "2026-07-23T00:45:59Z",
       "last_seen": "2026-07-23T00:45:59Z"
+    },
+    {
+      "id": "L-016",
+      "key": "ac_gap::for a11y acs requiring keyboard reachability and a visible focus indicator across a set of interactive items assert tab order and focus state on each item in e2e not just that the containing landmark is visible and labeled",
+      "text": "For a11y ACs requiring keyboard reachability and a visible focus indicator across a set of interactive items, assert Tab order and focus state on each item in e2e, not just that the containing landmark is visible and labeled.",
+      "signal": "ac_gap",
+      "scope": "a11y",
+      "status": "candidate",
+      "features": [
+        "app-shell"
+      ],
+      "recurrence": 1,
+      "harmful": 0,
+      "evidence": [
+        "SHELL-15 (a11y)"
+      ],
+      "created": "2026-07-24T00:22:44Z",
+      "last_seen": "2026-07-24T00:22:44Z"
     }
   ]
 }

@@ -104,6 +104,12 @@ Seen once or not yet corroborated. Tracked, not trusted.
 - evidence: DASH-17
 - last seen: 2026-07-23T00:45:59Z
 
+### L-016 — For a11y ACs requiring keyboard reachability and a visible focus indicator across a set of interactive items, assert Tab order and focus state on each item in e2e, not just that the containing landmark is visible and labeled.
+- signal: `ac_gap` · recurrence: 1 feature(s) · scope: `a11y` · harmful: 0
+- features: app-shell
+- evidence: SHELL-15 (a11y)
+- last seen: 2026-07-24T00:22:44Z
+
 ## Quarantined (failed when applied — ignore)
 
 A confirmed lesson that recurred alongside failure. Kept for the maintainer to review.
