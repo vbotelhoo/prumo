@@ -8,7 +8,7 @@ import { MenuIcon } from "lucide-react";
 import { LogoutButton } from "@/modules/auth";
 import { Button, Sheet, SheetContent, SheetTitle, SheetTrigger } from "@/shared";
 import { NAV_ITEMS, isActive, type NavItem } from "../_lib/nav";
-import { ThemeToggle } from "./theme-toggle";
+import { ThemeToggle } from "../../_components/theme-toggle";
 
 const NAV_LINK_CLASSES =
   "flex items-center rounded-md px-3 py-2 text-sm font-medium text-sidebar-foreground transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sidebar-ring";
