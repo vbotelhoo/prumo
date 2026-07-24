@@ -1,4 +1,4 @@
-import { test, expect } from "@playwright/test";
+import { test, expect, type Locator, type Page } from "@playwright/test";
 
 // Gera um CPF matematicamente válido (mesmo algoritmo de e2e/auth.spec.ts) —
 // o form de signup rejeita CPFs com dígitos verificadores inválidos.
@@ -79,6 +79,17 @@ async function createInstallmentCommitment(
   await expect(page.getByRole("dialog")).not.toBeVisible();
 }
 
+// StatCard (T3, reaproveitado por ProjectionSummary no T13) renderiza
+// `<span>{label}</span><span>{formatBRL(value)}</span>` dentro do mesmo
+// Card — localiza o span de valor a partir do label (mesmo helper de
+// e2e/dashboard.spec.ts, já que a estrutura é a mesma).
+function statCardValue(page: Page, label: string): Locator {
+  return page
+    .locator('[data-slot="stat-card"]', { hasText: label })
+    .locator("span")
+    .last();
+}
+
 test.describe("Projections", () => {
   test("complete projection flow: entrada + saida + parcelamento 3x", async ({ page }) => {
     await signUp(page, "Proj Test", `proj-test-${Date.now()}@example.com`);
@@ -121,8 +132,16 @@ test.describe("Projections", () => {
     // saidasPrevistas = 300 + 200 = 500
     // saldoProjetado = 1000 - 500 = 500
     await expect(page.locator("text=Entradas Previstas")).toBeVisible();
-    const saldoText = page.locator("text=Saldo Projetado").locator("..").locator("div").last();
+    const saldoText = statCardValue(page, "Saldo Projetado");
     await expect(saldoText).toContainText("500");
+
+    // POLISH-15: Total Comprometido usa a semântica de Saída (DESIGN.md),
+    // nunca azul — mesmo tratamento do StatCard "Total comprometido" do
+    // dashboard.
+    const comprometido = statCardValue(page, "Total Comprometido");
+    await expect(comprometido).toContainText("200");
+    await expect(comprometido).toHaveClass(/text-negative/);
+    await expect(comprometido).not.toHaveClass(/text-blue/);
   });
 
   test("navigate between months", async ({ page }) => {
@@ -185,7 +204,7 @@ test.describe("Projections", () => {
 
     // Get projection for account 1
     await page.goto("/app/projections");
-    const proj1Saldo = page.locator("text=Saldo Projetado").locator("..").locator("div").last();
+    const proj1Saldo = statCardValue(page, "Saldo Projetado");
     const saldo1Text = await proj1Saldo.textContent();
 
     // Account 2 in a genuinely separate browser context (isolated cookies —
@@ -206,7 +225,7 @@ test.describe("Projections", () => {
 
     // Get projection for account 2
     await page2.goto("/app/projections");
-    const proj2Saldo = page2.locator("text=Saldo Projetado").locator("..").locator("div").last();
+    const proj2Saldo = statCardValue(page2, "Saldo Projetado");
     const saldo2Text = await proj2Saldo.textContent();
 
     // Projections should be different (formatBRL uses pt-BR grouping and a

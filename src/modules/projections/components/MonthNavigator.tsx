@@ -2,6 +2,11 @@ import Link from "next/link";
 import { Button } from "@/shared";
 import { previousMonth, nextMonth, getCurrentMonth, formatMonthLabel } from "../domain/month";
 
+/**
+ * MonthNavigator: navegação entre meses no mesmo padrão de card/tipografia
+ * das demais páginas (POLISH-15) — título Title-like centralizado, ações
+ * secundárias (`outline`/`ghost`) nas bordas, só tokens.
+ */
 export function MonthNavigator({ month }: { month: string }) {
   const isCurrentMonth = month === getCurrentMonth();
   const prev = previousMonth(month);
@@ -15,7 +20,7 @@ export function MonthNavigator({ month }: { month: string }) {
         </Button>
       </Link>
 
-      <h2 className="text-lg font-semibold text-center flex-1 capitalize">
+      <h2 className="flex-1 text-center font-heading text-lg font-semibold capitalize text-foreground">
         {formatMonthLabel(month)}
       </h2>
 
