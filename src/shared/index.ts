@@ -19,6 +19,7 @@ export {
   addMonths,
   getLastDayOfMonth,
   formatDateIso,
+  formatDateBR,
   isDateInRange,
 } from "./date-utils";
 

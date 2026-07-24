@@ -9,6 +9,7 @@ import {
   CardTitle,
   EmptyState,
   formatBRL,
+  formatDateBR,
   Progress,
 } from "@/shared";
 import type { Commitment } from "../domain/types";
@@ -121,7 +122,12 @@ export function CommitmentList({
                           <span className="font-semibold text-foreground">
                             Parcela {inst.number} de {progress.totalCount}
                           </span>
-                          <span className="ml-2 text-muted-foreground">{inst.dueDate}</span>
+                          {/* formatDateBR (roadmap item 9, T16 harden pass):
+                          antes mostrava a data ISO crua ("2026-07-24") em vez
+                          de pt-BR, inconsistente com o resto do produto (AD-014). */}
+                          <span className="ml-2 text-muted-foreground">
+                            {formatDateBR(inst.dueDate)}
+                          </span>
                         </div>
                         <div className="flex items-center gap-3">
                           <span className="tabular-nums text-foreground">

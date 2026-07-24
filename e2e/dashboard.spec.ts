@@ -302,6 +302,10 @@ test.describe("Dashboard", () => {
   }) => {
     await signUp(page, "Dash Upcoming", `dash-upcoming-${Date.now()}@example.com`);
     const today = new Date().toISOString().split("T")[0];
+    // roadmap item 9, T16 harden pass: UpcomingInstallmentsList mostrava a
+    // data ISO crua sem formatação (e com risco de fuso — corrigido para
+    // `formatDateBR`); o vencimento agora aparece em pt-BR (DD/MM/YYYY).
+    const todayBR = today.split("-").reverse().join("/");
 
     await page.goto("/app/commitments");
     await createInstallmentCommitment(page, {
@@ -336,7 +340,7 @@ test.describe("Dashboard", () => {
     const row = page.locator("li", { hasText: "Conta a pagar" });
     await expect(row.getByText("Alimentação")).toBeVisible();
     await expect(row.getByText("R$ 75,00")).toBeVisible();
-    await expect(row.getByText(today)).toBeVisible();
+    await expect(row.getByText(todayBR)).toBeVisible();
   });
 
   test("marking an installment as paid from the dashboard removes it from the list without a full page navigation, and the summary/chart keep counting it (DASH-13/15)", async ({

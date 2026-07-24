@@ -42,6 +42,25 @@ export function formatDateIso(date: Date): string {
 }
 
 /**
+ * Format an ISO calendar date string (YYYY-MM-DD, no time component) as
+ * pt-BR (DD/MM/YYYY) for display — pure string manipulation, no `Date`
+ * object involved on purpose. `new Date(isoString).toLocaleDateString()`
+ * parses the input as UTC midnight and then renders it in the runtime's
+ * local timezone; for any negative UTC offset (e.g. America/Sao_Paulo,
+ * UTC-3 — the product's own market, AD-014) that always displays one day
+ * earlier than the stored date (roadmap item 9, T16 harden pass — found
+ * via UpcomingInstallmentsList, also fixed in TransactionList which had
+ * the same bug).
+ */
+export function formatDateBR(isoDate: string): string {
+  const [year, month, day] = isoDate.split("-");
+  if (!year || !month || !day) {
+    throw new Error(`Data ISO inválida: "${isoDate}"`);
+  }
+  return `${day}/${month}/${year}`;
+}
+
+/**
  * Check if a date string is valid and within a range.
  * @param dateString - "YYYY-MM-DD"
  * @param minDateString - minimum allowed date (inclusive)

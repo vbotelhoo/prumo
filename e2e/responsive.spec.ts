@@ -225,7 +225,12 @@ test.describe("Responsive — alvos de toque ≥44px em viewport mobile (POLISH-
     await page.goto("/app/categories");
     await page.getByLabel("Nome").fill("Categoria Toque");
     await page.getByRole("button", { name: "Criar categoria" }).click();
-    await expect(page.getByText("Categoria Toque")).toBeVisible();
+    // O item já foi criado no servidor neste ponto; o `router.refresh()` que
+    // atualiza a lista pode legitimamente demorar mais que o timeout padrão
+    // sob contenção pesada do Postgres de teste compartilhado entre workers
+    // e2e em paralelo — mesmo padrão/justificativa de e2e/categories.spec.ts
+    // (folga maior, sem enfraquecer a garantia).
+    await expect(page.getByText("Categoria Toque")).toBeVisible({ timeout: 15000 });
 
     await assertMinimumTouchTarget(page.getByRole("button", { name: "Criar categoria" }));
     await assertMinimumTouchTarget(page.getByRole("button", { name: "Excluir" }).first());
