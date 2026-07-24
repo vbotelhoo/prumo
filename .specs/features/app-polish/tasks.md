@@ -281,8 +281,8 @@ T14 ──→ T15 ──→ T16   (dependem de T9..T13)
 
 **Done when**:
 
-- [ ] Zero paleta hardcoded no módulo; colunas alinhadas nos 2 temas
-- [ ] Gate full passa (baselines mantidas; seletores sincronizados)
+- [x] Zero paleta hardcoded no módulo; colunas alinhadas nos 2 temas
+- [x] Gate full passa (baselines mantidas; seletores sincronizados)
 
 **Tests**: e2e · **Gate**: full
 **Commit**: `feat(transactions): align page with design system`
@@ -301,8 +301,8 @@ T14 ──→ T15 ──→ T16   (dependem de T9..T13)
 
 **Done when**:
 
-- [ ] Progresso de quitação assertado em e2e; copy e seletores sincronizados
-- [ ] Gate full passa (baselines mantidas)
+- [x] Progresso de quitação assertado em e2e; copy e seletores sincronizados
+- [x] Gate full passa (baselines mantidas)
 
 **Tests**: e2e · **Gate**: full
 **Commit**: `feat(commitments): align page with design system`
@@ -321,8 +321,8 @@ T14 ──→ T15 ──→ T16   (dependem de T9..T13)
 
 **Done when**:
 
-- [ ] Spec novo verde (happy + exclusão + vazio); zero paleta hardcoded no módulo
-- [ ] Gate full passa
+- [x] Spec novo verde (happy + exclusão + vazio); zero paleta hardcoded no módulo
+- [x] Gate full passa
 
 **Tests**: e2e · **Gate**: full
 **Commit**: `feat(categories): align page with design system and add e2e coverage`
@@ -341,8 +341,8 @@ T14 ──→ T15 ──→ T16   (dependem de T9..T13)
 
 **Done when**:
 
-- [ ] 4 stats via StatCard nos 2 temas; e2e de projections verde
-- [ ] Gate full passa
+- [x] 4 stats via StatCard nos 2 temas; e2e de projections verde
+- [x] Gate full passa
 
 **Tests**: e2e · **Gate**: full
 **Commit**: `feat(projections): align page with design system`
