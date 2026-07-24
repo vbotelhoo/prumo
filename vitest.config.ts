@@ -27,9 +27,15 @@ export default defineConfig({
       {
         extends: true,
         test: {
+          // Environment padrão do project `unit` é node (lógica pura,
+          // rápida, sem DOM). Testes de componente React (RTL, T1
+          // app-polish) usam `*.test.tsx` e sobrescrevem o environment por
+          // arquivo com o docblock `// @vitest-environment jsdom` — Vitest
+          // não permite dois projects com o mesmo nome, então isto evita
+          // duplicar o project `unit` só para trocar o environment.
           name: "unit",
           environment: "node",
-          include: ["src/**/__tests__/**/*.test.ts"],
+          include: ["src/**/__tests__/**/*.test.ts", "src/**/__tests__/**/*.test.tsx"],
           exclude: [...configDefaults.exclude, "src/**/*.integration.test.ts"],
         },
       },
