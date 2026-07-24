@@ -5,6 +5,10 @@
 
 export { auth } from "./domain/auth";
 
+// Optimistic session detection for public pages (design.md, componente 5;
+// LAND-16/17): checks cookie only, no database query.
+export { hasSessionCookie } from "./domain/session-cookie";
+
 // Server actions (design.md, componente 4): fronteira HTTP do módulo,
 // consumidas pelas páginas de `src/app` (T10) e pelos componentes de UI.
 export { signUpAction } from "./actions/sign-up";
