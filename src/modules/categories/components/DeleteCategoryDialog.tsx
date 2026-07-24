@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, useTransition } from "react";
 
 import {
   Dialog,
@@ -41,7 +41,7 @@ export function DeleteCategoryDialog({
 }: DeleteCategoryDialogProps) {
   const router = useRouter();
   const [confirmationInput, setConfirmationInput] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
 
   if (!initialCategory) {
@@ -61,18 +61,24 @@ export function DeleteCategoryDialog({
 
   const isConfirmationValid = confirmationInput === CONFIRMATION_TEXT;
 
-  async function handleDelete() {
+  function handleDelete() {
     setError(null);
-    setIsSubmitting(true);
 
-    try {
+    // Ação + refresh dentro do mesmo `startTransition`: mesmo padrão já
+    // comprovado em `UpcomingInstallmentsList`/`setInstallmentStatusAction`
+    // (DASH-13/15) — chamar `router.refresh()` como efeito solto fora de
+    // uma transition, na sequência de outros updates de estado (fechar o
+    // diálogo, que desmonta este componente via `pendingDelete` do pai),
+    // deixava o refresh perder a corrida às vezes: a lista ficava com o
+    // item já excluído no servidor mas ainda visível no DOM até um reload
+    // manual.
+    startTransition(async () => {
       const result = await deleteCategoryAction(category.id);
 
       if (result.ok) {
-        // Success
         setConfirmationInput("");
-        handleOpenChange(false);
         router.refresh();
+        handleOpenChange(false);
         onDeleted();
         return;
       }
@@ -85,9 +91,7 @@ export function DeleteCategoryDialog({
       }
 
       setError(result.error);
-    } finally {
-      setIsSubmitting(false);
-    }
+    });
   }
 
   if (isInUse) {
@@ -132,7 +136,7 @@ export function DeleteCategoryDialog({
             placeholder={CONFIRMATION_TEXT}
             value={confirmationInput}
             onChange={(e) => setConfirmationInput(e.target.value)}
-            disabled={isSubmitting}
+            disabled={isPending}
             autoFocus
           />
         </div>
@@ -140,16 +144,16 @@ export function DeleteCategoryDialog({
           <Button
             variant="outline"
             onClick={() => handleOpenChange(false)}
-            disabled={isSubmitting}
+            disabled={isPending}
           >
             Cancelar
           </Button>
           <Button
             variant="destructive"
             onClick={handleDelete}
-            disabled={!isConfirmationValid || isSubmitting}
+            disabled={!isConfirmationValid || isPending}
           >
-            {isSubmitting ? "Excluindo..." : "Excluir"}
+            {isPending ? "Excluindo..." : "Excluir"}
           </Button>
         </DialogFooter>
       </DialogContent>

@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@/shared";
+import { Button, EmptyState } from "@/shared";
 import type { Category, CategoryType } from "../domain/types";
 
 type CategorySectionProps = {
@@ -11,9 +11,12 @@ type CategorySectionProps = {
 
 /**
  * CategorySection renders a type-specific section (entrada/saida) with
- * default and custom sub-sections.
- * Default categories (userId = null) can only be viewed.
- * Custom categories (userId ≠ null) have delete buttons.
+ * default and custom sub-sections. Default categories (userId = null) can
+ * only be viewed. Custom categories (userId ≠ null) have delete buttons.
+ * Ambas as listas usam o mesmo tratamento neutro (`bg-muted`) — nada de
+ * azul decorativo em fundo (Acento Raro é reservado a ação primária,
+ * navegação ativa e foco). Seção "Personalizadas" vazia usa o `EmptyState`
+ * compartilhado (POLISH-03), compacto para caber inline na seção.
  */
 export function CategorySection({
   categories,
@@ -28,20 +31,18 @@ export function CategorySection({
   const customCategories = typedCategories.filter((cat) => cat.userId !== null);
 
   return (
-    <div className="border-b pb-6 last:border-b-0">
-      <h2 className="text-lg font-semibold mb-4">{sectionTitle}</h2>
+    <div className="border-b border-border pb-6 last:border-b-0">
+      <h2 className="mb-4 text-lg font-semibold text-foreground">{sectionTitle}</h2>
 
       {/* Default categories sub-section */}
       {defaultCategories.length > 0 && (
         <div className="mb-6">
-          <h3 className="text-sm font-medium text-gray-600 dark:text-gray-400 mb-2">
-            Padrão
-          </h3>
+          <h3 className="mb-2 text-sm font-medium text-muted-foreground">Padrão</h3>
           <ul className="space-y-2">
             {defaultCategories.map((cat) => (
               <li
                 key={cat.id}
-                className="px-3 py-2 rounded bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100"
+                className="truncate rounded bg-muted px-3 py-2 text-foreground"
               >
                 {cat.name}
               </li>
@@ -51,37 +52,30 @@ export function CategorySection({
       )}
 
       {/* Custom categories sub-section */}
-      {customCategories.length > 0 && (
-        <div>
-          <h3 className="text-sm font-medium text-gray-600 dark:text-gray-400 mb-2">
-            Personalizadas
-          </h3>
+      <div>
+        <h3 className="mb-2 text-sm font-medium text-muted-foreground">Personalizadas</h3>
+        {customCategories.length > 0 ? (
           <ul className="space-y-2">
             {customCategories.map((cat) => (
               <li
                 key={cat.id}
-                className="flex items-center justify-between px-3 py-2 rounded bg-blue-50 dark:bg-blue-900/20 text-gray-900 dark:text-gray-100"
+                className="flex items-center justify-between gap-2 rounded bg-muted px-3 py-2 text-foreground"
               >
-                <span>{cat.name}</span>
-                <Button
-                  variant="destructive"
-                  size="sm"
-                  onClick={() => onDeleteRequest(cat)}
-                >
+                <span className="min-w-0 truncate">{cat.name}</span>
+                <Button variant="destructive" size="sm" onClick={() => onDeleteRequest(cat)}>
                   Excluir
                 </Button>
               </li>
             ))}
           </ul>
-        </div>
-      )}
-
-      {/* Empty state */}
-      {typedCategories.length === 0 && (
-        <p className="text-sm text-gray-500 dark:text-gray-400">
-          Nenhuma categoria {type === "entrada" ? "de entrada" : "de saída"} criada.
-        </p>
-      )}
+        ) : (
+          <EmptyState
+            title={`Nenhuma categoria personalizada de ${type === "entrada" ? "entrada" : "saída"}`}
+            description="Crie uma categoria personalizada acima para organizar melhor seus lançamentos."
+            className="items-start px-0 py-4 text-left"
+          />
+        )}
+      </div>
     </div>
   );
 }

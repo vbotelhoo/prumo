@@ -4,7 +4,20 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import type { FormEvent } from "react";
 
-import { Button, Input, Label, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/shared";
+import {
+  Button,
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  Input,
+  Label,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/shared";
 import type { CategoryType } from "../domain/types";
 import { createCategoryAction } from "../actions/create-category-action";
 
@@ -68,47 +81,52 @@ export function CreateCategoryForm() {
   }
 
   return (
-    <form className="space-y-4 border rounded-lg p-4 bg-gray-50 dark:bg-gray-900" onSubmit={handleSubmit} noValidate>
-      <h3 className="font-medium">Criar nova categoria personalizada</h3>
+    <Card>
+      <CardHeader>
+        <CardTitle className="text-base">Criar nova categoria personalizada</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <form className="space-y-4" onSubmit={handleSubmit} noValidate>
+          {generalError && (
+            <p className="text-sm text-destructive">{generalError}</p>
+          )}
 
-      {generalError && (
-        <p className="text-sm text-destructive">{generalError}</p>
-      )}
+          <div className="flex flex-col gap-1">
+            <Label htmlFor="cat-name">Nome</Label>
+            <Input
+              id="cat-name"
+              value={form.name}
+              onChange={(e) => updateField("name", e.target.value)}
+              placeholder="Ex: Restaurante"
+              disabled={isSubmitting}
+              aria-invalid={!!fieldErrors.name}
+            />
+            {fieldErrors.name && (
+              <p className="text-sm text-destructive">{fieldErrors.name[0]}</p>
+            )}
+          </div>
 
-      <div className="flex flex-col gap-1">
-        <Label htmlFor="cat-name">Nome</Label>
-        <Input
-          id="cat-name"
-          value={form.name}
-          onChange={(e) => updateField("name", e.target.value)}
-          placeholder="Ex: Restaurante"
-          disabled={isSubmitting}
-          aria-invalid={!!fieldErrors.name}
-        />
-        {fieldErrors.name && (
-          <p className="text-sm text-destructive">{fieldErrors.name[0]}</p>
-        )}
-      </div>
+          <div className="flex flex-col gap-1">
+            <Label htmlFor="cat-type">Tipo</Label>
+            <Select value={form.type} onValueChange={(value) => updateField("type", value as CategoryType)}>
+              <SelectTrigger id="cat-type" disabled={isSubmitting}>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="entrada">Entrada</SelectItem>
+                <SelectItem value="saida">Saída</SelectItem>
+              </SelectContent>
+            </Select>
+            {fieldErrors.type && (
+              <p className="text-sm text-destructive">{fieldErrors.type[0]}</p>
+            )}
+          </div>
 
-      <div className="flex flex-col gap-1">
-        <Label htmlFor="cat-type">Tipo</Label>
-        <Select value={form.type} onValueChange={(value) => updateField("type", value as CategoryType)}>
-          <SelectTrigger id="cat-type" disabled={isSubmitting}>
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="entrada">Entrada</SelectItem>
-            <SelectItem value="saida">Saída</SelectItem>
-          </SelectContent>
-        </Select>
-        {fieldErrors.type && (
-          <p className="text-sm text-destructive">{fieldErrors.type[0]}</p>
-        )}
-      </div>
-
-      <Button type="submit" disabled={isSubmitting}>
-        {isSubmitting ? "Criando..." : "Criar categoria"}
-      </Button>
-    </form>
+          <Button type="submit" disabled={isSubmitting}>
+            {isSubmitting ? "Criando..." : "Criar categoria"}
+          </Button>
+        </form>
+      </CardContent>
+    </Card>
   );
 }
