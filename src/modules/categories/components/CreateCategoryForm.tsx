@@ -122,7 +122,7 @@ export function CreateCategoryForm() {
             )}
           </div>
 
-          <Button type="submit" disabled={isSubmitting}>
+          <Button type="submit" className="max-sm:min-h-11" disabled={isSubmitting}>
             {isSubmitting ? "Criando..." : "Criar categoria"}
           </Button>
         </form>

@@ -81,7 +81,11 @@ export function TransactionsPageClient({
         <PageHeader
           title="Transações"
           description={totalLabel}
-          action={<Button onClick={handleCreateClick}>+ Nova transação</Button>}
+          action={
+            <Button className="max-sm:min-h-11" onClick={handleCreateClick}>
+              + Nova transação
+            </Button>
+          }
         />
 
         {items.length === 0 ? (
@@ -90,7 +94,9 @@ export function TransactionsPageClient({
             title="Nenhuma transação registrada"
             description="Registre sua primeira transação para começar a acompanhar suas finanças."
             action={
-              <Button onClick={handleCreateClick}>Registrar primeira transação</Button>
+              <Button className="max-sm:min-h-11" onClick={handleCreateClick}>
+                Registrar primeira transação
+              </Button>
             }
           />
         ) : (

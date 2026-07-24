@@ -6,9 +6,9 @@ type PaginationProps = {
 };
 
 const LINK_CLASS =
-  "px-3 py-2 rounded border border-border text-foreground hover:bg-muted";
+  "inline-flex items-center justify-center px-3 py-2 rounded border border-border text-foreground hover:bg-muted max-sm:min-h-11";
 const DISABLED_CLASS =
-  "px-3 py-2 rounded border border-border text-muted-foreground cursor-not-allowed";
+  "inline-flex items-center justify-center px-3 py-2 rounded border border-border text-muted-foreground cursor-not-allowed max-sm:min-h-11";
 
 /**
  * Pagination component for numbered page navigation.
@@ -90,7 +90,7 @@ export function Pagination({ page, totalPages }: PaginationProps) {
             <span
               key={pageNum}
               aria-current="page"
-              className="px-3 py-2 rounded bg-primary text-primary-foreground font-medium tabular-nums"
+              className="inline-flex items-center justify-center px-3 py-2 rounded bg-primary text-primary-foreground font-medium tabular-nums max-sm:min-h-11"
             >
               {pageNum}
             </span>

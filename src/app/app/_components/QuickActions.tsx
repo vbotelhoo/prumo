@@ -32,10 +32,19 @@ export function QuickActions({ categories }: QuickActionsProps) {
 
   return (
     <div className="flex flex-wrap gap-3">
-      <Button type="button" onClick={() => setOpenModal("transaction")}>
+      <Button
+        type="button"
+        className="max-sm:min-h-11"
+        onClick={() => setOpenModal("transaction")}
+      >
         + Nova transação
       </Button>
-      <Button type="button" variant="outline" onClick={() => setOpenModal("commitment")}>
+      <Button
+        type="button"
+        variant="outline"
+        className="max-sm:min-h-11"
+        onClick={() => setOpenModal("commitment")}
+      >
         + Novo compromisso
       </Button>
 

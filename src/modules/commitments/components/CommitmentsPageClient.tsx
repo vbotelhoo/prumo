@@ -69,7 +69,11 @@ export function CommitmentsPageClient({
     <div className="space-y-6">
       <PageHeader
         title="Compromissos"
-        action={<Button onClick={() => setIsModalOpen(true)}>+ Novo compromisso</Button>}
+        action={
+          <Button className="max-sm:min-h-11" onClick={() => setIsModalOpen(true)}>
+            + Novo compromisso
+          </Button>
+        }
       />
 
       <CommitmentList

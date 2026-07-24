@@ -45,10 +45,20 @@ export function TransactionList({ items, onEdit, onDelete }: TransactionListProp
                 {formatBRL(txn.amount)}
               </div>
               <div className="flex gap-2">
-                <Button variant="outline" size="sm" onClick={() => onEdit(txn)}>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="max-sm:min-h-11"
+                  onClick={() => onEdit(txn)}
+                >
                   Editar
                 </Button>
-                <Button variant="destructive" size="sm" onClick={() => onDelete(txn)}>
+                <Button
+                  variant="destructive"
+                  size="sm"
+                  className="max-sm:min-h-11"
+                  onClick={() => onDelete(txn)}
+                >
                   Excluir
                 </Button>
               </div>

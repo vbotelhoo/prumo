@@ -62,7 +62,12 @@ export function CategorySection({
                 className="flex items-center justify-between gap-2 rounded bg-muted px-3 py-2 text-foreground"
               >
                 <span className="min-w-0 truncate">{cat.name}</span>
-                <Button variant="destructive" size="sm" onClick={() => onDeleteRequest(cat)}>
+                <Button
+                  variant="destructive"
+                  size="sm"
+                  className="max-sm:min-h-11"
+                  onClick={() => onDeleteRequest(cat)}
+                >
                   Excluir
                 </Button>
               </li>

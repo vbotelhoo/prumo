@@ -140,6 +140,7 @@ export function CommitmentList({
                             type="button"
                             size="sm"
                             variant="outline"
+                            className="max-sm:min-h-11"
                             onClick={() =>
                               onToggleInstallment?.(inst.id, isPaga ? "prevista" : "paga")
                             }
@@ -154,10 +155,20 @@ export function CommitmentList({
               )}
 
               <div className="flex gap-2 pt-2">
-                <Button size="sm" variant="outline" onClick={() => onEdit?.(commitment)}>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className="max-sm:min-h-11"
+                  onClick={() => onEdit?.(commitment)}
+                >
                   Editar
                 </Button>
-                <Button size="sm" variant="outline" onClick={() => onDelete?.(commitment)}>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className="max-sm:min-h-11"
+                  onClick={() => onDelete?.(commitment)}
+                >
                   Excluir
                 </Button>
               </div>
