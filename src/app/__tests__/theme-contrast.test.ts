@@ -125,3 +125,20 @@ describe("globals.css — única fonte de cor (SHELL-13)", () => {
     expect(colorKeys(darkTokens)).toEqual(colorKeys(lightTokens));
   });
 });
+
+// spec.md POLISH-04/AD-018: paleta categórica do gráfico como tokens
+// `--chart-1..8` em globals.css (CategorySpendingChart consome só
+// `var(--chart-N)`, nunca hex hardcoded) — presença dos 8 nos 2 temas.
+describe("globals.css — tokens --chart-1..8 (AD-018)", () => {
+  const CHART_TOKEN_NAMES = Array.from({ length: 8 }, (_, i) => `chart-${i + 1}`);
+
+  it.each([
+    ["claro", lightTokens],
+    ["escuro", darkTokens],
+  ] as const)("tema %s define os 8 tokens --chart-1..8", (_themeName, tokens) => {
+    for (const name of CHART_TOKEN_NAMES) {
+      expect(tokens[name], `token --${name} ausente`).toBeDefined();
+      expect(() => parseOklch(tokens[name]!)).not.toThrow();
+    }
+  });
+});
