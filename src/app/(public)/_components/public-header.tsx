@@ -9,6 +9,21 @@ interface PublicHeaderProps {
   readonly hasSession: boolean;
 }
 
+// LAND-10: rola até a seção sem depender de `scroll-behavior: smooth` global
+// (CSS global também afeta o scroll nativo de foco do browser — ex.: Tab —
+// site-wide; ver SPEC_DEVIATION em globals.css). Instantâneo sob
+// prefers-reduced-motion.
+function handleAnchorClick(event: React.MouseEvent<HTMLAnchorElement>, href: string) {
+  const id = href.replace("/#", "");
+  const target = document.getElementById(id);
+  if (!target) return;
+
+  event.preventDefault();
+  const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  target.scrollIntoView({ behavior: reducedMotion ? "auto" : "smooth", block: "start" });
+  window.history.pushState(null, "", href);
+}
+
 export function PublicHeader({ hasSession }: PublicHeaderProps) {
   const pathname = usePathname();
   const isLanding = pathname === "/";
@@ -35,6 +50,7 @@ export function PublicHeader({ hasSession }: PublicHeaderProps) {
               <Link
                 key={section.id}
                 href={section.href}
+                onClick={(event) => handleAnchorClick(event, section.href)}
                 className="text-sm font-medium text-muted-foreground hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded px-2 py-1 transition-colors"
               >
                 {section.label}
