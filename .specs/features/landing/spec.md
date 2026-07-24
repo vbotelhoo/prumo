@@ -142,25 +142,25 @@ A home `/` é um placeholder estático sem direcionamento: um visitante anônimo
 
 | Requirement ID | Story | Phase | Status |
 | --- | --- | --- | --- |
-| LAND-01 | P1: Landing | Design | In Tasks |
-| LAND-02 | P1: Landing | Design | In Tasks |
-| LAND-03 | P1: Landing | Design | In Tasks |
-| LAND-04 | P1: Landing | Design | In Tasks |
-| LAND-05 | P1: Landing | Design | In Tasks |
-| LAND-06 | P1: Landing | Design | In Tasks |
-| LAND-07 | P1: Shell público | Design | In Tasks |
-| LAND-08 | P1: Shell público | Design | In Tasks |
-| LAND-09 | P1: Shell público | Design | In Tasks |
-| LAND-10 | P1: Shell público | Design | In Tasks |
-| LAND-11 | P1: Shell público | Design | In Tasks |
-| LAND-12 | P1: Shell público | Design | In Tasks |
-| LAND-13 | P1: Auth restyle | Design | In Tasks |
-| LAND-14 | P1: Auth restyle | Design | In Tasks |
-| LAND-15 | P1: Auth restyle | Design | In Tasks |
-| LAND-16 | P2: Autenticado | Design | In Tasks |
-| LAND-17 | P2: Autenticado | Design | In Tasks |
-| LAND-18 | P2: Autenticado | Design | In Tasks |
-| LAND-19 | P2: Metadata | Design | In Tasks |
+| LAND-01 | P1: Landing | Design | Verified |
+| LAND-02 | P1: Landing | Design | Verified |
+| LAND-03 | P1: Landing | Design | Verified |
+| LAND-04 | P1: Landing | Design | Verified |
+| LAND-05 | P1: Landing | Design | Verified |
+| LAND-06 | P1: Landing | Design | Verified |
+| LAND-07 | P1: Shell público | Design | Verified |
+| LAND-08 | P1: Shell público | Design | Verified |
+| LAND-09 | P1: Shell público | Design | Verified |
+| LAND-10 | P1: Shell público | Design | Verified |
+| LAND-11 | P1: Shell público | Design | Verified |
+| LAND-12 | P1: Shell público | Design | Verified |
+| LAND-13 | P1: Auth restyle | Design | Verified |
+| LAND-14 | P1: Auth restyle | Design | Verified |
+| LAND-15 | P1: Auth restyle | Design | Verified |
+| LAND-16 | P2: Autenticado | Design | Verified |
+| LAND-17 | P2: Autenticado | Design | Verified |
+| LAND-18 | P2: Autenticado | Design | Verified |
+| LAND-19 | P2: Metadata | Design | Verified |
 
 **Coverage:** 19 total, 19 mapped to tasks (T1–T14), 0 unmapped ✅
 
@@ -168,8 +168,8 @@ A home `/` é um placeholder estático sem direcionamento: um visitante anônimo
 
 ## Success Criteria
 
-- [ ] E2E: visitante anônimo navega da landing até `/signup` e até `/login` pelo shell público (roadmap item 8)
-- [ ] E2E: usuário com sessão vê "Ir para o app" na landing e chega ao `/app` em um clique
-- [ ] Suíte de auth existente verde sem enfraquecimento de asserções comportamentais
-- [ ] Contraste AA verificado nos dois temas para as novas superfícies (mesmo padrão de teste de tokens do item 7)
-- [ ] Todos os gates verdes (typecheck, lint, unit, integração, E2E, build)
+- [x] E2E: visitante anônimo navega da landing até `/signup` e até `/login` pelo shell público (roadmap item 8)
+- [x] E2E: usuário com sessão vê "Ir para o app" na landing e chega ao `/app` em um clique
+- [x] Suíte de auth existente verde sem enfraquecimento de asserções comportamentais
+- [x] Contraste AA verificado nos dois temas para as novas superfícies (mesmo padrão de teste de tokens do item 7)
+- [x] Todos os gates verdes (typecheck, lint, unit, integração, E2E, build)
