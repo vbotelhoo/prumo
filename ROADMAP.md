@@ -81,7 +81,7 @@ Com o MVP funcional em produção, a Fase 2 ataca a experiência: hoje a home `/
 - Páginas de login e cadastro alinhadas à identidade visual
 - E2E: visitante anônimo navega da landing até o cadastro/login
 
-**Status**: ⏳ aguardando item 7
+**Status**: ✅ concluída (2026-07-24) — 14 tasks implementadas (helpers + route group → shell público (header/footer) → tema compartilhado → landing (hero/seções/CTA/metadata) → restyle auth forms), todos os gates de feature verdes (typecheck, lint, unit 222, landing+auth e2e 19/19, build). Validação em `.specs/features/landing/validation.md`.
 
 ### 9. Polish da área logada — `app-polish`
 

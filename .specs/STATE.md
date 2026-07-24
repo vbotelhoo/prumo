@@ -140,6 +140,18 @@
 
 ## Handoff
 
+- **Feature**: landing (Roadmap item 8, Fase 2) — `.specs/features/landing/`
+- **Phase / Task**: Specify ✅ → Discuss ✅ (context.md, 13 decisões) → Design ✅ (route group `(public)` confirmado) → Tasks ✅ APROVADAS (2026-07-23) → **Execute NÃO iniciado** (instrução explícita do usuário: não começar ainda)
+- **Next step**: ativar `tlc-spec-driven` e entrar no Execute de `.specs/features/landing/tasks.md` — 14 tasks / 4 fases sequenciais; **>3 fases ⇒ apresentar a oferta de um sub-agente por fase antes de qualquer task**. Skill `impeccable` confirmada pelo usuário para T5, T6, T8–T10, T12–T13; Better Auth (nome/util do cookie em server components) a verificar via doc oficial na T1 — sem Context7 MCP nesta sandbox.
+- **Key facts**: baselines de teste 193 unit / 156 integration / 39 e2e (gates comparam contra elas); detecção de sessão pública é otimista via cookie (sem banco — preserva SETUP-03); `home.spec.ts` tem ajuste em 2 etapas (mínimo na T5, reescrita na T8); restyle de auth (T12/T13) é apresentação pura com suítes existentes como gate.
+- **Environment**: Node v24 via nvm (`export PATH="$HOME/.nvm/versions/node/v24.18.0/bin:$PATH"` antes de qualquer gate); Postgres de teste `docker start prumo-test-pg` (porta 55432); matar `next start` manual por PID (`ss -ltnp | grep 3000`).
+- **Blockers**: none. **Uncommitted**: só arquivos de `.specs/features/landing/` + este STATE.md (specs da feature, commit na entrada do Execute ou quando o usuário pedir).
+- **Branch**: `cursor/spec-landing` (criada de `origin/main` pós-merge do PR #10 do app-shell; specs commitados aqui).
+
+---
+
+### Handoff anterior (app-shell, item 7 — concluído)
+
 - **Feature**: app-shell (Roadmap item 7, Fase 2) — `.specs/features/app-shell/` ✅ VALIDATED (PASS, iteração 1)
 - **Phase / Task**: Specify ✅ → Discuss ✅ → Design ✅ → Tasks ✅ → Execute ✅ (inline, 3 fases ≤ limite de sub-agentes) → Verify ✅ (PASS)
 - **Completed (Execute Phase)**:

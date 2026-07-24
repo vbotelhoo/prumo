@@ -1,7 +1,13 @@
+import { Metadata } from "next";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
 import { auth, SignUpForm } from "@/modules/auth";
+
+// LAND-19: Metadata da página de signup
+export const metadata: Metadata = {
+  title: "Criar conta — Prumo",
+};
 
 // Página `/signup` (design.md, componente 7; spec.md, story "Login e
 // sessão" AC6): usuário já autenticado que acessa `/signup` é redirecionado

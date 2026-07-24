@@ -1,7 +1,13 @@
+import { Metadata } from "next";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
 import { auth, LoginForm } from "@/modules/auth";
+
+// LAND-19: Metadata da página de login
+export const metadata: Metadata = {
+  title: "Entrar — Prumo",
+};
 
 // Página `/login` (design.md, componente 7; spec.md, story "Login e sessão"
 // AC6): usuário já autenticado que acessa `/login` é redirecionado para a

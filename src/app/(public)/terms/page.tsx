@@ -1,4 +1,10 @@
+import { Metadata } from "next";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/shared";
+
+// LAND-19: Metadata da página de termos
+export const metadata: Metadata = {
+  title: "Termos de uso — Prumo",
+};
 
 // Página `/terms` (design.md, componente 7; spec.md, story "Página de
 // termos" AC1, AUTH-13): pública (sem verificação de sessão), conteúdo

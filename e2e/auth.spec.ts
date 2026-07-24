@@ -46,7 +46,8 @@ async function fillSignUpForm(
   await page.getByLabel("E-mail").fill(options.email);
   await page.getByLabel("Senha", { exact: true }).fill(PASSWORD);
   await page.getByLabel("Confirmar senha").fill(PASSWORD);
-  await page.getByRole("checkbox").check();
+  // Check terms checkbox using role-based selector to avoid strict mode
+  await page.getByRole("checkbox", { name: "Li e aceito os termos de uso" }).click();
 }
 
 function uniqueEmail(prefix: string): string {
@@ -123,7 +124,10 @@ test.describe("Fluxo de auth", () => {
     const response = await page.goto("/terms");
 
     expect(response?.status()).toBe(200);
-    await expect(page.getByText("Termos de uso", { exact: true })).toBeVisible();
+    // Scope to main content to avoid strict mode violation with footer link
+    await expect(
+      page.locator("#main-content").getByText("Termos de uso", { exact: true }),
+    ).toBeVisible();
     await expect(page.getByText("Conteúdo placeholder", { exact: true })).toBeVisible();
   });
 });

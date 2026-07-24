@@ -143,3 +143,19 @@
     @apply font-sans;
   }
 }
+
+/*
+ * SPEC_DEVIATION: LAND-10 smooth scroll implemented via JS in PublicHeader's
+ * anchor click handler (scrollIntoView + prefers-reduced-motion check)
+ * instead of a global `html { scroll-behavior: smooth }` CSS rule.
+ * Reason: global scroll-behavior:smooth also governs the browser's native
+ * focus-triggered scroll (e.g. Tab key), which broke SHELL-16 (skip link
+ * keyboard focus) site-wide, including the protected /app area that has
+ * nothing to do with landing anchors. Scoping the behavior to the specific
+ * click handler keeps LAND-10 intact without the site-wide side effect.
+ */
+
+/* scroll-margin-top for all sections with IDs (landing page anchors) */
+section[id] {
+  scroll-margin-top: 80px; /* Accounts for sticky header height */
+}

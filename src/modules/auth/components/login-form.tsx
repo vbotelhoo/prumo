@@ -50,14 +50,16 @@ export function LoginForm() {
   }
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Entrar</CardTitle>
+    <Card className="w-full">
+      <CardHeader className="space-y-1">
+        <CardTitle className="text-xl font-semibold">Entrar</CardTitle>
       </CardHeader>
       <CardContent>
-        <form className="flex flex-col gap-4" onSubmit={handleSubmit} noValidate>
-          <div className="flex flex-col gap-1">
-            <Label htmlFor="email">E-mail</Label>
+        <form className="flex flex-col gap-6" onSubmit={handleSubmit} noValidate>
+          <div className="flex flex-col gap-2">
+            <Label htmlFor="email" className="text-sm font-medium">
+              E-mail
+            </Label>
             <Input
               id="email"
               name="email"
@@ -65,11 +67,14 @@ export function LoginForm() {
               value={form.email}
               onChange={(e) => updateField("email", e.target.value)}
               autoComplete="email"
+              className="h-9"
             />
           </div>
 
-          <div className="flex flex-col gap-1">
-            <Label htmlFor="password">Senha</Label>
+          <div className="flex flex-col gap-2">
+            <Label htmlFor="password" className="text-sm font-medium">
+              Senha
+            </Label>
             <Input
               id="password"
               name="password"
@@ -77,12 +82,15 @@ export function LoginForm() {
               value={form.password}
               onChange={(e) => updateField("password", e.target.value)}
               autoComplete="current-password"
+              className="h-9"
             />
           </div>
 
-          {formError && <p className="text-sm text-destructive">{formError}</p>}
+          {formError && (
+            <p className="text-sm font-medium text-destructive">{formError}</p>
+          )}
 
-          <Button type="submit" disabled={isSubmitting}>
+          <Button type="submit" disabled={isSubmitting} className="h-9 w-full">
             {isSubmitting ? "Entrando..." : "Entrar"}
           </Button>
         </form>
