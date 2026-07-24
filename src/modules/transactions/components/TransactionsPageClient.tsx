@@ -1,15 +1,15 @@
 "use client";
 
+import { Receipt } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import type { Category } from "@/modules/categories";
 import type { Transaction } from "../domain/types";
 import { TransactionModal } from "./TransactionModal";
 import { TransactionList } from "./TransactionList";
-import { TransactionsEmptyState } from "./TransactionsEmptyState";
 import { DeleteTransactionDialog } from "./DeleteTransactionDialog";
 import { Pagination } from "./Pagination";
-import { Button } from "@/shared";
+import { Button, EmptyState, PageHeader } from "@/shared";
 
 type TransactionsPageClientProps = {
   items: Transaction[];
@@ -22,10 +22,12 @@ type TransactionsPageClientProps = {
 /**
  * TransactionsPageClient is the coordinating client component for /app/transactions.
  * It manages the modal and dialog states, and composes all transaction-related components.
+ * `total` (contagem de transações em todas as páginas) vira a descrição do
+ * `PageHeader` — resolve o débito do `eslint-disable` anterior exibindo o
+ * dado em vez de descartá-lo.
  */
 export function TransactionsPageClient({
   items,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   total,
   page,
   totalPages,
@@ -71,16 +73,26 @@ export function TransactionsPageClient({
     router.refresh();
   };
 
+  const totalLabel = `${total} ${total === 1 ? "transação" : "transações"}`;
+
   return (
     <div className="flex-1 px-6 py-8">
       <div className="max-w-4xl space-y-6">
-        <div className="flex items-center justify-between">
-          <h1 className="text-2xl font-bold">Transações</h1>
-          <Button onClick={handleCreateClick}>+ Nova transação</Button>
-        </div>
+        <PageHeader
+          title="Transações"
+          description={totalLabel}
+          action={<Button onClick={handleCreateClick}>+ Nova transação</Button>}
+        />
 
         {items.length === 0 ? (
-          <TransactionsEmptyState onAddNew={handleCreateClick} />
+          <EmptyState
+            icon={Receipt}
+            title="Nenhuma transação registrada"
+            description="Registre sua primeira transação para começar a acompanhar suas finanças."
+            action={
+              <Button onClick={handleCreateClick}>Registrar primeira transação</Button>
+            }
+          />
         ) : (
           <>
             <div className="space-y-4">

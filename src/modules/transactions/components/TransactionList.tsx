@@ -10,43 +10,37 @@ type TransactionListProps = {
 };
 
 /**
- * TransactionList renders a list of transactions with visual distinction
- * for entrada (green) and saída (red) values.
+ * TransactionList renders a list of transactions. Segue a regra "Semântica
+ * Só em Número" do DESIGN.md: a cor de Entrada/Saída colore apenas o valor
+ * (tabular, alinhado à direita) — o badge de tipo permanece neutro. Nomes
+ * de categoria/descrição truncam com reticências sem quebrar o alinhamento
+ * da coluna de valor (edge case do spec, `min-w-0` + `truncate`).
  */
 export function TransactionList({ items, onEdit, onDelete }: TransactionListProps) {
   return (
-    <div className="space-y-2">
+    <ul className="divide-y divide-border">
       {items.map((txn) => {
         const isEntrada = txn.type === "entrada";
-        const valueColor = isEntrada ? "text-green-600" : "text-red-600";
+        const valueClass = isEntrada ? "text-positive" : "text-negative";
         const valuePrefix = isEntrada ? "+ " : "- ";
         const formattedDate = new Date(txn.date).toLocaleDateString("pt-BR");
         const description = txn.description || "—";
 
         return (
-          <div
-            key={txn.id}
-            className="flex items-center justify-between p-4 border rounded-lg bg-white dark:bg-gray-800"
-          >
-            <div className="flex-1 min-w-0">
-              <div className="flex flex-col gap-1">
-                <div className="flex items-center gap-2">
-                  <span className="text-sm text-gray-500">{formattedDate}</span>
-                  <span className="inline-block px-2 py-1 rounded text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100">
-                    {isEntrada ? "Entrada" : "Saída"}
-                  </span>
-                </div>
-                <div className="flex flex-col gap-1">
-                  <p className="text-sm text-gray-600 dark:text-gray-400">{description}</p>
-                  <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
-                    {txn.categoryName}
-                  </p>
-                </div>
+          <li key={txn.id} className="flex items-center justify-between gap-4 py-3">
+            <div className="min-w-0 flex-1">
+              <div className="flex items-center gap-2">
+                <span className="text-sm text-muted-foreground">{formattedDate}</span>
+                <span className="inline-block rounded px-2 py-0.5 text-xs font-medium bg-muted text-foreground">
+                  {isEntrada ? "Entrada" : "Saída"}
+                </span>
               </div>
+              <p className="truncate font-medium text-foreground">{txn.categoryName}</p>
+              <p className="truncate text-sm text-muted-foreground">{description}</p>
             </div>
 
-            <div className="flex items-center gap-4 ml-4">
-              <div className={`font-semibold whitespace-nowrap ${valueColor}`}>
+            <div className="flex shrink-0 items-center gap-4">
+              <div className={`text-right font-semibold tabular-nums ${valueClass}`}>
                 {valuePrefix}
                 {formatBRL(txn.amount)}
               </div>
@@ -54,18 +48,14 @@ export function TransactionList({ items, onEdit, onDelete }: TransactionListProp
                 <Button variant="outline" size="sm" onClick={() => onEdit(txn)}>
                   Editar
                 </Button>
-                <Button
-                  variant="destructive"
-                  size="sm"
-                  onClick={() => onDelete(txn)}
-                >
+                <Button variant="destructive" size="sm" onClick={() => onDelete(txn)}>
                   Excluir
                 </Button>
               </div>
             </div>
-          </div>
+          </li>
         );
       })}
-    </div>
+    </ul>
   );
 }
