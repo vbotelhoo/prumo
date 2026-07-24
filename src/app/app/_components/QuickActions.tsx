@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Plus } from "lucide-react";
 
 import { Button } from "@/shared";
 import type { Category } from "@/modules/categories";
@@ -34,12 +33,10 @@ export function QuickActions({ categories }: QuickActionsProps) {
   return (
     <div className="flex flex-wrap gap-3">
       <Button type="button" onClick={() => setOpenModal("transaction")}>
-        <Plus className="size-4" aria-hidden="true" />
-        Nova transação
+        + Nova transação
       </Button>
       <Button type="button" variant="outline" onClick={() => setOpenModal("commitment")}>
-        <Plus className="size-4" aria-hidden="true" />
-        Novo compromisso
+        + Novo compromisso
       </Button>
 
       {openModal === "transaction" ? (

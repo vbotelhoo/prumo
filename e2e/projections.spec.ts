@@ -224,11 +224,17 @@ test.describe("Projections", () => {
     expect(page.url()).toContain("/login");
   });
 
-  test("projections link in /app home navigates to projections", async ({ page }) => {
+  test("projections link in the app sidebar navigates to projections", async ({ page }) => {
     await signUp(page, "Link Test", `link-test-${Date.now()}@example.com`);
 
-    // From /app home, click Projeções link
-    await page.click('button:has-text("Projeções")');
+    // From /app home, click the "Projeções" sidebar nav link (app-polish
+    // T9: o antigo grid de 4 botões-emoji do dashboard foi removido — a
+    // navegação para as seções passa a ser exclusivamente a sidebar/drawer
+    // do AppShell, já coberta por e2e/shell.spec.ts).
+    await page
+      .getByRole("navigation", { name: "Navegação principal" })
+      .getByRole("link", { name: "Projeções" })
+      .click();
 
     // Should navigate to /app/projections
     await page.waitForURL("/app/projections");

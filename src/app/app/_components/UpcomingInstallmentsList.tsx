@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
-import { Button, formatBRL } from "@/shared";
+import { Button, EmptyState, formatBRL } from "@/shared";
 import type { Money } from "@/shared";
 import { setInstallmentStatusAction } from "@/modules/commitments";
 
@@ -26,8 +26,8 @@ export function UpcomingInstallmentsList({
 
   if (installments.length === 0) {
     return (
-      <div className="flex items-center justify-center h-32 text-sm text-gray-500">
-        Nenhuma parcela pendente este mês
+      <div className="flex h-32 items-center justify-center">
+        <EmptyState title="Nenhuma parcela pendente este mês" />
       </div>
     );
   }
@@ -50,25 +50,25 @@ export function UpcomingInstallmentsList({
   };
 
   return (
-    <ul className="divide-y">
+    <ul className="divide-y divide-border">
       {installments.map((installment) => (
         <li
           key={installment.installmentId}
           className="flex items-center justify-between gap-4 py-3"
         >
-          <div>
-            <div className="font-medium">{installment.description}</div>
-            <div className="text-sm text-gray-500">
+          <div className="min-w-0">
+            <div className="truncate font-medium text-foreground">{installment.description}</div>
+            <div className="truncate text-sm text-muted-foreground">
               {installment.categoryName} · vence em {installment.dueDate}
             </div>
             {errors[installment.installmentId] && (
-              <div className="text-sm text-destructive">
-                {errors[installment.installmentId]}
-              </div>
+              <div className="text-sm text-destructive">{errors[installment.installmentId]}</div>
             )}
           </div>
-          <div className="flex items-center gap-3">
-            <div className="font-semibold">{formatBRL(installment.amount)}</div>
+          <div className="flex shrink-0 items-center gap-3">
+            <div className="text-right font-semibold tabular-nums text-foreground">
+              {formatBRL(installment.amount)}
+            </div>
             <Button
               size="sm"
               variant="outline"
