@@ -123,7 +123,10 @@ test.describe("Fluxo de auth", () => {
     const response = await page.goto("/terms");
 
     expect(response?.status()).toBe(200);
-    await expect(page.getByText("Termos de uso", { exact: true })).toBeVisible();
+    // Scope to main content to avoid strict mode violation with footer link
+    await expect(
+      page.locator("#main-content").getByText("Termos de uso", { exact: true }),
+    ).toBeVisible();
     await expect(page.getByText("Conteúdo placeholder", { exact: true })).toBeVisible();
   });
 });
