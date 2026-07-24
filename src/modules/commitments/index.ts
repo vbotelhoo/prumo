@@ -31,3 +31,4 @@ export { deleteCommitmentAction } from "./actions/delete-commitment-action";
 
 // Components (UI)
 export { CommitmentsPageClient } from "./components/CommitmentsPageClient";
+export { CommitmentModal } from "./components/CommitmentModal";
