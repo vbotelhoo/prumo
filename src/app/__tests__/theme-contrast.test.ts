@@ -102,6 +102,17 @@ const PAIRS: { label: string; fg: string; bg: string; ui?: boolean }[] = [
   { label: "anel de foco sobre o fundo (visibilidade do foco, SHELL-15)", fg: "ring", bg: "background", ui: true },
   { label: "anel de foco sobre a sidebar", fg: "sidebar-ring", bg: "sidebar", ui: true },
   { label: "anel de foco sobre card (ex.: dentro do drawer)", fg: "ring", bg: "card", ui: true },
+
+  // Pares novos introduzidos pelas Fases 1–3 do app-polish (roadmap item 9):
+  // `--positive`/`--negative` (DashboardHero, StatCard, TransactionList,
+  // CommitmentList — Semântica Só em Número, AD-017) e `muted-foreground`
+  // sobre `muted` (badge "Prevista" de parcela em CommitmentList) não tinham
+  // par no teste de contraste ainda.
+  { label: "valor positivo (Entrada) sobre o fundo da página", fg: "positive", bg: "background" },
+  { label: "valor negativo (Saída/comprometido) sobre o fundo da página", fg: "negative", bg: "background" },
+  { label: "valor positivo (Entrada) sobre card (StatCard)", fg: "positive", bg: "card" },
+  { label: "valor negativo (Saída/comprometido) sobre card (StatCard/CommitmentList)", fg: "negative", bg: "card" },
+  { label: "texto secundário sobre badge neutro (ex.: parcela 'Prevista')", fg: "muted-foreground", bg: "muted" },
 ];
 
 describe.each([
