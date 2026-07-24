@@ -1,4 +1,5 @@
 import { PublicHeader } from "./_components/public-header";
+import { PublicFooter } from "./_components/public-footer";
 import { hasSessionCookie } from "@/modules/auth";
 
 // Layout da área pública (design.md, componente 1; spec.md, story "Shell
@@ -14,7 +15,7 @@ export default async function PublicLayout({
   const sessionPresent = await hasSessionCookie();
 
   return (
-    <>
+    <div className="flex flex-col min-h-screen">
       <a
         href="#main-content"
         className="sr-only focus-visible:not-sr-only focus-visible:fixed focus-visible:top-2 focus-visible:left-2 focus-visible:z-50 focus-visible:rounded-md focus-visible:bg-primary focus-visible:px-3 focus-visible:py-2 focus-visible:text-sm focus-visible:font-medium focus-visible:text-primary-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
@@ -24,9 +25,10 @@ export default async function PublicLayout({
       <PublicHeader hasSession={sessionPresent} />
       {/* tabIndex={-1}: alvo do skip link precisa ser focável
       programaticamente — <main> não é focável por padrão (SHELL-16). */}
-      <main id="main-content" tabIndex={-1} className="focus:outline-none">
+      <main id="main-content" tabIndex={-1} className="focus:outline-none flex-1">
         {children}
       </main>
-    </>
+      <PublicFooter />
+    </div>
   );
 }

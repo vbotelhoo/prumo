@@ -146,7 +146,40 @@ test.describe("Shell público — header anchors (LAND-10, LAND-11)", () => {
   });
 });
 
-// Footer tests moved to T6 (PublicFooter implementation)
+test.describe("Shell público — footer (LAND-08, LAND-12)", () => {
+  test("todas as páginas públicas mostram footer com tagline e link /terms (LAND-08)", async ({
+    page,
+  }) => {
+    const pages = ["/", "/login", "/signup", "/terms"];
+
+    for (const url of pages) {
+      await page.goto(url);
+
+      // Footer com tagline
+      await expect(
+        page.getByRole("contentinfo").getByText("Sua vida financeira alinhada"),
+      ).toBeVisible();
+
+      // Link para /terms
+      await expect(
+        page.getByRole("contentinfo").getByRole("link", { name: "Termos de uso" }),
+      ).toBeVisible();
+    }
+  });
+
+  test("footer é um landmark contentinfo com copyright (LAND-12)", async ({
+    page,
+  }) => {
+    await page.goto("/");
+
+    const footer = page.getByRole("contentinfo");
+    await expect(footer).toBeVisible();
+
+    // Copyright deve estar presente com o ano atual
+    const year = new Date().getFullYear();
+    await expect(footer.getByText(`© ${year} Prumo`)).toBeVisible();
+  });
+});
 
 test.describe("Shell público — theme persistência (LAND-09)", () => {
   test("tema selecionado no header público persiste na área logada e vice-versa", async ({
