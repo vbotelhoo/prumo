@@ -46,7 +46,8 @@ async function fillSignUpForm(
   await page.getByLabel("E-mail").fill(options.email);
   await page.getByLabel("Senha", { exact: true }).fill(PASSWORD);
   await page.getByLabel("Confirmar senha").fill(PASSWORD);
-  await page.getByRole("checkbox").check();
+  // Check terms checkbox using role-based selector to avoid strict mode
+  await page.getByRole("checkbox", { name: "Li e aceito os termos de uso" }).click();
 }
 
 function uniqueEmail(prefix: string): string {

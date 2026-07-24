@@ -116,12 +116,12 @@ export function SignUpForm() {
   }
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Criar conta</CardTitle>
+    <Card className="w-full">
+      <CardHeader className="space-y-1">
+        <CardTitle className="text-xl font-semibold">Criar conta</CardTitle>
       </CardHeader>
       <CardContent>
-        <form className="flex flex-col gap-4" onSubmit={handleSubmit} noValidate>
+        <form className="flex flex-col gap-6" onSubmit={handleSubmit} noValidate>
           <Field label="Nome" htmlFor="name" errors={fieldErrors.name}>
             <Input
               id="name"
@@ -129,6 +129,7 @@ export function SignUpForm() {
               value={form.name}
               onChange={(e) => updateField("name", e.target.value)}
               autoComplete="name"
+              className="h-9"
             />
           </Field>
 
@@ -139,6 +140,7 @@ export function SignUpForm() {
               type="date"
               value={form.birthDate}
               onChange={(e) => updateField("birthDate", e.target.value)}
+              className="h-9"
             />
           </Field>
 
@@ -149,6 +151,7 @@ export function SignUpForm() {
               value={form.cpf}
               onChange={(e) => updateField("cpf", e.target.value)}
               placeholder="000.000.000-00"
+              className="h-9"
             />
           </Field>
 
@@ -165,6 +168,7 @@ export function SignUpForm() {
               onChange={(e) => updateField("zipCode", e.target.value)}
               onBlur={handleCepBlur}
               placeholder="00000-000"
+              className="h-9"
             />
           </Field>
 
@@ -175,6 +179,7 @@ export function SignUpForm() {
               value={form.street}
               onChange={(e) => updateField("street", e.target.value)}
               autoComplete="address-line1"
+              className="h-9"
             />
           </Field>
 
@@ -184,6 +189,7 @@ export function SignUpForm() {
               name="addressNumber"
               value={form.addressNumber}
               onChange={(e) => updateField("addressNumber", e.target.value)}
+              className="h-9"
             />
           </Field>
 
@@ -198,6 +204,7 @@ export function SignUpForm() {
               value={form.complement}
               onChange={(e) => updateField("complement", e.target.value)}
               autoComplete="address-line2"
+              className="h-9"
             />
           </Field>
 
@@ -207,6 +214,7 @@ export function SignUpForm() {
               name="neighborhood"
               value={form.neighborhood}
               onChange={(e) => updateField("neighborhood", e.target.value)}
+              className="h-9"
             />
           </Field>
 
@@ -217,6 +225,7 @@ export function SignUpForm() {
               value={form.city}
               onChange={(e) => updateField("city", e.target.value)}
               autoComplete="address-level2"
+              className="h-9"
             />
           </Field>
 
@@ -228,6 +237,7 @@ export function SignUpForm() {
               onChange={(e) => updateField("state", e.target.value)}
               maxLength={2}
               autoComplete="address-level1"
+              className="h-9"
             />
           </Field>
 
@@ -239,6 +249,7 @@ export function SignUpForm() {
               value={form.email}
               onChange={(e) => updateField("email", e.target.value)}
               autoComplete="email"
+              className="h-9"
             />
           </Field>
 
@@ -250,12 +261,13 @@ export function SignUpForm() {
               value={form.password}
               onChange={(e) => updateField("password", e.target.value)}
               autoComplete="new-password"
+              className="h-9"
             />
+            <p className="text-xs text-muted-foreground">
+              Mínimo de 8 caracteres, com ao menos 1 letra minúscula, 1 maiúscula, 1 dígito
+              numérico e 1 caractere especial.
+            </p>
           </Field>
-          <p className="text-xs text-muted-foreground">
-            Mínimo de 8 caracteres, com ao menos 1 letra minúscula, 1 maiúscula, 1 dígito
-            numérico e 1 caractere especial.
-          </p>
 
           <Field
             label="Confirmar senha"
@@ -269,19 +281,21 @@ export function SignUpForm() {
               value={form.confirmPassword}
               onChange={(e) => updateField("confirmPassword", e.target.value)}
               autoComplete="new-password"
+              className="h-9"
             />
           </Field>
 
-          <div className="flex flex-col gap-1">
-            <div className="flex items-center gap-2">
+          <div className="flex flex-col gap-2">
+            <div className="flex items-start gap-2">
               <Checkbox
                 id="termsAccepted"
                 checked={form.termsAccepted}
                 onCheckedChange={(checked) => updateField("termsAccepted", checked === true)}
+                className="mt-1"
               />
-              <Label htmlFor="termsAccepted">
+              <Label htmlFor="termsAccepted" className="text-sm font-medium cursor-pointer">
                 Li e aceito os{" "}
-                <a href="/terms" className="underline underline-offset-4">
+                <a href="/terms" className="underline underline-offset-4 hover:text-foreground">
                   termos de uso
                 </a>
               </Label>
@@ -293,9 +307,11 @@ export function SignUpForm() {
             ))}
           </div>
 
-          {formError && <p className="text-sm text-destructive">{formError}</p>}
+          {formError && (
+            <p className="text-sm font-medium text-destructive">{formError}</p>
+          )}
 
-          <Button type="submit" disabled={isSubmitting}>
+          <Button type="submit" disabled={isSubmitting} className="h-9 w-full">
             {isSubmitting ? "Criando conta..." : "Criar conta"}
           </Button>
         </form>
@@ -318,12 +334,14 @@ function Field({
   children: React.ReactNode;
 }) {
   return (
-    <div className="flex flex-col gap-1">
-      <Label htmlFor={htmlFor}>{label}</Label>
+    <div className="flex flex-col gap-2">
+      <Label htmlFor={htmlFor} className="text-sm font-medium">
+        {label}
+      </Label>
       {children}
       {hint && <p className="text-xs text-muted-foreground">{hint}</p>}
       {errors?.map((message) => (
-        <p key={message} className="text-xs text-destructive">
+        <p key={message} className="text-xs font-medium text-destructive">
           {message}
         </p>
       ))}
