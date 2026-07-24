@@ -120,3 +120,47 @@ test("mini-visuais mostram dados realistas com BRL (LAND-05)", async ({ page }) 
   const count = await brlFormatted.count();
   expect(count).toBeGreaterThan(0);
 });
+
+test("seção de fechamento aparece antes do footer (LAND-04)", async ({ page }) => {
+  await page.goto("/");
+
+  // Scroll até o fim da página
+  await page.evaluate(() => {
+    window.scrollTo(0, document.body.scrollHeight);
+  });
+
+  // Verificar que a seção de fechamento com CTA aparece
+  await expect(page.getByRole("heading", { name: /Coloque sua vida financeira/ })).toBeVisible();
+  
+  // Verificar que o CTA "Criar conta" aparece na seção de fechamento
+  const createAccountLink = page.getByRole("link", { name: /Criar conta gratuita/i });
+  await expect(createAccountLink).toBeVisible();
+  expect(await createAccountLink.evaluate((el) => el.getAttribute("href"))).toBe("/signup");
+});
+
+test("clicar em âncora de seção rola até ela (LAND-10, scroll behavior)", async ({ page }) => {
+  await page.goto("/");
+
+  // Encontrar um link de âncora no header (ex.: âncora "Parcelas")
+  const parcelasAnchorLink = page.getByRole("link", { name: /Parcelas e Financiamentos/i }).first();
+  
+  // Fazer scroll para garantir que estamos no topo
+  await page.evaluate(() => {
+    window.scrollTo(0, 0);
+  });
+
+  // Clicar na âncora
+  await parcelasAnchorLink.click();
+
+  // Esperar o scroll suave completar
+  await page.waitForTimeout(1000);
+
+  // Verificar que a seção de parcelas está visível (próxima ao viewport)
+  const parcelasSection = page.locator("#parcelas");
+  await expect(parcelasSection).toBeVisible();
+
+  // Verificar que o scroll não deixou o título completamente escondido
+  // pelo header sticky (scroll-margin-top deve proteger isso)
+  const boundingBox = await parcelasSection.boundingBox();
+  expect(boundingBox?.y).toBeGreaterThan(0); // Não totalmente fora do topo
+});

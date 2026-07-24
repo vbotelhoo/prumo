@@ -5,6 +5,7 @@ import {
   ParcelasVisual,
   ProjecaoVisual,
 } from "./_components/value-section-visuals";
+import { ClosingCTA } from "./_components/closing-cta";
 
 // Landing page (SETUP-03): nenhum import de banco/auth — garante o
 // edge case "home renderiza mesmo com o banco fora do ar" (spec.md, Edge
@@ -40,6 +41,9 @@ export default function Home() {
         description="Projeção mensal mostra o saldo de cada mês com base em receitas, despesas avulsas e parcelamentos. Planeje com confiança."
         visual={<ProjecaoVisual />}
       />
+
+      {/* LAND-04: Seção de fechamento com CTA antes do footer */}
+      <ClosingCTA />
     </main>
   );
 }

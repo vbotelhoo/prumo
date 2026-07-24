@@ -143,3 +143,19 @@
     @apply font-sans;
   }
 }
+
+/**
+ * Smooth scroll behavior for anchor navigation (LAND-10).
+ * Guarded by prefers-reduced-motion to respect accessibility preferences.
+ * scroll-margin-top compensates for sticky header so title is not hidden.
+ */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+/* scroll-margin-top for all sections with IDs (landing page anchors) */
+section[id] {
+  scroll-margin-top: 80px; /* Accounts for sticky header height */
+}
