@@ -138,15 +138,29 @@
 - **Date**: 2026-07-23
 - **Status**: active
 
+### AD-018
+- **Decision**: Cores de gráficos/dataviz sempre via tokens `--chart-1..N` definidos em `globals.css` (temas claro e escuro), referenciados nos componentes via `var(--chart-N)` — nunca hex hardcoded. Paleta validada com a skill dataviz (CVD-safe, ordem fixa).
+- **Reason**: AD-017 estabelece tokens de `globals.css` como única fonte de cor; gráficos eram a única exceção restante (paleta hex em `CategorySpendingChart`).
+- **Trade-off**: Indireção extra (Recharts recebe strings `var()`); variantes escuras precisam ser calibradas por tema.
+- **Scope**: Todos os componentes de gráfico, atuais e futuros.
+- **Date**: 2026-07-24
+- **Status**: active
+
 ## Handoff
 
-- **Feature**: landing (Roadmap item 8, Fase 2) — `.specs/features/landing/`
-- **Phase / Task**: Specify ✅ → Discuss ✅ (context.md, 13 decisões) → Design ✅ (route group `(public)` confirmado) → Tasks ✅ APROVADAS (2026-07-23) → **Execute NÃO iniciado** (instrução explícita do usuário: não começar ainda)
-- **Next step**: ativar `tlc-spec-driven` e entrar no Execute de `.specs/features/landing/tasks.md` — 14 tasks / 4 fases sequenciais; **>3 fases ⇒ apresentar a oferta de um sub-agente por fase antes de qualquer task**. Skill `impeccable` confirmada pelo usuário para T5, T6, T8–T10, T12–T13; Better Auth (nome/util do cookie em server components) a verificar via doc oficial na T1 — sem Context7 MCP nesta sandbox.
-- **Key facts**: baselines de teste 193 unit / 156 integration / 39 e2e (gates comparam contra elas); detecção de sessão pública é otimista via cookie (sem banco — preserva SETUP-03); `home.spec.ts` tem ajuste em 2 etapas (mínimo na T5, reescrita na T8); restyle de auth (T12/T13) é apresentação pura com suítes existentes como gate.
+- **Feature**: app-polish (Roadmap item 9, Fase 2) — `.specs/features/app-polish/`
+- **Phase / Task**: Specify ✅ → Design ✅ aprovado (AD-018 registrado) → Tasks ✅ aprovadas (2026-07-24, usuário liberou execução sem gate de aprovação por task) → **Execute em andamento**
+- **Next step**: orquestrador despacha um sub-agente por fase, sequencial (Fase 2 depende de T1/T3/T4 da Fase 1; Fase 3 de T2/T3; Fase 4 de T9–T13); após a última task da Fase 4, Verifier independente roda automaticamente e escreve `validation.md`. Decisão de design confirmada: atalhos do dashboard via modais compostos (exports públicos + `QuickActions` + `router.refresh()`).
+- **Key facts**: decisões do usuário na entrevista de spec (2026-07-24): (1) reestruturar dentro do canon (funcionalidade/rotas/actions intactas); (2) estados completos — `loading.tsx` por rota + `error.tsx` compartilhado + empty states unificados; (3) botões-emoji de navegação do dashboard substituídos por atalhos de criação ("+ Nova transação", "+ Novo compromisso"). 22 requisitos POLISH-01..22, todos mapeados a tasks (T1–T16). Baselines: unit 222 / integration 156 / e2e 57 (suítes existentes = gate de regressão). 12 arquivos com cores hardcoded a migrar para tokens. Sem lições confirmadas no store (só candidatas).
 - **Environment**: Node v24 via nvm (`export PATH="$HOME/.nvm/versions/node/v24.18.0/bin:$PATH"` antes de qualquer gate); Postgres de teste `docker start prumo-test-pg` (porta 55432); matar `next start` manual por PID (`ss -ltnp | grep 3000`).
-- **Blockers**: none. **Uncommitted**: só arquivos de `.specs/features/landing/` + este STATE.md (specs da feature, commit na entrada do Execute ou quando o usuário pedir).
-- **Branch**: `cursor/spec-landing` (criada de `origin/main` pós-merge do PR #10 do app-shell; specs commitados aqui).
+- **Blockers**: none. **Uncommitted**: nenhum — specs (spec.md/design.md/tasks.md) + este STATE.md commitados na entrada do Execute.
+- **Branch**: `cursor/spec-app-polish` (criada de `origin/main` pós-merge do PR #11 da landing).
+
+---
+
+### Handoff anterior (landing, item 8 — concluído)
+
+- **Feature**: landing (Roadmap item 8, Fase 2) — ✅ VALIDATED (PASS) e mergeada em `main` via PR #11 (2026-07-24). 14 tasks executadas; gates finais: unit 222, landing+auth e2e 19/19, build ✅. Validação em `.specs/features/landing/validation.md`.
 
 ---
 
