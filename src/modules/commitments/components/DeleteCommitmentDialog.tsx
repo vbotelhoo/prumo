@@ -55,9 +55,9 @@ export function DeleteCommitmentDialog({
           </DialogDescription>
         </DialogHeader>
 
-        <div className="bg-gray-50 p-3 rounded text-sm">
-          <p className="font-semibold">{commitment.description}</p>
-          <p className="text-gray-500">Compromisso será removido</p>
+        <div className="bg-muted p-3 rounded text-sm">
+          <p className="font-semibold text-foreground">{commitment.description}</p>
+          <p className="text-muted-foreground">Compromisso será removido</p>
         </div>
 
         <div className="flex gap-2 justify-end">

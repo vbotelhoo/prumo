@@ -1,11 +1,18 @@
 "use client";
 
 import { useState } from "react";
-import { Button, Progress, Card, CardContent, CardHeader, CardTitle } from "@/shared";
-import { formatBRL } from "@/shared";
+import {
+  Button,
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  EmptyState,
+  formatBRL,
+  Progress,
+} from "@/shared";
 import type { Commitment } from "../domain/types";
 import { computeCommitmentProgress } from "../domain/installments";
-import { CommitmentsEmptyState } from "./CommitmentsEmptyState";
 
 interface CommitmentListProps {
   commitments: Commitment[];
@@ -14,6 +21,16 @@ interface CommitmentListProps {
   onToggleInstallment?: (installmentId: string, status: "prevista" | "paga") => void;
 }
 
+/**
+ * CommitmentList: um card por compromisso com progresso de quitação legível
+ * de relance (POLISH-14) — "N/M pagas" + barra `Progress`. Estados de
+ * parcela (prevista/paga) e o badge "Quitado" ficam neutros (tokens
+ * muted/foreground): DESIGN.md reserva verde estritamente a Entrada e
+ * vermelho a Saída/comprometido — nenhum dos dois é "Já Pago" ou um estado
+ * de quitação, então a distinção vem de peso/ícone, não de matiz (regra
+ * "Semântica Só em Número"). "Saldo" (valor ainda comprometido) usa a
+ * mesma semântica de Saída do StatCard "Total comprometido" do dashboard.
+ */
 export function CommitmentList({
   commitments,
   onEdit,
@@ -23,7 +40,12 @@ export function CommitmentList({
   const [expandedId, setExpandedId] = useState<string | null>(null);
 
   if (commitments.length === 0) {
-    return <CommitmentsEmptyState />;
+    return (
+      <EmptyState
+        title="Nenhum compromisso ainda"
+        description="Crie seu primeiro compromisso (compra parcelada ou financiamento) para começar a acompanhar suas parcelas."
+      />
+    );
   }
 
   return (
@@ -34,15 +56,18 @@ export function CommitmentList({
 
         return (
           <Card key={commitment.id}>
-            <CardHeader className="cursor-pointer" onClick={() => setExpandedId(isExpanded ? null : commitment.id)}>
-              <div className="flex justify-between items-start">
+            <CardHeader
+              className="cursor-pointer"
+              onClick={() => setExpandedId(isExpanded ? null : commitment.id)}
+            >
+              <div className="flex items-start justify-between">
                 <div className="flex-1">
                   <CardTitle className="text-base">{commitment.description}</CardTitle>
-                  <p className="text-sm text-gray-500">{commitment.categoryName}</p>
+                  <p className="text-sm text-muted-foreground">{commitment.categoryName}</p>
                 </div>
                 {progress.isSettled && (
-                  <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded">
-                    Quitado
+                  <span className="rounded bg-muted px-2 py-1 text-xs font-medium text-foreground">
+                    ✓ Quitado
                   </span>
                 )}
               </div>
@@ -50,58 +75,82 @@ export function CommitmentList({
             <CardContent className="space-y-3">
               <div className="grid grid-cols-2 gap-4 text-sm">
                 <div>
-                  <p className="text-gray-500">Parcelas</p>
-                  <p className="font-semibold">{progress.paidCount}/{progress.totalCount}</p>
+                  <p className="text-muted-foreground">Parcelas pagas</p>
+                  <p className="font-semibold tabular-nums text-foreground">
+                    {progress.paidCount}/{progress.totalCount}
+                  </p>
                 </div>
                 <div>
-                  <p className="text-gray-500">Valor Total</p>
-                  <p className="font-semibold">{formatBRL(commitment.total)}</p>
+                  <p className="text-muted-foreground">Valor Total</p>
+                  <p className="font-semibold tabular-nums text-foreground">
+                    {formatBRL(commitment.total)}
+                  </p>
                 </div>
                 <div>
-                  <p className="text-gray-500">Já Pago</p>
-                  <p className="font-semibold text-green-600">{formatBRL(progress.amountPaid)}</p>
+                  <p className="text-muted-foreground">Já Pago</p>
+                  <p className="font-semibold tabular-nums text-foreground">
+                    {formatBRL(progress.amountPaid)}
+                  </p>
                 </div>
                 <div>
-                  <p className="text-gray-500">Saldo</p>
-                  <p className="font-semibold text-orange-600">{formatBRL(progress.amountRemaining)}</p>
+                  <p className="text-muted-foreground">Saldo</p>
+                  <p className="font-semibold tabular-nums text-negative">
+                    {formatBRL(progress.amountRemaining)}
+                  </p>
                 </div>
               </div>
 
               <div className="space-y-1">
-                <p className="text-xs text-gray-500">{progress.percentPaid}% pago</p>
+                <p className="text-xs text-muted-foreground">
+                  {progress.percentPaid}% pago
+                </p>
                 <Progress value={progress.percentPaid} className="h-2" />
               </div>
 
               {isExpanded && commitment.installments && (
-                <div className="mt-4 space-y-2 border-t pt-4">
-                  <h4 className="font-semibold text-sm">Parcelas</h4>
-                  {commitment.installments.map((inst) => (
-                    <div
-                      key={inst.id}
-                      className="flex items-center justify-between p-2 bg-gray-50 rounded text-sm cursor-pointer hover:bg-gray-100"
-                      onClick={() =>
-                        onToggleInstallment?.(inst.id, inst.status === "paga" ? "prevista" : "paga")
-                      }
-                    >
-                      <div className="flex-1">
-                        <span className="font-semibold">{inst.number}/{progress.totalCount}</span>
-                        <span className="text-gray-500 ml-2">{inst.dueDate}</span>
-                      </div>
-                      <div className="flex items-center gap-3">
-                        <span>{formatBRL(inst.amount)}</span>
-                        <span
-                          className={`text-xs px-2 py-1 rounded ${
-                            inst.status === "paga"
-                              ? "bg-green-100 text-green-800"
-                              : "bg-gray-200 text-gray-800"
-                          }`}
-                        >
-                          {inst.status === "paga" ? "✓ Paga" : "Prevista"}
-                        </span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
+                <ul className="mt-4 space-y-2 border-t border-border pt-4">
+                  <li className="sr-only">Parcelas de {commitment.description}</li>
+                  {commitment.installments.map((inst) => {
+                    const isPaga = inst.status === "paga";
+                    return (
+                      <li
+                        key={inst.id}
+                        className="flex items-center justify-between gap-3 rounded bg-muted/50 p-2 text-sm"
+                      >
+                        <div className="flex-1">
+                          <span className="font-semibold text-foreground">
+                            Parcela {inst.number} de {progress.totalCount}
+                          </span>
+                          <span className="ml-2 text-muted-foreground">{inst.dueDate}</span>
+                        </div>
+                        <div className="flex items-center gap-3">
+                          <span className="tabular-nums text-foreground">
+                            {formatBRL(inst.amount)}
+                          </span>
+                          <span
+                            className={
+                              isPaga
+                                ? "rounded bg-muted px-2 py-1 text-xs font-medium text-foreground"
+                                : "rounded bg-muted px-2 py-1 text-xs font-medium text-muted-foreground"
+                            }
+                          >
+                            {isPaga ? "✓ Paga" : "Prevista"}
+                          </span>
+                          <Button
+                            type="button"
+                            size="sm"
+                            variant="outline"
+                            onClick={() =>
+                              onToggleInstallment?.(inst.id, isPaga ? "prevista" : "paga")
+                            }
+                          >
+                            {isPaga ? "Marcar como prevista" : "Marcar como paga"}
+                          </Button>
+                        </div>
+                      </li>
+                    );
+                  })}
+                </ul>
               )}
 
               <div className="flex gap-2 pt-2">

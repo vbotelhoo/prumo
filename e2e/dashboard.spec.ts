@@ -97,7 +97,7 @@ async function createInstallmentCommitment(
     firstDueDate: string;
   },
 ) {
-  const dialog = await openDialogFrom(page, page, "Novo Compromisso", "Novo Compromisso");
+  const dialog = await openDialogFrom(page, page, "Novo compromisso", "Novo Compromisso");
 
   await dialog.getByLabel("Descrição").fill(options.description);
   await dialog.getByLabel("Categoria").click();
@@ -320,9 +320,11 @@ test.describe("Dashboard", () => {
     });
 
     // Marca "Conta ja paga" como paga na própria página de compromissos:
-    // expande o card (clique no header) e clica no status da parcela.
+    // expande o card (clique no header) e clica em "Marcar como paga" na
+    // primeira parcela (CommitmentList expõe um botão por parcela, não um
+    // clique implícito na linha inteira — POLISH-14/16).
     await page.getByText("Conta ja paga").click();
-    await page.getByText("Prevista", { exact: true }).first().click();
+    await page.getByRole("button", { name: "Marcar como paga" }).first().click();
     await expect(page.getByText("✓ Paga")).toBeVisible();
 
     await page.goto("/app");
