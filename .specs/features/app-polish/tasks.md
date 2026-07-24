@@ -221,8 +221,8 @@ T14 ──→ T15 ──→ T16   (dependem de T9..T13)
 
 **Done when**:
 
-- [ ] Branches negativo/positivo testados; um único Display
-- [ ] Gate quick passa (baseline + novos)
+- [x] Branches negativo/positivo testados; um único Display
+- [x] Gate quick passa (baseline + novos)
 
 **Tests**: unit · **Gate**: quick
 **Commit**: `feat(dashboard): hero balance component`
@@ -241,8 +241,8 @@ T14 ──→ T15 ──→ T16   (dependem de T9..T13)
 
 **Done when**:
 
-- [ ] Exports públicos compilam; lint de fronteiras verde (AD-010)
-- [ ] RTL: um modal por vez; gate quick passa (baseline + novos)
+- [x] Exports públicos compilam; lint de fronteiras verde (AD-010)
+- [x] RTL: um modal por vez; gate quick passa (baseline + novos)
 
 **Tests**: unit · **Gate**: quick
 **Commit**: `feat(dashboard): quick create actions with composed module modals`
@@ -261,8 +261,8 @@ T14 ──→ T15 ──→ T16   (dependem de T9..T13)
 
 **Done when**:
 
-- [ ] ACs 1–6 da story do dashboard verificados por e2e
-- [ ] Gate full passa: unit ≥ baseline+novos, integration 156, e2e ≥ 57 (ajustados+novos, nada deletado sem substituto)
+- [x] ACs 1–6 da story do dashboard verificados por e2e
+- [x] Gate full passa: unit ≥ baseline+novos, integration 156, e2e ≥ 57 (ajustados+novos, nada deletado sem substituto)
 
 **Tests**: e2e · **Gate**: full
 **Commit**: `feat(dashboard): hero-first recomposition with quick actions`
