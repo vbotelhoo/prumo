@@ -88,3 +88,35 @@ test("hero preview exibe dados realistas (LAND-05)", async ({ page }) => {
   // Verificar formatação BRL (R$ seguido de números)
   await expect(page.locator("text=/R\\$/").first()).toBeVisible();
 });
+
+test("três seções de valor aparecem na landing (LAND-03)", async ({ page }) => {
+  await page.goto("/");
+
+  // Verificar que as três seções de valor estão presentes
+  await expect(page.getByRole("heading", { name: /Sabe exatamente/ })).toBeVisible();
+  await expect(page.getByRole("heading", { name: /Parcelamentos e financiamentos/ })).toBeVisible();
+  await expect(page.getByRole("heading", { name: /Suas próximas semanas/ })).toBeVisible();
+});
+
+test("seções de valor têm IDs corretos para navegação (LAND-10)", async ({ page }) => {
+  await page.goto("/");
+
+  // Verificar que cada seção tem o ID correto de ancoragem
+  const previsibilidadeSection = page.locator("#previsibilidade");
+  const parcelasSection = page.locator("#parcelas");
+  const projecaoSection = page.locator("#projecao");
+
+  await expect(previsibilidadeSection).toBeVisible();
+  await expect(parcelasSection).toBeVisible();
+  await expect(projecaoSection).toBeVisible();
+});
+
+test("mini-visuais mostram dados realistas com BRL (LAND-05)", async ({ page }) => {
+  await page.goto("/");
+
+  // Verificar que valores em BRL são exibidos nas seções
+  // (há múltiplas instâncias, então não usar strict mode)
+  const brlFormatted = page.locator("text=/R\\$/");
+  const count = await brlFormatted.count();
+  expect(count).toBeGreaterThan(0);
+});
