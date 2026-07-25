@@ -185,7 +185,7 @@ export function CommitmentModal({
             />
           </div>
 
-          <Button type="submit" disabled={isPending} className="w-full">
+          <Button type="submit" disabled={isPending} className="w-full max-sm:min-h-11">
             {isPending ? "Salvando..." : editingCommitment ? "Atualizar" : "Criar"}
           </Button>
         </form>

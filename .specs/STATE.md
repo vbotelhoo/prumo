@@ -138,15 +138,31 @@
 - **Date**: 2026-07-23
 - **Status**: active
 
+### AD-018
+- **Decision**: Cores de gráficos/dataviz sempre via tokens `--chart-1..N` definidos em `globals.css` (temas claro e escuro), referenciados nos componentes via `var(--chart-N)` — nunca hex hardcoded. Paleta validada com a skill dataviz (CVD-safe, ordem fixa).
+- **Reason**: AD-017 estabelece tokens de `globals.css` como única fonte de cor; gráficos eram a única exceção restante (paleta hex em `CategorySpendingChart`).
+- **Trade-off**: Indireção extra (Recharts recebe strings `var()`); variantes escuras precisam ser calibradas por tema.
+- **Scope**: Todos os componentes de gráfico, atuais e futuros.
+- **Date**: 2026-07-24
+- **Status**: active
+
 ## Handoff
 
-- **Feature**: landing (Roadmap item 8, Fase 2) — `.specs/features/landing/`
-- **Phase / Task**: Specify ✅ → Discuss ✅ (context.md, 13 decisões) → Design ✅ (route group `(public)` confirmado) → Tasks ✅ APROVADAS (2026-07-23) → **Execute NÃO iniciado** (instrução explícita do usuário: não começar ainda)
-- **Next step**: ativar `tlc-spec-driven` e entrar no Execute de `.specs/features/landing/tasks.md` — 14 tasks / 4 fases sequenciais; **>3 fases ⇒ apresentar a oferta de um sub-agente por fase antes de qualquer task**. Skill `impeccable` confirmada pelo usuário para T5, T6, T8–T10, T12–T13; Better Auth (nome/util do cookie em server components) a verificar via doc oficial na T1 — sem Context7 MCP nesta sandbox.
-- **Key facts**: baselines de teste 193 unit / 156 integration / 39 e2e (gates comparam contra elas); detecção de sessão pública é otimista via cookie (sem banco — preserva SETUP-03); `home.spec.ts` tem ajuste em 2 etapas (mínimo na T5, reescrita na T8); restyle de auth (T12/T13) é apresentação pura com suítes existentes como gate.
-- **Environment**: Node v24 via nvm (`export PATH="$HOME/.nvm/versions/node/v24.18.0/bin:$PATH"` antes de qualquer gate); Postgres de teste `docker start prumo-test-pg` (porta 55432); matar `next start` manual por PID (`ss -ltnp | grep 3000`).
-- **Blockers**: none. **Uncommitted**: só arquivos de `.specs/features/landing/` + este STATE.md (specs da feature, commit na entrada do Execute ou quando o usuário pedir).
-- **Branch**: `cursor/spec-landing` (criada de `origin/main` pós-merge do PR #10 do app-shell; specs commitados aqui).
+- **Feature**: app-polish (Roadmap item 9, Fase 2) — `.specs/features/app-polish/` ✅ VALIDATED (PASS, iteração 2)
+- **Phase / Task**: Specify ✅ → Design ✅ → Tasks ✅ → Execute ✅ (4 sub-agentes por fase, sequencial) → Verify ✅ (PASS na iteração 2; iteração 1 encontrou 5 gaps, fix→re-verify em 1 rodada)
+- **Completed (Execute Phase)**: Fase 1 (T1-T6, commits `aa110b0`..`d555b7e`) infra RTL/jsdom + `EmptyState`/`Skeleton`/`StatCard`/`PageHeader` + tokens `--chart-1..8` + `error.tsx` + 5× `loading.tsx` → Fase 2 (T7-T9, `3510405`..`85923f0`) `DashboardHero` + `QuickActions` (modais compostos) + dashboard recomposto → Fase 3 (T10-T13, `b530518`..`80642da`) polish de transações/compromissos/categorias(+e2e novo)/projeções, corrigiu race condition real em `DeleteCategoryDialog` → Fase 4 (T14-T16, `e2bfd35`..`83b18b2`) e2e responsivo/teclado + varredura de tokens + passes impeccable, corrigiu bug real de timezone (`formatDateBR`) e 2 colisões de layout mobile → Fix da iteração 1 do Verifier (`67e6bbd`..`09449ac`): loading skeletons ressincronizados, teclado do `CommitmentList`, touch targets de modal, edge cases de truncamento/gráfico.
+- **Verifier**: iteração 1 FAIL (5 gaps: 2 reais — `loading.tsx` desatualizado, toggle de teclado do `CommitmentList` — e 3 menores de cobertura) → fix aplicado → iteração 2 PASS (`.specs/features/app-polish/validation.md`, commit `37c63eb`): 21/22 ACs verificadas, sensor 3/3 mutações mortas em ambas as iterações. 3 itens residuais não-bloqueantes registrados: cobertura e2e de touch target incompleta em 3/5 modais (fix de código aplicado, só sem prova automatizada), truncamento cosmético ausente na descrição do `CommitmentList`, edge case de banco indisponível só coberto no nível de componente (não e2e).
+- **Gates finais**: typecheck ✅, lint ✅, unit 263 ✅ (baseline 222 + 41 novos), integration 156 ✅ (baseline mantida, feature não toca `data/`/`actions/`), e2e 79 ✅ (baseline 57 + 22 novos), build ✅.
+- **Incidente de sessão**: o computador do usuário reiniciou sozinho no meio da rodada de fix da iteração 1 (dois agentes em background foram encerrados sem aviso); o working tree sobreviveu intacto em disco — nada foi perdido, um novo agente retomou de onde parou após reiniciar o container `prumo-test-pg`.
+- **Environment**: Node v24 via nvm (`export PATH="$HOME/.nvm/versions/node/v24.18.0/bin:$PATH"` antes de qualquer gate); Postgres de teste `docker start prumo-test-pg` (porta 55432) — teve poluição de dados órfãos de sessões anteriores em múltiplas rodadas desta feature, resolvido com `TRUNCATE` + `npx tsx prisma/seed.ts` (o webServer do Playwright não reseeda sozinho); matar `next start` manual por PID (`ss -ltnp | grep 3000`).
+- **Blockers**: none. **Uncommitted**: none.
+- **Branch**: `cursor/spec-app-polish` (criada de `origin/main` pós-merge do PR #11 da landing). PR ainda não aberto — próximo passo.
+
+---
+
+### Handoff anterior (landing, item 8 — concluído)
+
+- **Feature**: landing (Roadmap item 8, Fase 2) — ✅ VALIDATED (PASS) e mergeada em `main` via PR #11 (2026-07-24). 14 tasks executadas; gates finais: unit 222, landing+auth e2e 19/19, build ✅. Validação em `.specs/features/landing/validation.md`.
 
 ---
 

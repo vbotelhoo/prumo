@@ -1,43 +1,32 @@
-import { Card, formatBRL, money } from "@/shared";
+import { StatCard } from "@/shared";
 import type { MonthlyProjection } from "../domain/types";
 
+/**
+ * ProjectionSummary: os 4 stats da página de projeções sobre o primitivo
+ * `StatCard` (POLISH-15) — mesmo padrão de card/tipografia das demais
+ * páginas (contrato `{projection}` preservado; o dashboard usa `StatCard`
+ * diretamente e não depende deste componente).
+ *
+ * Tons: Entradas = `entrada` (verde), Saídas e Total Comprometido = `saida`
+ * (vermelho — DESIGN.md define comprometido como semântica de Saída, nunca
+ * azul; corrige o `text-blue-600` anterior). Saldo Projetado segue a mesma
+ * regra do `DashboardHero`: negativo usa `saida`, não-negativo fica neutro
+ * (cor primária) — só o número muda de cor, nunca o card (Semântica Só em
+ * Número).
+ */
 export function ProjectionSummary({ projection }: { projection: MonthlyProjection }) {
   const isSaldoNegativo = projection.saldoProjetado < 0;
 
   return (
-    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-      <Card className="p-4">
-        <div className="text-sm text-gray-500 mb-2">Entradas Previstas</div>
-        <div className="text-lg font-semibold text-green-600">
-          {formatBRL(projection.entradasPrevistas)}
-        </div>
-      </Card>
-
-      <Card className="p-4">
-        <div className="text-sm text-gray-500 mb-2">Saídas Previstas</div>
-        <div className="text-lg font-semibold text-red-600">
-          {formatBRL(projection.saidasPrevistas)}
-        </div>
-      </Card>
-
-      <Card className={`p-4 ${isSaldoNegativo ? "border-red-200" : ""}`}>
-        <div className="text-sm text-gray-500 mb-2">Saldo Projetado</div>
-        <div
-          className={`text-lg font-semibold ${
-            isSaldoNegativo ? "text-destructive" : "text-green-600"
-          }`}
-        >
-          {isSaldoNegativo ? "-" : ""}
-          {formatBRL(money(Math.abs(projection.saldoProjetado)))}
-        </div>
-      </Card>
-
-      <Card className="p-4">
-        <div className="text-sm text-gray-500 mb-2">Total Comprometido</div>
-        <div className="text-lg font-semibold text-blue-600">
-          {formatBRL(projection.totalComprometido)}
-        </div>
-      </Card>
+    <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
+      <StatCard label="Entradas Previstas" value={projection.entradasPrevistas} tone="entrada" />
+      <StatCard label="Saídas Previstas" value={projection.saidasPrevistas} tone="saida" />
+      <StatCard
+        label="Saldo Projetado"
+        value={projection.saldoProjetado}
+        tone={isSaldoNegativo ? "saida" : "neutral"}
+      />
+      <StatCard label="Total Comprometido" value={projection.totalComprometido} tone="saida" />
     </div>
   );
 }

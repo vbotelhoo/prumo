@@ -18,6 +18,9 @@
   --color-sidebar-primary: var(--sidebar-primary);
   --color-sidebar-foreground: var(--sidebar-foreground);
   --color-sidebar: var(--sidebar);
+  --color-chart-8: var(--chart-8);
+  --color-chart-7: var(--chart-7);
+  --color-chart-6: var(--chart-6);
   --color-chart-5: var(--chart-5);
   --color-chart-4: var(--chart-4);
   --color-chart-3: var(--chart-3);
@@ -80,11 +83,22 @@
   --border: oklch(0.9 0.008 250);
   --input: oklch(0.9 0.008 250);
   --ring: oklch(0.48 0.14 250);
-  --chart-1: oklch(0.87 0.01 250);
-  --chart-2: oklch(0.556 0.03 250);
-  --chart-3: oklch(0.439 0.04 250);
-  --chart-4: oklch(0.371 0.04 250);
-  --chart-5: oklch(0.269 0.03 250);
+  /*
+   * Paleta categórica do gráfico (AD-018): 8 matizes fixos, ordem CVD-safe
+   * validada com a skill dataviz (scripts/validate_palette.js — worst
+   * adjacent CVD ΔE 9.1, normal-vision ΔE 19.6, contraste vs --card
+   * verificado; ver CategorySpendingChart.tsx e o registro da task no
+   * histórico do roadmap item 9). Não são cores de texto — usadas só em
+   * fatias/legenda do gráfico.
+   */
+  --chart-1: oklch(0.575 0.163 255.5); /* azul */
+  --chart-2: oklch(0.671 0.175 40.6); /* laranja */
+  --chart-3: oklch(0.669 0.141 162.1); /* água */
+  --chart-4: oklch(0.764 0.161 75.1); /* amarelo */
+  --chart-5: oklch(0.716 0.141 357.4); /* magenta */
+  --chart-6: oklch(0.529 0.18 142.5); /* verde */
+  --chart-7: oklch(0.433 0.167 283.6); /* violeta */
+  --chart-8: oklch(0.623 0.191 24.9); /* vermelho */
   --radius: 0.625rem;
   --sidebar: oklch(0.965 0.005 250);
   --sidebar-foreground: oklch(0.2 0.02 250);
@@ -117,11 +131,16 @@
   --border: oklch(1 0 0 / 10%);
   --input: oklch(1 0 0 / 15%);
   --ring: oklch(0.76 0.13 250);
-  --chart-1: oklch(0.87 0.01 250);
-  --chart-2: oklch(0.556 0.03 250);
-  --chart-3: oklch(0.439 0.04 250);
-  --chart-4: oklch(0.371 0.04 250);
-  --chart-5: oklch(0.269 0.03 250);
+  /* Mesmos 8 matizes, passo escuro (dataviz): worst adjacent CVD ΔE 8.4,
+   * normal-vision ΔE 19.3, contraste ≥3:1 contra --card escuro. */
+  --chart-1: oklch(0.622 0.161 255.1); /* azul */
+  --chart-2: oklch(0.622 0.173 40.1); /* laranja */
+  --chart-3: oklch(0.621 0.128 163.1); /* água */
+  --chart-4: oklch(0.67 0.143 73.2); /* amarelo */
+  --chart-5: oklch(0.622 0.171 0.8); /* magenta */
+  --chart-6: oklch(0.529 0.18 142.5); /* verde */
+  --chart-7: oklch(0.67 0.145 286.8); /* violeta */
+  --chart-8: oklch(0.669 0.159 22.3); /* vermelho */
   --sidebar: oklch(0.21 0.008 250);
   --sidebar-foreground: oklch(0.93 0.004 250);
   --sidebar-primary: oklch(0.76 0.13 250);

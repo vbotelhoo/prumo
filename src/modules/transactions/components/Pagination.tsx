@@ -5,10 +5,17 @@ type PaginationProps = {
   totalPages: number;
 };
 
+const LINK_CLASS =
+  "inline-flex items-center justify-center px-3 py-2 rounded border border-border text-foreground hover:bg-muted max-sm:min-h-11";
+const DISABLED_CLASS =
+  "inline-flex items-center justify-center px-3 py-2 rounded border border-border text-muted-foreground cursor-not-allowed max-sm:min-h-11";
+
 /**
  * Pagination component for numbered page navigation.
  * Renders [← Anterior] [1] [2] … [N] [Próxima →] using Link for server-side routing.
  * Current page is highlighted. Navigation buttons are disabled on boundaries.
+ * Cor só via tokens (POLISH-04); página atual usa o acento de marca (Azul
+ * Prumo), o mesmo tratamento de "item ativo" da navegação principal.
  */
 export function Pagination({ page, totalPages }: PaginationProps) {
   if (totalPages <= 1) {
@@ -56,19 +63,14 @@ export function Pagination({ page, totalPages }: PaginationProps) {
   }
 
   return (
-    <div className="flex items-center justify-center gap-2 mt-8">
+    <nav aria-label="Paginação" className="flex flex-wrap items-center justify-center gap-2 mt-8">
       {/* Previous button */}
       {showPrevious ? (
-        <Link
-          href={`?page=${previousPage}`}
-          className="px-3 py-2 rounded border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-800"
-        >
+        <Link href={`?page=${previousPage}`} className={LINK_CLASS}>
           ← Anterior
         </Link>
       ) : (
-        <span className="px-3 py-2 rounded border border-gray-300 dark:border-gray-600 text-gray-400 dark:text-gray-600 cursor-not-allowed">
-          ← Anterior
-        </span>
+        <span className={DISABLED_CLASS}>← Anterior</span>
       )}
 
       {/* Page numbers */}
@@ -76,7 +78,7 @@ export function Pagination({ page, totalPages }: PaginationProps) {
         {pageNumbers.map((pageNum, index) => {
           if (pageNum === "...") {
             return (
-              <span key={`ellipsis-${index}`} className="px-2 text-gray-600 dark:text-gray-400">
+              <span key={`ellipsis-${index}`} className="px-2 text-muted-foreground">
                 …
               </span>
             );
@@ -87,16 +89,13 @@ export function Pagination({ page, totalPages }: PaginationProps) {
           return isCurrentPage ? (
             <span
               key={pageNum}
-              className="px-3 py-2 rounded bg-blue-600 text-white font-medium"
+              aria-current="page"
+              className="inline-flex items-center justify-center px-3 py-2 rounded bg-primary text-primary-foreground font-medium tabular-nums max-sm:min-h-11"
             >
               {pageNum}
             </span>
           ) : (
-            <Link
-              key={pageNum}
-              href={`?page=${pageNum}`}
-              className="px-3 py-2 rounded border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-800"
-            >
+            <Link key={pageNum} href={`?page=${pageNum}`} className={`${LINK_CLASS} tabular-nums`}>
               {pageNum}
             </Link>
           );
@@ -105,17 +104,12 @@ export function Pagination({ page, totalPages }: PaginationProps) {
 
       {/* Next button */}
       {showNext ? (
-        <Link
-          href={`?page=${nextPage}`}
-          className="px-3 py-2 rounded border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-800"
-        >
+        <Link href={`?page=${nextPage}`} className={LINK_CLASS}>
           Próxima →
         </Link>
       ) : (
-        <span className="px-3 py-2 rounded border border-gray-300 dark:border-gray-600 text-gray-400 dark:text-gray-600 cursor-not-allowed">
-          Próxima →
-        </span>
+        <span className={DISABLED_CLASS}>Próxima →</span>
       )}
-    </div>
+    </nav>
   );
 }

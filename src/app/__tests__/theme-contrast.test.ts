@@ -102,6 +102,17 @@ const PAIRS: { label: string; fg: string; bg: string; ui?: boolean }[] = [
   { label: "anel de foco sobre o fundo (visibilidade do foco, SHELL-15)", fg: "ring", bg: "background", ui: true },
   { label: "anel de foco sobre a sidebar", fg: "sidebar-ring", bg: "sidebar", ui: true },
   { label: "anel de foco sobre card (ex.: dentro do drawer)", fg: "ring", bg: "card", ui: true },
+
+  // Pares novos introduzidos pelas Fases 1–3 do app-polish (roadmap item 9):
+  // `--positive`/`--negative` (DashboardHero, StatCard, TransactionList,
+  // CommitmentList — Semântica Só em Número, AD-017) e `muted-foreground`
+  // sobre `muted` (badge "Prevista" de parcela em CommitmentList) não tinham
+  // par no teste de contraste ainda.
+  { label: "valor positivo (Entrada) sobre o fundo da página", fg: "positive", bg: "background" },
+  { label: "valor negativo (Saída/comprometido) sobre o fundo da página", fg: "negative", bg: "background" },
+  { label: "valor positivo (Entrada) sobre card (StatCard)", fg: "positive", bg: "card" },
+  { label: "valor negativo (Saída/comprometido) sobre card (StatCard/CommitmentList)", fg: "negative", bg: "card" },
+  { label: "texto secundário sobre badge neutro (ex.: parcela 'Prevista')", fg: "muted-foreground", bg: "muted" },
 ];
 
 describe.each([
@@ -123,5 +134,22 @@ describe("globals.css — única fonte de cor (SHELL-13)", () => {
         .filter((key) => key !== "radius")
         .sort();
     expect(colorKeys(darkTokens)).toEqual(colorKeys(lightTokens));
+  });
+});
+
+// spec.md POLISH-04/AD-018: paleta categórica do gráfico como tokens
+// `--chart-1..8` em globals.css (CategorySpendingChart consome só
+// `var(--chart-N)`, nunca hex hardcoded) — presença dos 8 nos 2 temas.
+describe("globals.css — tokens --chart-1..8 (AD-018)", () => {
+  const CHART_TOKEN_NAMES = Array.from({ length: 8 }, (_, i) => `chart-${i + 1}`);
+
+  it.each([
+    ["claro", lightTokens],
+    ["escuro", darkTokens],
+  ] as const)("tema %s define os 8 tokens --chart-1..8", (_themeName, tokens) => {
+    for (const name of CHART_TOKEN_NAMES) {
+      expect(tokens[name], `token --${name} ausente`).toBeDefined();
+      expect(() => parseOklch(tokens[name]!)).not.toThrow();
+    }
   });
 });

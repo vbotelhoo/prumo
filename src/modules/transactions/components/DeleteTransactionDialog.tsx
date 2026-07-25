@@ -82,6 +82,7 @@ export function DeleteTransactionDialog({
         <DialogFooter>
           <Button
             variant="outline"
+            className="max-sm:min-h-11"
             onClick={() => handleOpenChange(false)}
             disabled={isSubmitting}
           >
@@ -89,6 +90,7 @@ export function DeleteTransactionDialog({
           </Button>
           <Button
             variant="destructive"
+            className="max-sm:min-h-11"
             onClick={handleDelete}
             disabled={isSubmitting}
           >

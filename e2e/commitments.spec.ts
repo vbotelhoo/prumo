@@ -34,6 +34,46 @@ function uniqueEmail(prefix: string): string {
   return `${prefix}-${Date.now()}-${Math.floor(Math.random() * 100000)}@example.com`;
 }
 
+// spec.md Edge Cases: "usuário recém-cadastrado abre cada página THEN cada
+// uma SHALL mostrar seu empty state com ação primária clara". Confirmado
+// para dashboard/transações/categorias em outros specs e2e (validation.md);
+// faltava para /app/commitments especificamente.
+test("conta nova mostra o estado vazio de compromissos com ação primária", async ({ page }) => {
+  const name = "Bia E2E Compromissos Vazio";
+  const email = uniqueEmail("e2e-commit-empty");
+
+  await page.goto("/signup");
+  await page.getByLabel("Nome").fill(name);
+  await page.getByLabel("Data de nascimento").fill("1990-01-01");
+  await page.getByLabel("CPF").fill(uniqueValidCpf());
+  await page.getByLabel("CEP").fill("12345-000");
+  await page.getByLabel("Logradouro").fill("Rua Test");
+  await page.getByLabel("Número").fill("123");
+  await page.getByLabel("Bairro").fill("Bairro");
+  await page.getByLabel("Cidade").fill("Cidade");
+  await page.getByLabel("UF").fill("SP");
+  await page.getByLabel("E-mail").fill(email);
+  await page.getByLabel("Senha", { exact: true }).fill(PASSWORD);
+  await page.getByLabel("Confirmar senha").fill(PASSWORD);
+  await page.getByRole("checkbox").check();
+
+  await page.getByRole("button", { name: "Criar conta" }).click();
+  await expect(page).toHaveURL(/\/app$/);
+
+  await page.goto("/app/commitments");
+  await expect(page).toHaveURL(/\/app\/commitments$/);
+
+  await expect(page.getByText("Nenhum compromisso ainda")).toBeVisible();
+  await expect(
+    page.getByText(
+      "Crie seu primeiro compromisso (compra parcelada ou financiamento) para começar a acompanhar suas parcelas.",
+    ),
+  ).toBeVisible();
+  // Ação primária clara: o atalho de criação do cabeçalho da página
+  // permanece visível e operável mesmo com a lista vazia.
+  await expect(page.getByRole("button", { name: "+ Novo compromisso" })).toBeVisible();
+});
+
 test("should create installment, verify rounding, and mark as paid", async ({ page }) => {
   const name = "Ana E2E Compromissos";
   const email = uniqueEmail("e2e-commit");
@@ -69,7 +109,7 @@ test("should create installment, verify rounding, and mark as paid", async ({ pa
 
   // 3. Navigate to commitments and open the creation dialog
   await page.goto("/app/commitments");
-  await page.getByRole("button", { name: "Novo Compromisso" }).click();
+  await page.getByRole("button", { name: "Novo compromisso" }).click();
 
   await expect(page.getByRole("dialog")).toBeVisible();
 
@@ -95,10 +135,12 @@ test("should create installment, verify rounding, and mark as paid", async ({ pa
   await expect(page.getByText("Notebook")).toBeVisible();
   await expect(page.getByText("Eletrônicos")).toBeVisible();
 
-  // 6. Verify progress metrics
+  // 6. Verify progress metrics (POLISH-14: contador legível de relance + barra)
   await expect(page.getByText("0/3")).toBeVisible(); // 0 pagas / 3 total
   await expect(page.getByText("R$ 0,00")).toBeVisible(); // 0 pago
   await expect(page.getByText("R$ 100,00").first()).toBeVisible(); // total / saldo (ambos R$ 100,00 antes de pagar)
+  const progressBar = page.getByRole("progressbar");
+  await expect(progressBar).toHaveAttribute("aria-valuenow", "0");
 
   // 7. Expand commitment to see installments
   await page.getByText("Notebook").click();
@@ -112,15 +154,15 @@ test("should create installment, verify rounding, and mark as paid", async ({ pa
   // 9. Verify all are prevista (predicted)
   await expect(page.getByText("Prevista")).toHaveCount(3);
 
-  // 10. Click on first installment row to mark as paid
-  const firstInstallmentRow = page.locator("[class*='bg-gray-50']").first();
-  await firstInstallmentRow.click();
+  // 10. Click "Marcar como paga" on the first installment to mark it as paid
+  await page.getByRole("button", { name: "Marcar como paga" }).first().click();
 
   // 11. Verify the installment is now marked as paga
   await expect(page.getByText("✓ Paga").first()).toBeVisible();
 
-  // 12. Verify progress updated (1/3 pagas, R$ 33,34 pago, R$ 66,66 saldo)
+  // 12. Verify progress updated (1/3 pagas, R$ 33,34 pago, R$ 66,66 saldo, barra em 33%)
   await expect(page.getByText("1/3").first()).toBeVisible();
   await expect(page.getByText("R$ 33,34").first()).toBeVisible(); // pago amount
   await expect(page.getByText("R$ 66,66")).toBeVisible(); // saldo restante
+  await expect(progressBar).toHaveAttribute("aria-valuenow", "33");
 });

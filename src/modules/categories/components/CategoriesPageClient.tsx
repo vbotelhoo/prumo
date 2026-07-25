@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { PageHeader } from "@/shared";
 import type { Category } from "../domain/types";
 import { CategorySection } from "./CategorySection";
 import { CreateCategoryForm } from "./CreateCategoryForm";
@@ -41,22 +42,24 @@ export function CategoriesPageClient({ categories }: CategoriesPageClientProps) 
 
   return (
     <div className="space-y-8">
+      <PageHeader
+        title="Categorias"
+        description="Categorias padrão e personalizadas usadas em transações e compromissos."
+      />
+
       <CreateCategoryForm />
 
-      <div>
-        <h1 className="text-2xl font-bold mb-6">Categorias</h1>
-        <div className="space-y-6">
-          <CategorySection
-            categories={categories}
-            type="entrada"
-            onDeleteRequest={handleDeleteRequest}
-          />
-          <CategorySection
-            categories={categories}
-            type="saida"
-            onDeleteRequest={handleDeleteRequest}
-          />
-        </div>
+      <div className="space-y-6">
+        <CategorySection
+          categories={categories}
+          type="entrada"
+          onDeleteRequest={handleDeleteRequest}
+        />
+        <CategorySection
+          categories={categories}
+          type="saida"
+          onDeleteRequest={handleDeleteRequest}
+        />
       </div>
 
       <DeleteCategoryDialog

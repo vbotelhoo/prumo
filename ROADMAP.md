@@ -89,7 +89,7 @@ Com o MVP funcional em produção, a Fase 2 ataca a experiência: hoje a home `/
 - Estados vazios, loading e erro consistentes; responsividade revisada
 - Passes `critique`/`polish`/`harden` do `impeccable` sobre cada página
 
-**Status**: ⏳ aguardando itens 7–8
+**Status**: ✅ concluída (2026-07-24) — 16 tasks implementadas em 4 fases (fundação de primitivos/tokens/estados → dashboard reestruturado com atalhos → polish das 4 páginas de dados → qualidade transversal/responsivo/impeccable), todos os gates verdes (typecheck, lint, unit 263, integration 156, e2e 79, build). Verifier independente: PASS na iteração 2 (iteração 1 encontrou 5 gaps, corrigidos e reverificados do zero). Validação em `.specs/features/app-polish/validation.md`.
 
 ## Fases futuras (fora do MVP)
 

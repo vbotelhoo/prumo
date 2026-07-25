@@ -1,6 +1,7 @@
 import { headers } from "next/headers";
 
 import { auth } from "@/modules/auth";
+import { PageHeader } from "@/shared";
 import {
   getMonthlyProjection,
   parseMonthParam,
@@ -32,7 +33,8 @@ export default async function ProjectionsPage(props: {
   const projection = await getMonthlyProjection(userId, month);
 
   return (
-    <div className="max-w-6xl mx-auto py-8 px-4 space-y-8">
+    <div className="max-w-6xl mx-auto space-y-8 px-4 py-8">
+      <PageHeader title="Projeções" description="Planejamento do mês selecionado." />
       <MonthNavigator month={month} />
       <ProjectionSummary projection={projection} />
     </div>

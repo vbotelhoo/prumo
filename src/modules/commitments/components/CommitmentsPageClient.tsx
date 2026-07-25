@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
-import { Button } from "@/shared";
+import { Button, PageHeader } from "@/shared";
 import type { Commitment } from "../domain/types";
 import type { Category } from "@/modules/categories";
 import { CommitmentModal } from "./CommitmentModal";
@@ -67,10 +67,14 @@ export function CommitmentsPageClient({
 
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold">Compromissos</h1>
-        <Button onClick={() => setIsModalOpen(true)}>+ Novo Compromisso</Button>
-      </div>
+      <PageHeader
+        title="Compromissos"
+        action={
+          <Button className="max-sm:min-h-11" onClick={() => setIsModalOpen(true)}>
+            + Novo compromisso
+          </Button>
+        }
+      />
 
       <CommitmentList
         commitments={initialCommitments}

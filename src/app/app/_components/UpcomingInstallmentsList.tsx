@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
-import { Button, formatBRL } from "@/shared";
+import { Button, EmptyState, formatBRL, formatDateBR } from "@/shared";
 import type { Money } from "@/shared";
 import { setInstallmentStatusAction } from "@/modules/commitments";
 
@@ -26,8 +26,8 @@ export function UpcomingInstallmentsList({
 
   if (installments.length === 0) {
     return (
-      <div className="flex items-center justify-center h-32 text-sm text-gray-500">
-        Nenhuma parcela pendente este mês
+      <div className="flex h-32 items-center justify-center">
+        <EmptyState title="Nenhuma parcela pendente este mês" />
       </div>
     );
   }
@@ -50,28 +50,43 @@ export function UpcomingInstallmentsList({
   };
 
   return (
-    <ul className="divide-y">
+    <ul className="divide-y divide-border">
       {installments.map((installment) => (
         <li
           key={installment.installmentId}
-          className="flex items-center justify-between gap-4 py-3"
+          // POLISH-17 (harden pass, T16): a linha inteira (desc + categoria/
+          // data + valor + botão) não cabia lado a lado em 320px — o valor e
+          // o botão (`shrink-0`) sobravam quase toda a largura, esmagando a
+          // descrição em "N…" e colidindo visualmente com a data. Empilha em
+          // coluna abaixo de sm, volta à linha única a partir daí.
+          className="flex flex-col gap-2 py-3 sm:flex-row sm:items-center sm:justify-between sm:gap-4"
         >
-          <div>
-            <div className="font-medium">{installment.description}</div>
-            <div className="text-sm text-gray-500">
-              {installment.categoryName} · vence em {installment.dueDate}
+          <div className="min-w-0">
+            <div className="truncate font-medium text-foreground">{installment.description}</div>
+            {/* Data de vencimento nunca trunca (harden pass, roadmap item 9
+            T16): antes ficava na mesma linha truncável do nome da categoria
+            e cortava a data ISO crua no meio ("vence em 2…"); agora só o
+            nome da categoria encolhe, e a data sempre aparece por inteiro.
+            `formatDateBR` evita o bug de fuso de `new Date(iso).toLocaleDateString()`
+            (achado no mesmo pass, também corrigido em TransactionList). */}
+            <div className="flex min-w-0 gap-1 text-sm text-muted-foreground">
+              <span className="truncate">{installment.categoryName}</span>
+              <span className="shrink-0">
+                · vence em {formatDateBR(installment.dueDate)}
+              </span>
             </div>
             {errors[installment.installmentId] && (
-              <div className="text-sm text-destructive">
-                {errors[installment.installmentId]}
-              </div>
+              <div className="text-sm text-destructive">{errors[installment.installmentId]}</div>
             )}
           </div>
-          <div className="flex items-center gap-3">
-            <div className="font-semibold">{formatBRL(installment.amount)}</div>
+          <div className="flex shrink-0 items-center justify-between gap-3 sm:justify-end">
+            <div className="text-right font-semibold tabular-nums text-foreground">
+              {formatBRL(installment.amount)}
+            </div>
             <Button
               size="sm"
               variant="outline"
+              className="max-sm:min-h-11"
               disabled={isPending}
               onClick={() => handleMarkAsPaid(installment.installmentId)}
             >

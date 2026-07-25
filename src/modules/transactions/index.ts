@@ -20,3 +20,4 @@ export { deleteTransactionAction } from "./actions/delete-transaction-action";
 
 // Components
 export { TransactionsPageClient } from "./components/TransactionsPageClient";
+export { TransactionModal } from "./components/TransactionModal";
