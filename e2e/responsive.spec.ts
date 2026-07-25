@@ -294,4 +294,39 @@ test.describe("Responsive — navegação por teclado com foco visível (POLISH-
     await page.keyboard.press("Enter");
     await page.waitForURL(/\?month=/);
   });
+
+  // POLISH-20 gap fix (validation.md Fix 2): o toggle de expandir/recolher
+  // parcelas em CommitmentList era um `<div onClick>` sem role/tabIndex —
+  // inalcançável e inoperável por teclado. Agora expõe role="button" +
+  // tabIndex + onKeyDown (Enter/Espaço), com o mesmo foco visível
+  // (`focus-visible:ring`) dos demais controles.
+  test("Compromissos: Tab até o toggle de expandir parcelas, expande com Enter e recolhe com Espaço", async ({
+    page,
+  }) => {
+    await signUp(page, "Keyboard Compromissos", uniqueEmail("e2e-resp-kbd-commit"));
+
+    await page.goto("/app/commitments");
+    await createInstallmentCommitment(page, {
+      description: "Toggle Teclado Item",
+      category: "Cartão de crédito",
+      total: "300,00",
+      installmentCount: "3",
+      firstDueDate: todayISO(),
+    });
+
+    const expandToggle = page.getByRole("button", {
+      name: "Expandir parcelas de Toggle Teclado Item",
+    });
+    await tabUntilFocused(page, expandToggle);
+    await assertVisibleFocusIndicator(expandToggle);
+
+    await page.keyboard.press("Enter");
+    await expect(page.getByRole("button", { name: "Marcar como paga" }).first()).toBeVisible();
+    await expect(
+      page.getByRole("button", { name: "Recolher parcelas de Toggle Teclado Item" }),
+    ).toBeVisible();
+
+    await page.keyboard.press("Space");
+    await expect(page.getByRole("button", { name: "Marcar como paga" })).toHaveCount(0);
+  });
 });

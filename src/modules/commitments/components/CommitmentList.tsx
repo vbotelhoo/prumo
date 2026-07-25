@@ -55,11 +55,25 @@ export function CommitmentList({
         const progress = computeCommitmentProgress(commitment.installments || []);
         const isExpanded = expandedId === commitment.id;
 
+        const toggleExpanded = () => {
+          setExpandedId(isExpanded ? null : commitment.id);
+        };
+
         return (
           <Card key={commitment.id}>
             <CardHeader
-              className="cursor-pointer"
-              onClick={() => setExpandedId(isExpanded ? null : commitment.id)}
+              className="cursor-pointer rounded-t-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              role="button"
+              tabIndex={0}
+              aria-expanded={isExpanded}
+              aria-label={`${isExpanded ? "Recolher" : "Expandir"} parcelas de ${commitment.description}`}
+              onClick={toggleExpanded}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault();
+                  toggleExpanded();
+                }
+              }}
             >
               <div className="flex items-start justify-between">
                 <div className="flex-1">
