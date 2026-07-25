@@ -1,12 +1,18 @@
 import { Skeleton } from "@/shared";
 
 // Skeleton de /app/categories (POLISH-01): aproxima CategoriesPageClient —
-// formulário de criação, título de página e as 2 seções (Entradas/Saídas)
-// com suas listas de categorias.
+// PageHeader (título + descrição), formulário de criação e as 2 seções
+// (Entradas/Saídas) com suas listas de categorias, na mesma ordem em que a
+// página real renderiza (PageHeader → form → seções).
 export default function CategoriesLoading() {
   return (
     <div className="flex-1 px-6 py-8">
       <div className="max-w-4xl space-y-8">
+        <div className="flex flex-col gap-2">
+          <Skeleton className="h-8 w-40" />
+          <Skeleton className="h-4 w-64" />
+        </div>
+
         <div className="flex flex-col gap-3 rounded-lg border p-4">
           <Skeleton className="h-4 w-32" />
           <div className="flex gap-3">
@@ -15,18 +21,15 @@ export default function CategoriesLoading() {
           </div>
         </div>
 
-        <div>
-          <Skeleton className="mb-6 h-8 w-32" />
-          <div className="space-y-6">
-            {Array.from({ length: 2 }, (_, section) => (
-              <div key={section} className="space-y-3 border-b pb-6 last:border-b-0">
-                <Skeleton className="h-5 w-24" />
-                {Array.from({ length: 3 }, (_, row) => (
-                  <Skeleton key={row} className="h-8 w-full" />
-                ))}
-              </div>
-            ))}
-          </div>
+        <div className="space-y-6">
+          {Array.from({ length: 2 }, (_, section) => (
+            <div key={section} className="space-y-3 border-b pb-6 last:border-b-0">
+              <Skeleton className="h-5 w-24" />
+              {Array.from({ length: 3 }, (_, row) => (
+                <Skeleton key={row} className="h-8 w-full" />
+              ))}
+            </div>
+          ))}
         </div>
       </div>
     </div>
