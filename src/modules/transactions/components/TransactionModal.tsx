@@ -267,12 +267,13 @@ export function TransactionModal({
             <Button
               type="button"
               variant="outline"
+              className="max-sm:min-h-11"
               onClick={() => handleOpenChange(false)}
               disabled={isSubmitting}
             >
               Cancelar
             </Button>
-            <Button type="submit" disabled={isSubmitting}>
+            <Button type="submit" className="max-sm:min-h-11" disabled={isSubmitting}>
               {isSubmitting
                 ? isEditMode
                   ? "Salvando..."

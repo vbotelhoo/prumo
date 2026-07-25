@@ -107,7 +107,11 @@ export function DeleteCategoryDialog({
             excluída. Remova ou reclassifique as transações antes de tentar novamente.
           </DialogDescription>
           <DialogFooter>
-            <Button variant="outline" onClick={() => handleOpenChange(false)}>
+            <Button
+              variant="outline"
+              className="max-sm:min-h-11"
+              onClick={() => handleOpenChange(false)}
+            >
               Fechar
             </Button>
           </DialogFooter>
@@ -143,6 +147,7 @@ export function DeleteCategoryDialog({
         <DialogFooter>
           <Button
             variant="outline"
+            className="max-sm:min-h-11"
             onClick={() => handleOpenChange(false)}
             disabled={isPending}
           >
@@ -150,6 +155,7 @@ export function DeleteCategoryDialog({
           </Button>
           <Button
             variant="destructive"
+            className="max-sm:min-h-11"
             onClick={handleDelete}
             disabled={!isConfirmationValid || isPending}
           >

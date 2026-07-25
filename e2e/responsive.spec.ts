@@ -126,6 +126,31 @@ async function assertVisibleFocusIndicator(locator: Locator) {
   expect(hasIndicator).toBe(true);
 }
 
+// O `<DialogContent>` do design system anima `zoom-in-95`/`fade-in-0` em
+// `duration-100` ao abrir (src/shared/components/ui/dialog.tsx). Medir a
+// bounding box de um botão interno antes do fim dessa animação de escala
+// captura um valor levemente menor que o final — sincroniza no evento
+// `animationend` (condição observável) em vez de um `waitForTimeout` fixo.
+async function waitForDialogAnimation(dialog: Locator) {
+  await dialog.evaluate(
+    (el) =>
+      new Promise<void>((resolve) => {
+        if (getComputedStyle(el).animationName === "none") {
+          resolve();
+          return;
+        }
+        const done = () => {
+          el.removeEventListener("animationend", done);
+          resolve();
+        };
+        el.addEventListener("animationend", done, { once: true });
+        // Fallback: se o navegador não disparar o evento por algum motivo,
+        // não trava o teste indefinidamente.
+        setTimeout(resolve, 500);
+      }),
+  );
+}
+
 // Tab genérico até o elemento alvo ficar focado — robusto a mudanças na
 // composição do shell (skip link, sidebar, topbar) que mudariam uma
 // contagem fixa de Tabs.
@@ -242,6 +267,42 @@ test.describe("Responsive — alvos de toque ≥44px em viewport mobile (POLISH-
 
     await assertMinimumTouchTarget(page.getByRole("button", { name: "← Mês Anterior" }));
     await assertMinimumTouchTarget(page.getByRole("button", { name: "Próximo Mês →" }));
+  });
+
+  // POLISH-18 gap fix (validation.md Fix 4 / gap 4): os testes acima cobrem
+  // só os controles de página; os botões internos de modais (Criar/Cancelar
+  // no formulário de criação, Cancelar/Excluir no diálogo de confirmação)
+  // nunca tinham sido medidos em 320px.
+  test("Modais: botões internos de criação e exclusão (Criar/Cancelar, Excluir/Cancelar)", async ({
+    page,
+  }) => {
+    await signUp(page, "Touch Modais", uniqueEmail("e2e-resp-touch-modal"));
+    await page.goto("/app/transactions");
+
+    // Modal de criação (TransactionModal): Cancelar/Criar
+    await page.getByRole("button", { name: "+ Nova transação" }).click();
+    const createDialog = page.getByRole("dialog");
+    await expect(createDialog).toBeVisible();
+    await waitForDialogAnimation(createDialog);
+    await assertMinimumTouchTarget(createDialog.getByRole("button", { name: "Cancelar" }));
+    await assertMinimumTouchTarget(createDialog.getByRole("button", { name: "Criar" }));
+    await createDialog.getByRole("button", { name: "Cancelar" }).click();
+    await expect(createDialog).not.toBeVisible();
+
+    await createTransaction(page, {
+      type: "entrada",
+      amount: "50,00",
+      category: "Salário",
+      date: todayISO(),
+    });
+
+    // Diálogo de exclusão (DeleteTransactionDialog): Cancelar/Excluir
+    await page.getByRole("button", { name: "Excluir" }).first().click();
+    const deleteDialog = page.getByRole("dialog");
+    await expect(deleteDialog).toBeVisible();
+    await waitForDialogAnimation(deleteDialog);
+    await assertMinimumTouchTarget(deleteDialog.getByRole("button", { name: "Cancelar" }));
+    await assertMinimumTouchTarget(deleteDialog.getByRole("button", { name: "Excluir" }));
   });
 });
 

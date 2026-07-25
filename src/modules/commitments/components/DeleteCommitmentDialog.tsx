@@ -61,11 +61,17 @@ export function DeleteCommitmentDialog({
         </div>
 
         <div className="flex gap-2 justify-end">
-          <Button variant="outline" onClick={onClose} disabled={isPending}>
+          <Button
+            variant="outline"
+            className="max-sm:min-h-11"
+            onClick={onClose}
+            disabled={isPending}
+          >
             Cancelar
           </Button>
           <Button
             variant="destructive"
+            className="max-sm:min-h-11"
             onClick={handleDelete}
             disabled={isPending}
           >
