@@ -165,28 +165,28 @@ As páginas da área logada (dashboard, transações, compromissos, categorias, 
 
 | Requirement ID | Story | Task(s) | Status |
 | -------------- | ----- | ------- | ------ |
-| POLISH-01 | P1 Fundação — skeletons por rota (5× `loading.tsx`) | T6 | In Tasks |
-| POLISH-02 | P1 Fundação — error boundary compartilhado com retry | T5 | In Tasks |
-| POLISH-03 | P1 Fundação — EmptyState compartilhado em todas as listas | T2, T12 | In Tasks |
-| POLISH-04 | P1 Fundação/Páginas — zero cor fora de tokens em `/app` + módulos UI | T4, T10, T12, T15 | In Tasks |
-| POLISH-05 | P1 Dashboard — saldo-herói Display tabular | T7, T9 | In Tasks |
-| POLISH-06 | P1 Dashboard — semântica de cor no saldo (negativo/positivo) | T7 | In Tasks |
-| POLISH-07 | P1 Dashboard — navegação por emoji removida, atalhos de criação no lugar | T8, T9 | In Tasks |
-| POLISH-08 | P1 Dashboard — atalho abre formulário; sucesso reflete nos números | T8, T9 | In Tasks |
-| POLISH-09 | P1 Dashboard — cards + gráfico conformes (tokens, sem sombra em repouso) | T4, T9 | In Tasks |
-| POLISH-10 | P1 Dashboard — estado zerado (herói R$ 0,00 + empty states) | T9 | In Tasks |
-| POLISH-11 | P1 Páginas — Número Alinhado Rule em todas as listas/colunas | T3, T10, T11, T12, T13 | In Tasks |
-| POLISH-12 | P1 Páginas — hierarquia tipográfica + cabeçalho de página consistente | T3, T10, T11, T12, T13 | In Tasks |
-| POLISH-13 | P1 Páginas — Semântica Só em Número Rule | T3, T10, T11, T12, T13 | In Tasks |
-| POLISH-14 | P1 Páginas — progresso de quitação legível em compromissos | T11 | In Tasks |
-| POLISH-15 | P1 Páginas — projeções no mesmo padrão (navegador de mês + resumo) | T13 | In Tasks |
-| POLISH-16 | P1 Páginas — modais/diálogos alinhados ao DS, comportamento preservado | T10, T11 | In Tasks |
-| POLISH-17 | P1 Responsivo — ≥320px sem scroll horizontal do body | T14 | In Tasks |
-| POLISH-18 | P1 Responsivo — alvos de toque ≥44px | T14 | In Tasks |
-| POLISH-19 | P1 A11y — AA nos dois temas, pares novos no teste de contraste | T15 | In Tasks |
-| POLISH-20 | P1 A11y — operável por teclado com foco visível | T14 | In Tasks |
-| POLISH-21 | P2 Qualidade — detector impeccable zero findings nos alvos | T16 | In Tasks |
-| POLISH-22 | P2 Qualidade — passes critique/polish/harden registrados | T16 | In Tasks |
+| POLISH-01 | P1 Fundação — skeletons por rota (5× `loading.tsx`) | T6 | ❌ Needs Fix |
+| POLISH-02 | P1 Fundação — error boundary compartilhado com retry | T5 | ✅ Verified |
+| POLISH-03 | P1 Fundação — EmptyState compartilhado em todas as listas | T2, T12 | ✅ Verified |
+| POLISH-04 | P1 Fundação/Páginas — zero cor fora de tokens em `/app` + módulos UI | T4, T10, T12, T15 | ✅ Verified |
+| POLISH-05 | P1 Dashboard — saldo-herói Display tabular | T7, T9 | ✅ Verified |
+| POLISH-06 | P1 Dashboard — semântica de cor no saldo (negativo/positivo) | T7 | ✅ Verified |
+| POLISH-07 | P1 Dashboard — navegação por emoji removida, atalhos de criação no lugar | T8, T9 | ✅ Verified |
+| POLISH-08 | P1 Dashboard — atalho abre formulário; sucesso reflete nos números | T8, T9 | ✅ Verified |
+| POLISH-09 | P1 Dashboard — cards + gráfico conformes (tokens, sem sombra em repouso) | T4, T9 | ✅ Verified |
+| POLISH-10 | P1 Dashboard — estado zerado (herói R$ 0,00 + empty states) | T9 | ✅ Verified |
+| POLISH-11 | P1 Páginas — Número Alinhado Rule em todas as listas/colunas | T3, T10, T11, T12, T13 | ✅ Verified |
+| POLISH-12 | P1 Páginas — hierarquia tipográfica + cabeçalho de página consistente | T3, T10, T11, T12, T13 | ✅ Verified |
+| POLISH-13 | P1 Páginas — Semântica Só em Número Rule | T3, T10, T11, T12, T13 | ✅ Verified |
+| POLISH-14 | P1 Páginas — progresso de quitação legível em compromissos | T11 | ✅ Verified |
+| POLISH-15 | P1 Páginas — projeções no mesmo padrão (navegador de mês + resumo) | T13 | ✅ Verified |
+| POLISH-16 | P1 Páginas — modais/diálogos alinhados ao DS, comportamento preservado | T10, T11 | ✅ Verified |
+| POLISH-17 | P1 Responsivo — ≥320px sem scroll horizontal do body | T14 | ✅ Verified |
+| POLISH-18 | P1 Responsivo — alvos de toque ≥44px | T14 | ⚠️ Partial (ver validation.md) |
+| POLISH-19 | P1 A11y — AA nos dois temas, pares novos no teste de contraste | T15 | ✅ Verified |
+| POLISH-20 | P1 A11y — operável por teclado com foco visível | T14 | ❌ Needs Fix |
+| POLISH-21 | P2 Qualidade — detector impeccable zero findings nos alvos | T16 | ✅ Verified |
+| POLISH-22 | P2 Qualidade — passes critique/polish/harden registrados | T16 | ✅ Verified |
 
 **ID format:** `POLISH-NN`. **Status:** Pending → In Design → In Tasks → Implementing → Verified.
 

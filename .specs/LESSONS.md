@@ -110,6 +110,18 @@ Seen once or not yet corroborated. Tracked, not trusted.
 - evidence: SHELL-15 (a11y)
 - last seen: 2026-07-24T00:22:44Z
 
+### L-017 — When a later task restructures a page's layout, re-check and update that route's loading.tsx skeleton in the same commit — presentational-only files excluded from test/audit scope can silently go stale relative to the real page shape.
+- signal: `ac_gap` · recurrence: 1 feature(s) · scope: `app-polish,loading-states` · harmful: 0
+- features: app-polish
+- evidence: validation.md POLISH-01 — src/app/app/loading.tsx (whole file) vs src/app/app/page.tsx:53-91 (app-polish,loading-states)
+- last seen: 2026-07-24T23:54:25Z
+
+### L-018 — A finding documented as 'considered, not fixed, deserves its own future task' in a polish/harden report is still an unmet acceptance criterion — register it as an actual fix task before closing the feature, not just as a justification note.
+- signal: `ac_gap` · recurrence: 1 feature(s) · scope: `app-polish,accessibility` · harmful: 0
+- features: app-polish
+- evidence: validation.md POLISH-20 — src/modules/commitments/components/CommitmentList.tsx:60-63; self-admitted in polish-report.md finding #10 (app-polish,accessibility)
+- last seen: 2026-07-24T23:54:25Z
+
 ## Quarantined (failed when applied — ignore)
 
 A confirmed lesson that recurred alongside failure. Kept for the maintainer to review.
