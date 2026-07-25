@@ -34,6 +34,46 @@ function uniqueEmail(prefix: string): string {
   return `${prefix}-${Date.now()}-${Math.floor(Math.random() * 100000)}@example.com`;
 }
 
+// spec.md Edge Cases: "usuário recém-cadastrado abre cada página THEN cada
+// uma SHALL mostrar seu empty state com ação primária clara". Confirmado
+// para dashboard/transações/categorias em outros specs e2e (validation.md);
+// faltava para /app/commitments especificamente.
+test("conta nova mostra o estado vazio de compromissos com ação primária", async ({ page }) => {
+  const name = "Bia E2E Compromissos Vazio";
+  const email = uniqueEmail("e2e-commit-empty");
+
+  await page.goto("/signup");
+  await page.getByLabel("Nome").fill(name);
+  await page.getByLabel("Data de nascimento").fill("1990-01-01");
+  await page.getByLabel("CPF").fill(uniqueValidCpf());
+  await page.getByLabel("CEP").fill("12345-000");
+  await page.getByLabel("Logradouro").fill("Rua Test");
+  await page.getByLabel("Número").fill("123");
+  await page.getByLabel("Bairro").fill("Bairro");
+  await page.getByLabel("Cidade").fill("Cidade");
+  await page.getByLabel("UF").fill("SP");
+  await page.getByLabel("E-mail").fill(email);
+  await page.getByLabel("Senha", { exact: true }).fill(PASSWORD);
+  await page.getByLabel("Confirmar senha").fill(PASSWORD);
+  await page.getByRole("checkbox").check();
+
+  await page.getByRole("button", { name: "Criar conta" }).click();
+  await expect(page).toHaveURL(/\/app$/);
+
+  await page.goto("/app/commitments");
+  await expect(page).toHaveURL(/\/app\/commitments$/);
+
+  await expect(page.getByText("Nenhum compromisso ainda")).toBeVisible();
+  await expect(
+    page.getByText(
+      "Crie seu primeiro compromisso (compra parcelada ou financiamento) para começar a acompanhar suas parcelas.",
+    ),
+  ).toBeVisible();
+  // Ação primária clara: o atalho de criação do cabeçalho da página
+  // permanece visível e operável mesmo com a lista vazia.
+  await expect(page.getByRole("button", { name: "+ Novo compromisso" })).toBeVisible();
+});
+
 test("should create installment, verify rounding, and mark as paid", async ({ page }) => {
   const name = "Ana E2E Compromissos";
   const email = uniqueEmail("e2e-commit");

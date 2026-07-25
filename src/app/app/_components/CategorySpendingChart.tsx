@@ -24,6 +24,19 @@ interface ChartDatum extends CategorySpendingSlice {
   fill: string;
 }
 
+// Extraída como função pura testável isoladamente (edge case do spec: 1
+// única categoria ou >8 permanece legível, ciclando os 8 tokens sem
+// repetição indistinguível dentro de um mesmo ciclo). Testar isto via RTL
+// exigiria mockar `ResponsiveContainer`/`ResizeObserver` do Recharts em
+// jsdom — a lógica de atribuição de cor não depende de DOM, então isolá-la
+// evita esse acoplamento frágil (ver `__tests__/category-spending-chart.test.ts`).
+export function assignCategoryChartColors(data: CategorySpendingSlice[]): ChartDatum[] {
+  return data.map((slice, index) => ({
+    ...slice,
+    fill: CATEGORY_COLOR_VARS[index % CATEGORY_COLOR_VARS.length]!,
+  }));
+}
+
 export function CategorySpendingChart({ data }: { readonly data: CategorySpendingSlice[] }) {
   if (data.length === 0) {
     return (
@@ -33,10 +46,7 @@ export function CategorySpendingChart({ data }: { readonly data: CategorySpendin
     );
   }
 
-  const chartData: ChartDatum[] = data.map((slice, index) => ({
-    ...slice,
-    fill: CATEGORY_COLOR_VARS[index % CATEGORY_COLOR_VARS.length]!,
-  }));
+  const chartData: ChartDatum[] = assignCategoryChartColors(data);
 
   return (
     <ResponsiveContainer width="100%" height={280}>
