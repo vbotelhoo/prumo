@@ -165,7 +165,7 @@ As páginas da área logada (dashboard, transações, compromissos, categorias, 
 
 | Requirement ID | Story | Task(s) | Status |
 | -------------- | ----- | ------- | ------ |
-| POLISH-01 | P1 Fundação — skeletons por rota (5× `loading.tsx`) | T6 | ❌ Needs Fix |
+| POLISH-01 | P1 Fundação — skeletons por rota (5× `loading.tsx`) | T6 | ✅ Verified |
 | POLISH-02 | P1 Fundação — error boundary compartilhado com retry | T5 | ✅ Verified |
 | POLISH-03 | P1 Fundação — EmptyState compartilhado em todas as listas | T2, T12 | ✅ Verified |
 | POLISH-04 | P1 Fundação/Páginas — zero cor fora de tokens em `/app` + módulos UI | T4, T10, T12, T15 | ✅ Verified |
@@ -182,9 +182,9 @@ As páginas da área logada (dashboard, transações, compromissos, categorias, 
 | POLISH-15 | P1 Páginas — projeções no mesmo padrão (navegador de mês + resumo) | T13 | ✅ Verified |
 | POLISH-16 | P1 Páginas — modais/diálogos alinhados ao DS, comportamento preservado | T10, T11 | ✅ Verified |
 | POLISH-17 | P1 Responsivo — ≥320px sem scroll horizontal do body | T14 | ✅ Verified |
-| POLISH-18 | P1 Responsivo — alvos de toque ≥44px | T14 | ⚠️ Partial (ver validation.md) |
+| POLISH-18 | P1 Responsivo — alvos de toque ≥44px | T14 | ⚠️ Partial (melhorado na iteração 2 — 2/5 modais com prova e2e; ver validation.md) |
 | POLISH-19 | P1 A11y — AA nos dois temas, pares novos no teste de contraste | T15 | ✅ Verified |
-| POLISH-20 | P1 A11y — operável por teclado com foco visível | T14 | ❌ Needs Fix |
+| POLISH-20 | P1 A11y — operável por teclado com foco visível | T14 | ✅ Verified |
 | POLISH-21 | P2 Qualidade — detector impeccable zero findings nos alvos | T16 | ✅ Verified |
 | POLISH-22 | P2 Qualidade — passes critique/polish/harden registrados | T16 | ✅ Verified |
 
